@@ -25,7 +25,9 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 4) Temp Stuff
+### Temp Stuff
+After activating the virtual environment, run the following command to start the application:
 ```bash
-python app.py
+cd backend
+python manage.py runserver
 ```
