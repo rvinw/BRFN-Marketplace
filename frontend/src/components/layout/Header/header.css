@@ -1,0 +1,162 @@
+/* Header wrapper */
+.site-header {
+  width: 100%;
+}
+
+/* ===== TopBar (sticky) ===== */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  width: 100%;
+  background: #faf7f2; /* warm neutral */
+  border-bottom: 1px solid #e6e1d9;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  padding: 12px 20px;
+}
+
+/* Left */
+.topbar_left {
+  flex: 0 0 auto;
+}
+.topbar_logo {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+/* Center */
+.topbar_center {
+  flex: 1 1 auto;
+  min-width: 240px;
+}
+.topbar_center--compact {
+  /* shrink instantly when postcode expands */
+  flex: 0.8 1 auto;
+}
+
+/* Right */
+.topbar_right {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Buttons */
+.topbar-btn {
+  border: 1px solid #d8d2c8;
+  background: white;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.topbar-btn:hover {
+  background: #fffaf2;
+}
+
+/* Search */
+.search {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+}
+
+.search__input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d8d2c8;
+  outline: none;
+}
+
+.search__btn {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d8d2c8;
+  background: white;
+  cursor: pointer;
+}
+
+.search__btn:hover {
+  background: #fffaf2;
+}
+
+/* Postcode */
+.postcode-chip {
+  border: 1px solid #d8d2c8;
+  background: white;
+  padding: 8px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.postcode-edit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  border: 1px solid #d8d2c8;
+  background: white;
+  padding: 6px 8px;
+  border-radius: 999px;
+}
+
+.postcode-input {
+  width: 120px;
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+.postcode-save {
+  border: 1px solid #d8d2c8;
+  background: #fffaf2;
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* ===== NavBar (NOT sticky) ===== */
+.navbar {
+  width: 100%;
+  background: white;
+  border-bottom: 1px solid #eee;
+}
+
+.navbar__inner {
+  display: flex;
+  gap: 8px;
+  padding: 10px 20px;
+  flex-wrap: wrap;
+}
+
+.navitem {
+  border: 1px solid #eee;
+  background: white;
+  padding: 8px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navitem:hover {
+  background: #fafafa;
+}
+
+.navitem__icon {
+  font-size: 16px;
+}
+
+.navitem__text {
+  font-size: 14px;
+}
