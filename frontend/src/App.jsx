@@ -1,4 +1,3 @@
-/* App.jsx */
 import { useState } from 'react'
 import './App.css'
 import Header from "./components/layout/Header/Header";
@@ -9,15 +8,44 @@ export default function App() {
 
   return (
     <>
-      {/* Pass setView to the Header */}
       <Header onNavigate={setView} />
       
       <main style={{ padding: 20 }}>
-        {view === 'home' ? (
-          <div>
+        {view === 'add' && <AddProductForm />}
+
+        {view === 'home' && (
+          <div className="dashboard-content">
+            <h1>Products</h1>
+            <p></p>
           </div>
-        ) : (
-          <AddProductForm />
+        )}
+
+        {view === 'orders' && (
+          <div className="dashboard-content">
+            <h1>Incoming Orders</h1>
+            <p></p>
+          </div>
+        )}
+
+        {view === 'history' && (
+          <div className="dashboard-content">
+            <h1>Previous Orders</h1>
+            <p></p>
+          </div>
+        )}
+
+        {view === 'payout' && (
+          <div className="dashboard-content">
+            <h1>Weekly Payout</h1>
+            <p></p>
+          </div>
+        )}
+
+        {view === 'community' && (
+          <div className="dashboard-content">
+            <h1>Community Engagement</h1>
+            <p></p>
+          </div>
         )}
       </main>
     </>
