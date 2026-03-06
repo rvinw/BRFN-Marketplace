@@ -1,21 +1,30 @@
-export default function NavBar() {
+export default function NavBar({ onNavigate }) {
   const categories = [
-    { label: "Vegetables", icon: "🥕" },
-    { label: "Dairy", icon: "🥛" },
-    { label: "Bakery", icon: "🍞" },
-    { label: "Preserves", icon: "🍯" },
-    { label: "Seasonal", icon: "🌞" },
+    { label: "Add a Product", value: "add" },
+    { label: "Products", value: "home" },
+    { label: "Incoming Orders", value: "orders" },
+    { label: "Previous Orders", value: "history" },
+    { label: "Request Weekly Payout", value: "payout" },
+    { label: "Community Engagement", value: "community" },
   ];
 
   return (
     <nav className="navbar">
       <div className="navbar__inner">
-        {categories.map((c) => (
-          <button key={c.label} className="navitem" type="button">
-            <span className="navitem__icon">{c.icon}</span>
-            <span className="navitem__text">{c.label}</span>
-          </button>
-        ))}
+        <span className="navbar__title">Producer Dashboard</span>
+        
+        <div className="nav-buttons-container">
+          {categories.map((c) => (
+            <button 
+              key={c.label} 
+              className="navitem" 
+              type="button"
+              onClick={() => onNavigate(c.value)}
+            >
+              <span className="navitem__text">{c.label}</span>
+            </button>
+          ))}
+        </div>
       </div>
     </nav>
   );

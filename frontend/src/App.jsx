@@ -1,33 +1,24 @@
+/* App.jsx */
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import Header from "./components/layout/Header/Header";
-
-/* function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <Header>Header</Header>
-      
-    </>
-  )
-}
-
-export default App */
+import AddProductForm from "./components/AddProductForm"; 
 
 export default function App() {
+  const [view, setView] = useState('home');
+
   return (
     <>
-      <Header />
+      {/* Pass setView to the Header */}
+      <Header onNavigate={setView} />
+      
       <main style={{ padding: 20 }}>
-        <h1>Home Page</h1>
-        <p>Carousel will go here.</p>
-        <p>Categories section will go here.</p>
-        <div style={{ height: 1200 }}>
-          Scroll down to test sticky TopBar
-        </div>
+        {view === 'home' ? (
+          <div>
+          </div>
+        ) : (
+          <AddProductForm />
+        )}
       </main>
     </>
   );
