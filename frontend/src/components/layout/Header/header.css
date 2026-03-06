@@ -1,41 +1,99 @@
-/* Header wrapper */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@400;500;600&display=swap');
+
+/* ── Design Tokens ── */
+:root {
+  --cream:        #faf7f2;
+  --cream-hover:  #f4efe6;
+  --cream-deep:   #ede7db;
+  --border:       #ddd7cc;
+  --border-focus: #b8a98e;
+  --text-primary: #2a2420;
+  --text-muted:   #9a8f84;
+  --accent:       #c0622a;
+  --accent-hover: #a8521f;
+  --white:        #ffffff;
+  --shadow-sm:    0 1px 3px rgba(42,36,32,0.08);
+  --shadow-md:    0 4px 16px rgba(42,36,32,0.10);
+  --radius-sm:    8px;
+  --radius-md:    12px;
+  --radius-pill:  999px;
+  --transition:   0.18s ease;
+}
+
+/* ── Base ── */
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* ── Site Header ── */
 .site-header {
   width: 100%;
 }
 
-/* ===== TopBar (sticky) ===== */
+/* ══════════════════════════════
+   TOP BAR
+══════════════════════════════ */
 .topbar {
   position: sticky;
   top: 0;
   z-index: 1000;
-
   width: 100%;
-  background: #faf7f2; /* warm neutral */
-  border-bottom: 1px solid #e6e1d9;
+  background: var(--cream);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 
   display: flex;
   align-items: center;
-  gap: 16px;
-
-  padding: 12px 20px;
+  gap: 20px;
+  padding: 10px 28px;
 }
 
-/* Left */
+/* Left — Logo */
 .topbar_left {
   flex: 0 0 auto;
 }
+
 .topbar_logo {
-  font-weight: 700;
-  letter-spacing: 0.2px;
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 1.35rem;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  cursor: pointer;
+  text-decoration: none;
+
+  /* subtle underline accent */
+  position: relative;
 }
 
-/* Center */
+.topbar_logo::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -2px;
+  width: 100%; height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition);
+}
+
+.topbar_logo:hover::after {
+  transform: scaleX(1);
+}
+
+/* Center — Search */
 .topbar_center {
   flex: 1 1 auto;
   min-width: 240px;
+  max-width: 560px;
 }
+
 .topbar_center--compact {
-  /* shrink instantly when postcode expands */
   flex: 0.8 1 auto;
 }
 
@@ -44,119 +102,265 @@
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  margin-left: auto;
 }
 
-/* Buttons */
+/* ── Topbar Buttons ── */
 .topbar-btn {
-  border: 1px solid #d8d2c8;
-  background: white;
-  padding: 8px 10px;
-  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
   cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
 }
 
 .topbar-btn:hover {
-  background: #fffaf2;
+  background: var(--cream-hover);
+  border-color: var(--border-focus);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
-/* Search */
+.topbar-btn:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Primary CTA button variant */
+.topbar-btn--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--white);
+}
+
+.topbar-btn--primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+/* ── Search Bar ── */
 .search {
   display: flex;
   width: 100%;
-  gap: 8px;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.search:focus-within {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(184,169,142,0.2), var(--shadow-sm);
 }
 
 .search__input {
   flex: 1;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #d8d2c8;
-  outline: none;
-}
-
-.search__btn {
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #d8d2c8;
-  background: white;
-  cursor: pointer;
-}
-
-.search__btn:hover {
-  background: #fffaf2;
-}
-
-/* Postcode */
-.postcode-chip {
-  border: 1px solid #d8d2c8;
-  background: white;
-  padding: 8px 10px;
-  border-radius: 999px;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.postcode-edit {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  border: 1px solid #d8d2c8;
-  background: white;
-  padding: 6px 8px;
-  border-radius: 999px;
-}
-
-.postcode-input {
-  width: 120px;
+  padding: 10px 14px;
   border: none;
   outline: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text-primary);
   background: transparent;
 }
 
-.postcode-save {
-  border: 1px solid #d8d2c8;
-  background: #fffaf2;
-  padding: 6px 10px;
-  border-radius: 999px;
-  cursor: pointer;
+.search__input::placeholder {
+  color: var(--text-muted);
 }
 
-/* ===== NavBar (NOT sticky) ===== */
+.search__btn {
+  padding: 10px 16px;
+  border: none;
+  border-left: 1px solid var(--border);
+  background: var(--cream);
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--text-muted);
+  transition: background var(--transition), color var(--transition);
+}
+
+.search__btn:hover {
+  background: var(--cream-deep);
+  color: var(--accent);
+}
+
+/* ── Postcode ── */
+.postcode-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
+}
+
+.postcode-chip:hover {
+  background: var(--cream-hover);
+  border-color: var(--border-focus);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.postcode-chip__icon {
+  font-size: 13px;
+  color: var(--accent);
+}
+
+.postcode-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border-focus);
+  background: var(--white);
+  padding: 6px 8px 6px 14px;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 0 0 3px rgba(184,169,142,0.2), var(--shadow-sm);
+}
+
+.postcode-input {
+  width: 110px;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.postcode-save {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--white);
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.postcode-save:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+/* ══════════════════════════════
+   CATEGORY NAV BAR
+══════════════════════════════ */
 .navbar {
   width: 100%;
-  background: white;
-  border-bottom: 1px solid #eee;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
 }
 
 .navbar__inner {
   display: flex;
-  gap: 8px;
-  padding: 10px 20px;
+  gap: 6px;
+  padding: 10px 28px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
+/* ── Nav Items ── */
 .navitem {
-  border: 1px solid #eee;
-  background: white;
-  padding: 8px 10px;
-  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 7px 14px;
+  border-radius: var(--radius-md);
   cursor: pointer;
 
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition),
+    transform var(--transition),
+    box-shadow var(--transition);
 }
 
 .navitem:hover {
-  background: #fafafa;
+  background: var(--cream);
+  border-color: var(--border);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.navitem:active {
+  transform: translateY(0);
+}
+
+/* Active state */
+.navitem--active {
+  background: var(--cream-deep);
+  border-color: var(--border-focus);
+  color: var(--accent);
+}
+
+.navitem--active .navitem__icon {
+  transform: scale(1.15);
 }
 
 .navitem__icon {
-  font-size: 16px;
+  font-size: 15px;
+  transition: transform var(--transition);
+  line-height: 1;
+}
+
+.navitem:hover .navitem__icon {
+  transform: scale(1.15);
 }
 
 .navitem__text {
-  font-size: 14px;
+  font-size: 13.5px;
+  white-space: nowrap;
+}
+
+/* ── Divider between nav groups ── */
+.navbar__divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 4px;
+  flex-shrink: 0;
 }
