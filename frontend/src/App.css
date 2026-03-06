@@ -1,7 +1,7 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
 }
 
@@ -39,4 +39,52 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.navbar__title {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #a3e635; /* Matching your BRFN Green from the screenshot */
+  margin-right: 20px; /* Space between title and first button */
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.producer-form {
+  display: flex;
+  flex-direction: column; 
+  gap: 15px; 
+  padding: 20px;
+}
+
+.producer-form label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: white; 
+}
+
+.producer-form input, 
+.producer-form select, 
+.producer-form textarea {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box; 
+}
+
+/* Optional: Style for the submit button specifically */
+.producer-form button.navitem {
+  margin-top: 10px;
+  justify-content: center;
+  background-color: #a3e635; /* BRFN Green */
+  color: black;
+  font-weight: bold;
 }

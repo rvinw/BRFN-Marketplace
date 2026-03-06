@@ -8,16 +8,14 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-
   width: 100%;
-  background: #faf7f2; /* warm neutral */
+  background: #696a69; /* warm neutral */
   border-bottom: 1px solid #e6e1d9;
-
   display: flex;
   align-items: center;
   gap: 16px;
-
   padding: 12px 20px;
+  box-sizing: border-box;
 }
 
 /* Left */
@@ -27,37 +25,13 @@
 .topbar_logo {
   font-weight: 700;
   letter-spacing: 0.2px;
+  color: white;
 }
 
 /* Center */
 .topbar_center {
   flex: 1 1 auto;
   min-width: 240px;
-}
-.topbar_center--compact {
-  /* shrink instantly when postcode expands */
-  flex: 0.8 1 auto;
-}
-
-/* Right */
-.topbar_right {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* Buttons */
-.topbar-btn {
-  border: 1px solid #d8d2c8;
-  background: white;
-  padding: 8px 10px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.topbar-btn:hover {
-  background: #fffaf2;
 }
 
 /* Search */
@@ -79,82 +53,100 @@
   padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid #d8d2c8;
-  background: white;
+  background: rgb(64, 61, 61);
+  color: white;
   cursor: pointer;
 }
 
 .search__btn:hover {
-  background: #fffaf2;
+  background: #34ec0f;
+  color: black;
 }
 
-/* Postcode */
+
+.topbar_right {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topbar-btn {
+  border: 1px solid #d8d2c8;
+  background: rgb(64, 61, 61);
+  color: white;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+
 .postcode-chip {
   border: 1px solid #d8d2c8;
-  background: white;
+  background: rgb(64, 61, 61);
+  color: white;
   padding: 8px 10px;
   border-radius: 999px;
   cursor: pointer;
   white-space: nowrap;
 }
 
-.postcode-edit {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 
-  border: 1px solid #d8d2c8;
-  background: white;
-  padding: 6px 8px;
-  border-radius: 999px;
-}
-
-.postcode-input {
-  width: 120px;
-  border: none;
-  outline: none;
-  background: transparent;
-}
-
-.postcode-save {
-  border: 1px solid #d8d2c8;
-  background: #fffaf2;
-  padding: 6px 10px;
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-/* ===== NavBar (NOT sticky) ===== */
 .navbar {
   width: 100%;
-  background: white;
+  background: rgb(166, 24, 206);
   border-bottom: 1px solid #eee;
 }
 
 .navbar__inner {
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   padding: 10px 20px;
-  flex-wrap: wrap;
+  max-width: 1280px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  gap: 1px;
+}
+
+.navbar__title {
+  color: #34ec0f;
+  font-weight: 700;
+  font-size: 1.2rem;
+  flex-shrink: 0; 
+  white-space: nowrap;
+}
+
+
+.nav-buttons-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap;
+}
+
+.nav-buttons-container::-webkit-scrollbar {
+  display: none; 
 }
 
 .navitem {
+  flex-shrink: 0; 
   border: 1px solid #eee;
-  background: white;
-  padding: 8px 10px;
+  background: rgb(166, 24, 206);
+  padding: 8px 16px;
   border-radius: 12px;
   cursor: pointer;
-
+  white-space: nowrap;
+  color: white;
   display: flex;
   align-items: center;
   gap: 8px;
+  transition: background 0.2s ease;
 }
 
 .navitem:hover {
-  background: #fafafa;
-}
-
-.navitem__icon {
-  font-size: 16px;
+  background: #34ec0f;
+  color: black;
 }
 
 .navitem__text {
