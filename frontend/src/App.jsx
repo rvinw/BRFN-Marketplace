@@ -1,34 +1,50 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./App.css";
+
+// Layout components
 import Header from "./components/layout/Header/Header";
 
-/* function App() {
-  const [count, setCount] = useState(0)
+// Pages
+import Login from "./pages/Login";
+import RegisterCustomer from "./pages/RegisterCustomer";
+import RegisterProducer from "./pages/RegisterProducer";
 
+function Home() {
   return (
-    <>
-      <Header>Header</Header>
-      
-    </>
-  )
-}
-
-export default App */
-
-export default function App() {
-  return (
-    <>
-      <Header />
-      <main style={{ padding: 20 }}>
-        <h1>Home Page</h1>
-        <p>Carousel will go here.</p>
-        <p>Categories section will go here.</p>
-        <div style={{ height: 1200 }}>
-          Scroll down to test sticky TopBar
-        </div>
-      </main>
-    </>
+    <div style={{ padding: "40px", textAlign: "center" }}>
+      <h2>Welcome to BRFN Marketplace</h2>
+      <p>Home page coming soon...</p>
+    </div>
   );
 }
+
+function ProducerDashboard() {
+  return (
+    <div style={{ padding: "40px", textAlign: "center" }}>
+      <h2>Producer Dashboard</h2>
+      <p>Producer dashboard coming soon...</p>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      {/* Global Header */}
+      <Header />
+
+      {/* Page Routes */}
+      <Routes>
+        <Route path="/" element={<Home />} />
+
+        {/* Auth routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register/customer" element={<RegisterCustomer />} />
+        <Route path="/register/producer" element={<RegisterProducer />} />
+        <Route path="/producer" element={<ProducerDashboard />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;

@@ -1,9 +1,11 @@
 import { useState } from "react";
 import SearchBar from "./SearchBar";
+import { useNavigate } from "react-router-dom";
 
 export default function TopBar() {
 
     const [postcodeOpen, setPostcodeOpen] = useState(false);
+    const navigate = useNavigate();
     return(
     <div className="topbar">
         {/* Left */}
@@ -33,7 +35,7 @@ export default function TopBar() {
                 </div>
             )}
 
-            <button className="topbar-btn" type="button">
+            <button onClick={() => navigate("/login")}>
                 👤 Login
             </button>
 

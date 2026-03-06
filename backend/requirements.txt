@@ -8,3 +8,6 @@ sqlparse==0.5.5
 djangorestframework
 psycopg[binary]
 drf-spectacular
+djangorestframework
+djangorestframework-simplejwt
+django-cors-headers
