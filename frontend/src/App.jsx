@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import './carousel.css'
 import Header from "./components/layout/Header/Header";
@@ -20,6 +18,8 @@ import Carousel from './Carousel';
 export default App */
 
 export default function App() {
+  const [view, setView] = useState('home');
+
   return (
     <>
       <Header />
