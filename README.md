@@ -33,4 +33,6 @@ python manage.py runserver
 ```
 ### for routing between webpages
 in terminal run 
+```bash
 npm install react-router-dom
+```
