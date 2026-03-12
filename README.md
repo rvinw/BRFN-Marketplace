@@ -31,3 +31,6 @@ After activating the virtual environment, run the following command to start the
 cd backend
 python manage.py runserver
 ```
+### for routing between webpages
+in terminal run 
+npm install react-router-dom
