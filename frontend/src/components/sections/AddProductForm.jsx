@@ -30,11 +30,10 @@ export default function AddProductForm() {
 
   return (
     <div className="form-container">
-      <h2 className="navbar__title">Add New Product</h2>
+      
       <form className="producer-form">
         <label>Name</label>
         <input name="name" type="text" onChange={handleChange} />
-
         <label>Category</label>
         <select name="category" onChange={handleChange}>
           <option value="Dairy">Dairy</option>
@@ -46,10 +45,35 @@ export default function AddProductForm() {
         <textarea name="description" onChange={handleChange} />
 
         <div style={{ display: 'flex', gap: '20px' }}>
-          <div style={{ flex: 1 }}>
-            <label>Price</label>
-            <input name="price" type="text" onChange={handleChange} />
-          </div>
+  <div style={{ flex: 1 }}>
+    <label>Price</label>
+    {/* Wrap the input in a div to hold the £ sign */}
+    <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+      <span style={{ 
+        position: 'absolute', 
+        left: '12px', 
+        color: '#333', 
+        fontWeight: 'bold',
+        pointerEvents: 'none' // Ensures the user clicks 'through' the £ to the input
+      }}>
+        £
+      </span>
+      <input 
+        name="price" 
+        type="number"
+        step="0.01"
+        placeholder='0.00' 
+        onChange={handleChange}
+        required 
+        style={{ 
+          paddingLeft: '28px', // Pushes the text to the right of the £ sign
+          width: '100%',
+          backgroundColor: '#ffffff',
+          color: '#333'
+        }}
+      />
+    </div>
+  </div>
           <div style={{ flex: 1 }}>
             <label>Unit Amount</label>
             <input name="unitAmount" type="text" onChange={handleChange} />

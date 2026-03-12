@@ -41,6 +41,12 @@ const icons = {
       <path d="M14 10c3-3 4-7 2-9s-6-1-9 2C4 6 4 10 7 12l1 1-4 4a1 1 0 0 0 1.4 1.4l4-4 1 1c2 2 6 2 8-1s1-6-2-9" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   ),
+  Producer: (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M9 22V12h6v10" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
 };
 
 const categories = [
@@ -58,6 +64,7 @@ export default function NavBar() {
   return (
     <nav className="navbar">
       <div className="navbar__inner">
+        {/* Render Category Links */}
         {categories.map((c) => (
           <Link
             key={c.label}
@@ -71,6 +78,24 @@ export default function NavBar() {
             <span className="navitem__text">{c.label}</span>
           </Link>
         ))}
+
+        {/* Vertical Divider for separation */}
+        <div style={{ width: '1px', background: '#e0e0e0', height: '24px', margin: '0 15px' }}></div>
+
+        {/* Producer Dashboard Link */}
+        <Link
+          to="/dashboard/producer"
+          className={`navitem${active === 'Producer' ? " navitem--active" : ""}`}
+          onClick={() => setActive('Producer')}
+          style={{ marginLeft: 'auto' }}
+        >
+          <span className="navitem__icon" style={{ color: '#2c5f2d' }}>
+            {icons.Producer}
+          </span>
+          <span className="navitem__text" style={{ color: '#2c5f2d', fontWeight: 'bold' }}>
+            Producer Hub
+          </span>
+        </Link>
       </div>
     </nav>
   );
