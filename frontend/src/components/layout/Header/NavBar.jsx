@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const icons = {
   Vegetables: (
@@ -41,6 +42,7 @@ const icons = {
     </svg>
   ),
 };
+
 const categories = [
   { label: "Vegetables" },
   { label: "Dairy" },
@@ -57,17 +59,17 @@ export default function NavBar() {
     <nav className="navbar">
       <div className="navbar__inner">
         {categories.map((c) => (
-          <button
+          <Link
             key={c.label}
+            to={`/products?category=${c.label.toLowerCase()}`}
             className={`navitem${active === c.label ? " navitem--active" : ""}`}
-            type="button"
             onClick={() => setActive(active === c.label ? null : c.label)}
           >
             <span className="navitem__icon">
               {icons[c.label]}
             </span>
             <span className="navitem__text">{c.label}</span>
-          </button>
+          </Link>
         ))}
       </div>
     </nav>
