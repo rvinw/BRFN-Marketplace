@@ -1,12 +1,12 @@
-import TopBar from "./TopBar";
-import NavBar from "./NavBar";
-import "./header.css";
+import TopBar from './TopBar'
+import NavBar from './NavBar'
+import './header.css'
 
-export default function Header({ onNavigate }) { // <--- Did you add this?
+export default function Header() {
   return (
-    <header className="site-header">
+    <header className="header">
       <TopBar />
-      <NavBar onNavigate={onNavigate} /> {/* <--- And this? */}
+      <NavBar />
     </header>
-  );
+  )
 }
