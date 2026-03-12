@@ -1,40 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { Routes, Route } from 'react-router-dom'
+
+import Header from './components/layout/Header/Header'
+import Footer from './components/layout/Footer/Footer'
+
+// Pages 
+import HomePage from './components/Pages/HomePage'
+import ProductsPage from './components/Pages/ProductsPage'
+import ProductDetailPage from './components/Pages/ProductDetailPage'
+import LoginPage from './components/Pages/LoginPage'
+import CustomerRegisterPage from './components/Pages/CustomerRegisterPage'
+import ProducerRegisterPage from './components/Pages/ProducerRegisterPage'
+import CartPage from './components/Pages/CartPage'
+import CheckoutPage from './components/Pages/CheckoutPage'
+import CustomerDashboardPage from './components/Pages/CustomerDashboardPage'
+import ProducerDashboardPage from './components/Pages/ProducerDashboardPage'
 import './App.css'
-import './carousel.css'
-import Header from "./components/layout/Header/Header";
-import Carousel from './Carousel';
-
-/* function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <Header>Header</Header>
-      
-    </>
-  )
-}
-
-export default App */
 
 export default function App() {
   return (
     <>
       <Header />
-      
-      <main style={{ padding: 20 }}>
-        <h1>Home Page</h1>
-        <p>Carousel will go here.</p>
-        <Carousel></Carousel>
-        <p>Categories section will go here.</p>
-        <div style={{ height: 1200 }}>
-          Scroll down to test sticky TopBar
-    
-        </div>
-        
-      </main>
+      <Routes>
+        <Route path="/"                    element={<HomePage />} />
+        <Route path="/products"            element={<ProductsPage />} />
+        <Route path="/products/:id"        element={<ProductDetailPage />} />
+        <Route path="/login"               element={<LoginPage />} />
+        <Route path="/register/customer"   element={<CustomerRegisterPage />} />
+        <Route path="/register/producer"   element={<ProducerRegisterPage />} />
+        <Route path="/cart"                element={<CartPage />} />
+        <Route path="/checkout"            element={<CheckoutPage />} />
+        <Route path="/dashboard/customer"  element={<CustomerDashboardPage />} />
+        <Route path="/dashboard/producer"  element={<ProducerDashboardPage />} />
+      </Routes>
+      <Footer />
     </>
-  );
+  )
 }

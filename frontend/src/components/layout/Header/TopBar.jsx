@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import SearchBar from "./SearchBar";
 
 const PinIcon = () => (
@@ -30,7 +31,7 @@ export default function TopBar() {
     <div className="topbar">
       {/* Left */}
       <div className="topbar_left">
-        <span className="topbar_logo">BRFN Marketplace</span>
+        <Link to="/" className="topbar_logo">BRFN Marketplace</Link>  {/* 👈 logo now links home */}
       </div>
 
       {/* Center */}
@@ -68,15 +69,15 @@ export default function TopBar() {
           </div>
         )}
 
-        <button className="topbar-btn" type="button">
+        <Link to="/login" className="topbar-btn">          {/* 👈 was <button> */}
           <UserIcon />
           Login
-        </button>
+        </Link>
 
-        <button className="topbar-btn topbar-btn--primary" type="button">
+        <Link to="/cart" className="topbar-btn topbar-btn--primary">  {/* 👈 was <button> */}
           <CartIcon />
           Cart
-        </button>
+        </Link>
       </div>
     </div>
   );
