@@ -1,0 +1,213 @@
+·      Users with roles
+·      Produce listings
+·      Customer orders
+·      Payments incl. commission and weekly settlement
+ 
+ 
+Order_id
+Customer_id
+Delivery_address
+Items
+Payment_ref
+Delievry_dates
+Commission
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+order_id
+ 
+customer_name
+ 
+customer_email
+ 
+delivery_address
+items = [
+(product_name, category, producer_name, producer_postcode, qty, unit_price, allergens, organic_flag),
+…]
+ 
+payment_provider, payment_ref, total_amount
+ 
+producer_delivery_dates = [(producer_name, delivery_date, status), …]
+ 
+commission_amount
+ 
+UNF -> 1NF (No arrays)
+ 
+Order: order_id, customer_id, delivery_address_id, placed_at, total_amount
+ 
+Order_item: order_id, product_id, quantity, unit_price_at_purchase, total_cost
+ 
+Order_producer: order_id, producer_id, delivery_date, status
+ 
+1NF -> 2NF
+ 
+Product: product_id, producer_id, category_id, product_name, product_description, current_price, product_unit, stock_quantity, harvest_date, best_before_date, organic_status, availability_status, created_at (?), updated_at (?)
+ 
+Producer: producer_id, user_id, business_name, producer_address, producer_postcode, lead_time_hours (?), is_verified (?)
+ 
+CATEGORY: category_id, category_name
+ 
+ORDER_ITEM: order_id PK, product_id PK, quantity, unit_price_at_purchase
+ 
+2NF -> 3NF
+ 
+USER: user_id, user_email, user_password
+ 
+ALLERGEN: allergen_id, allergen_name
+ 
+PRODUCT_ALLERGEN: product_id FK, allergen_id FK
+ 
+ 
+--------------------------------------------------------------------------------------------------------------
+--- USERS -------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+ 
+ 
+USER:
+                  user_id (PK)
+                  email (UNIQUE, NOT NULL)
+                  password (NOT NULL)
+                  phone
+                  full_name (NOT NULL)
+                  role_name (CUSTOMER, PRODUCER, COMMUNITY_GROUP, RESTAURANT, ADMIN)
+ 
+ADDRESS:
+                  address_id (PK)
+                  line_1(NOT NULL)
+                  line_2 (NULL)
+                  city (NOT NULL)
+                  postcode (NOT NULL)
+ 
+CUSTOMER_PROFILE:
+                  customer_id (PK)
+                  user_id (UNIQUE, FK from USER.user_id)
+                  customer_type
+                  org_name (NULL)
+address_id (FK from ADDRESS.address_id)
+ 
+PRODUCER_PROFILE
+                  producer_id
+                  user_id (UNIQUE, FK from USER.user_id)
+                  business_name
+                  contact_name
+address_id (FK from ADDRESS.address_id)
+                  lead_time_hours
+is_verified
+ 
+ 
+ 
+--------------------------------------------------------------------------------------------------------------
+--- CATALOGUE ------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+ 
+ 
+CATEGORY:
+	category_id (PK)
+	category_name (UNIQUE, NOT NULL)
+	category_description (TEXT, NULL)
+ 
+PRODUCT:
+	product_id (PK)
+	producer_id (FK from PRODUCER_PROFILE.producer_id, NOT NULL)
+	category_id (FK from CATEGORY.category_id, NOT NULL)
+	product_name (NOT NULL)
+	product_description (NOT NULL)
+	current_price (DECIMAL/NUMERIC (10,2), NOT NULL)
+	product_unit (EACH|PACK|BUNCH|BOX|DOZEN|G|KG|ML|L, NOT NULL)
+	stock_quantity (DECIMAL(12,3), NOT NULL)
+	product_stock_threshold (DECIMAL(12, 3), NULL)
+	harvest_date (DATE, NULL)
+	best_before_date (DATE, NULL)
+	organic_status (NOT NULL, ORGANIC | NON_ORGANIC)
+	is_available (BOOLEAN, NOT NULL, DEFAULT TRUE)
+	created_at (TIMESTAMP, NOT NULL, DEFAULT NOW())
+	updated_at (TIMESTAMP, NOT NULL, DEFAULT NOW())
+ 
+PRODUCT_IMAGE:
+	image_id (PK)
+	product_id (FK from PRODUCT.product_id, NOT NULL)
+	image_url (TEXT, NOT NULL)
+	image_sort_order (INT, NULL)
+ 
+ALLERGEN:
+	allergen_id (PK)
+	allergen_name (UNIQUE, NOT NULL)
+ 
+PRODUCT_ALLERGEN:
+	product_id (FK from PRODUCT.product_id, NOT NULL)
+	allergen_id (FK from ALLERGEN.allergen_id, NOT NULL)
+	PK (product_id, allergen_id)
+ 
+PRODUCT_AVAILABILITY_WINDOW:
+	window_id (PK)
+	product_id (FK from PRODUCT.product_id, NOT NULL)
+	availability_type (SEASONAL / YEAR_ROUND, NOT NULL)
+	start_month (INT, NULL, must be 1–12 if not NULL, CHECK (start_month BETWEEN 1 AND 12 OR start_month IS NULL))
+	end_month (INT, NULL, must be 1–12 if not NULL, CHECK (end_month BETWEEN 1 AND 12 OR end_month IS NULL))
+	* if availability_type = YEAR_ROUND → start_month and end_month must be NULL
+	* if availability_type = SEASONAL → start_month and end_month must NOT be NULL
+ 
+PRODUCT_DEAL:
+	deal_id (PK)
+	product_id (FK from PRODUCT.product_id, NOT NULL)
+	discount_percentage (NOT NULL, DECIMAL(5,2), 0–100)
+	expires_at (TIMESTAMP, NOT NULL)
+	note (NULL)
+	is_active (BOOLEAN, NOT NULL, DEFAULT TRUE)
+	* CHECK (discount_percentage BETWEEN 0 AND 100)
+ 
+------------------------------------------------------------------------------------------------------------
+--- CART -----------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+ 
+ 
+CART:
+                  cart_id,
+                  customer_id,
+                  status
+ 
+CART_ITEM:
+                  cart_id,
+                  product_id,
+                  product_cart_quantity
+ 
+ 
+--------------------------------------------------------------------------------------------------------------
+--- ORDERS -----------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+ 
+ 
+ORDER:
+order_id,
+customer_id,
+delivery_address_id,
+placed_at,
+order_status,
+total_amount
+ 
+ORDER_STATUS_HISTORY:
+                  history_id
+                  order_producer_id
+                  old_status (NULL)
+                  new_status
+                  note (NULL)
+                  changed_at
+                  changed_by_user_id (NULL, FK from users.users_id)
+ 
+ 
+--------------------------------------------------------------------------------------------------------------
+--- PAYMENTS --------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+ 
