@@ -1,3 +1,9 @@
+body {
+  background: #faf7f2;
+  margin: 0;
+  min-height: 100vh;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -40,3 +46,85 @@
 .read-the-docs {
   color: #888;
 }
+<<<<<<< Updated upstream
+=======
+
+.navbar__title {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #a3e635;
+  margin-right: 20px;
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.producer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+}
+
+.producer-form label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333333;
+}
+
+.producer-form input,
+.producer-form select,
+.producer-form textarea {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.producer-form button.navitem {
+  margin-top: 10px;
+  justify-content: center;
+  background-color: #a3e635;
+  color: black;
+  font-weight: bold;
+}
+
+.price-field-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.currency-symbol {
+  position: absolute;
+  left: 12px;
+  color: #333;
+  font-weight: bold;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.price-field-wrapper input {
+  padding-left: 30px !important;
+  background-color: #333 !important;
+  color: #ffffff !important;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+  height: 40px;
+}
+
+.price-field-wrapper input::-webkit-outer-spin-button,
+.price-field-wrapper input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+>>>>>>> Stashed changes
