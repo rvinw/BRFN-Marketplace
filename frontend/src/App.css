@@ -7,7 +7,7 @@ body {
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
 }
 
@@ -46,8 +46,6 @@ body {
 .read-the-docs {
   color: #888;
 }
-<<<<<<< Updated upstream
-=======
 
 .navbar__title {
   font-weight: 700;
@@ -127,4 +125,3 @@ body {
   -webkit-appearance: none;
   margin: 0;
 }
->>>>>>> Stashed changes
