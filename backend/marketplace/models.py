@@ -308,3 +308,32 @@ class OrderStatusHistory(models.Model):
 # -----------------------------------|
 # PAYMENTS---------------------------|
 # -----------------------------------|
+class AddProduct(models.Model):
+    name = models.CharField(max_length=200)
+    category = models.CharField(max_length=50)
+    description = models.TextField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    unit_amount = models.CharField(max_length=50)
+    availability = models.BooleanField(default=True)
+    stock_quantity = models.IntegerField(default=0)
+    allergy_info = models.CharField(max_length=500, blank= True)
+    harvest_date = models.DateTimeField(null=True, blank=True)
+    product_image = models.ImageField(upload_to='products/', null=True, blank=True)
+    
+    def __str__(self):
+        return self.name
+    
+class CommunityPost(models.Model):
+    POST_TYPE_CHOICES = [
+        ('Farm Story', 'Farm Story'),
+        ('Recipe', 'Recipe'),
+    ]
+    
+    post_type = models.CharField(max_length=50, choices=POST_TYPE_CHOICES)
+    is_public = models.BooleanField(default=False)
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.title

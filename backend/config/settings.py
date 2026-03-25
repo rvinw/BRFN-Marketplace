@@ -41,10 +41,12 @@ INSTALLED_APPS = [
     "rest_framework",
     "marketplace",
     "accounts",
+    "corsheaders"
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -135,3 +137,7 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 AUTH_USER_MODEL = "accounts.User"
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
