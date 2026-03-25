@@ -41,3 +41,6 @@ npm install react-router-dom
 ```bash
 npm run dev
 ```
+### New Requirement code for image handling and fixing CORS error
+python -m pip install Pillow
+docker-compose exec web pip install django-cors-headers
