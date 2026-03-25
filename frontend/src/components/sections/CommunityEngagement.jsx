@@ -3,11 +3,42 @@ import { useState } from 'react';
 export default function CommunityEngagement() {
   const [postType, setPostType] = useState('Farm Story');
   const [isPublic, setIsPublic] = useState(false);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // This is where we will eventually send data to Django
-    console.log("Post Submitted:", { postType, isPublic });
+    
+    const postData = {
+      post_type: postType,
+      is_public: isPublic,
+      title: title,
+      description: description
+    };
+
+    try {
+      const response = await fetch('http://localhost:8000/api/community-posts/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postData),
+      });
+
+      if (response.ok) {
+        alert('Post published!');
+        setTitle('');
+        setDescription('');
+        setPostType('Farm Story');
+        setIsPublic(false);
+      } else {
+        alert('Error - check console');
+        console.error(await response.json());
+      }
+    } catch (error) {
+      alert('Error - check console');
+      console.error(error);
+    }
   };
 
   return (
@@ -16,7 +47,6 @@ export default function CommunityEngagement() {
       
       <form className="producer-form" onSubmit={handleSubmit}>
         
-        {/* 1. The Checkbox at the Top */}
         <div style={{ 
           display: 'flex', 
           alignItems: 'center', 
@@ -38,7 +68,6 @@ export default function CommunityEngagement() {
           </label>
         </div>
 
-        {/* 2. Dropdown Menu */}
         <label style={{ color: '#333' }}>What are you sharing today?</label>
         <select 
           value={postType} 
@@ -49,20 +78,22 @@ export default function CommunityEngagement() {
           <option value="Recipe">Recipe</option>
         </select>
 
-        {/* 3. Title */}
         <label style={{ color: '#333' }}>Title</label>
         <input 
           type="text" 
           placeholder="e.g., The Secret to Our Award-Winning Carrots" 
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
           required 
           style={{ background: '#fff', color: '#333' }}
         />
 
-        {/* 4. Description */}
         <label style={{ color: '#333' }}>Description</label>
         <textarea 
           placeholder="Share your story or the full recipe here..." 
           rows="8" 
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           required 
           style={{ 
             padding: '12px', 
@@ -73,7 +104,6 @@ export default function CommunityEngagement() {
           }}
         />
 
-        {/* 5. Submit Button */}
         <button type="submit" className="navitem" style={{ 
           backgroundColor: '#a3e635', 
           color: 'black', 
