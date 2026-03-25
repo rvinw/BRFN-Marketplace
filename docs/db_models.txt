@@ -173,6 +173,7 @@ PRODUCT_DEAL:
 ------------------------------------------------------------------------------------------------------------
  
  
+<<<<<<< HEAD
 CART:
                   cart_id,
                   customer_id,
@@ -182,6 +183,21 @@ CART_ITEM:
                   cart_id,
                   product_id,
                   product_cart_quantity
+=======
+CART:
+	cart_id (PK)
+	customer_id (FK from CUSTOMER_PROFILE.customer_id, NOT NULL)
+	created_at (TIMESTAMP, DEFAULT NOW(), NOT NULL)
+	updated_at (TIMESTAMP, DEFAULT NOW(), NOT NULL)
+
+CART_ITEM:
+	cart_item_id (PK)
+	cart_id (FK from CART.cart_id, NOT NULL)
+	product_id (FK from PRODUCT.product_id, NOT NULL)
+	product_cart_quantity (INT, CHECK (product_cart_quantity > 0), NOT NULL) 
+	UNIQUE (cart_id, product_id)
+
+>>>>>>> f809843d27a82daa04d5fc78b83c5287aec29588
  
  
 --------------------------------------------------------------------------------------------------------------
@@ -190,6 +206,7 @@ CART_ITEM:
  
  
 ORDER:
+<<<<<<< HEAD
 order_id,
 customer_id,
 delivery_address_id,
@@ -205,6 +222,38 @@ ORDER_STATUS_HISTORY:
                   note (NULL)
                   changed_at
                   changed_by_user_id (NULL, FK from users.users_id)
+=======
+	order_id (PK)
+	customer_id (fk from CUSTOMER.customer_id, NOT NULL)
+	delivery_address_id (FK from ADDRESS.address_id, NOT NULL)
+	placed_at (TIMESTAMP, NOT NULL, DEFAULT NOW())
+	order_status (PENDING | PAID | CANCELLED | COMPLETED, NOT NULL)
+	total_amount (DECIMAL(12,2), NOT NULL)
+
+ORDER_PRODUCER:
+	order_producer_id (PK)
+	order_id (FK from ORDER.order_id, NOT NULL)
+	producer_id (FK from PRODUCER_PROFILE.producer_id, NOT NULL)
+	status (PENDING | CONFIRMED | READY | DELIVERED | CANCELLED, NOT NULL)
+	UNIQUE(order_id, producer_id)
+
+ORDER_ITEM
+	order_item_id (PK)
+	order_producer_id (FK → ORDER_PRODUCER.order_producer_id, NOT NULL)
+	product_id (FK → PRODUCT.product_id, NOT NULL)
+	quantity (DECIMAL(12,3), NOT NULL, CHECK(quantity > 0))
+	unit_price_gbp (DECIMAL(10,2), NOT NULL)
+	total_cost (DECIMAL(12,2), NOT NULL) (quantity × unit_price_gbp) 
+
+ORDER_STATUS_HISTORY:
+	history_id (PK)
+	order_producer_id (FK from ORDER_PRODUCER.order_producer_id, NOT NULL)
+	old_status (NULL)
+	new_status (NOT NULL)
+	note (NULL)
+	changed_at (TIMESTAMP, NOT NULL, DEFAULT NOW())
+	changed_by_user_id (NULL, FK from users.users_id)
+>>>>>>> f809843d27a82daa04d5fc78b83c5287aec29588
  
  
 --------------------------------------------------------------------------------------------------------------

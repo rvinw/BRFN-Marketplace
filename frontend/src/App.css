@@ -50,8 +50,8 @@ body {
 .navbar__title {
   font-weight: 700;
   font-size: 1.2rem;
-  color: #a3e635;
-  margin-right: 20px;
+  color: #a3e635; /* Matching your BRFN Green from the screenshot */
+  margin-right: 20px; /* Space between title and first button */
   padding-left: 10px;
   display: flex;
   align-items: center;
@@ -65,35 +65,37 @@ body {
 
 .producer-form {
   display: flex;
-  flex-direction: column;
-  gap: 15px;
+  flex-direction: column; 
+  gap: 15px; 
   padding: 20px;
 }
 
 .producer-form label {
   font-weight: bold;
   margin-bottom: 5px;
-  color: #333333;
+  color: #333333; 
 }
 
-.producer-form input,
-.producer-form select,
+.producer-form input, 
+.producer-form select, 
 .producer-form textarea {
   padding: 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
   width: 100%;
-  box-sizing: border-box;
+  box-sizing: border-box; 
 }
 
+/* Optional: Style for the submit button specifically */
 .producer-form button.navitem {
   margin-top: 10px;
   justify-content: center;
-  background-color: #a3e635;
+  background-color: #a3e635; /* BRFN Green */
   color: black;
   font-weight: bold;
 }
 
+/* Container for the price input */
 .price-field-wrapper {
   position: relative;
   display: flex;
@@ -101,25 +103,28 @@ body {
   width: 100%;
 }
 
+/* The £ symbol itself */
 .currency-symbol {
   position: absolute;
   left: 12px;
-  color: #333;
+  color: #333; /* Match your label color */
   font-weight: bold;
-  pointer-events: none;
+  pointer-events: none; /* Clicking the £ still clicks the input */
   z-index: 5;
 }
 
+/* The actual input box */
 .price-field-wrapper input {
-  padding-left: 30px !important;
-  background-color: #333 !important;
-  color: #ffffff !important;
+  padding-left: 30px !important; /* Pushes the numbers away from the £ */
+  background-color: #333 !important; /* Ensures the box is white */
+  color: #ffffff !important; /* Ensures the typed numbers are dark */
   border: 1px solid #ccc;
   border-radius: 6px;
   width: 100%;
   height: 40px;
 }
 
+/* Clean up: removes the "spinners" (up/down arrows) from the number field for a cleaner look */
 .price-field-wrapper input::-webkit-outer-spin-button,
 .price-field-wrapper input::-webkit-inner-spin-button {
   -webkit-appearance: none;
