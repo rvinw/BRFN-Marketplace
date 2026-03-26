@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./CartPage.css";
 
 
@@ -39,6 +40,7 @@ const SAMPLE_ITEMS = [
 ];
 
 export default function CartPage() {
+  const navigate = useNavigate();
   const [items, setItems] = useState(SAMPLE_ITEMS);
 
   const updateQty = (id, delta) => {
@@ -123,10 +125,10 @@ export default function CartPage() {
             <span>Total</span>
             <span>£{total.toFixed(2)}</span>
           </div>
-          <button className="checkout-btn" disabled={items.length === 0}>
+          <button className="checkout-btn" disabled={items.length === 0} onClick={() => navigate("/checkout")}>
             Proceed to Checkout
           </button>
-          <button className="continue-link">← Continue shopping</button>
+          <button className="continue-link" onClick={() => navigate("/products")}>← Continue shopping</button>
           <p className="producer-note">
             Items may be fulfilled by multiple local producers. Delivery dates will be confirmed at checkout.
           </p>
