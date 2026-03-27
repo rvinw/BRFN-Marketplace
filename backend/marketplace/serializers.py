@@ -26,7 +26,7 @@ class ProductAvailabilityWindowSerializer(serializers.ModelSerializer):
         fields = ["id", "availability_type", "start_month", "end_month"]
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class AddProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
     deals = ProductDealSerializer(many=True, read_only=True)
     availability_windows = ProductAvailabilityWindowSerializer(many=True, read_only=True)
@@ -44,3 +44,6 @@ class ProductSerializer(serializers.ModelSerializer):
             "producer_name", "images", "deals", "availability_windows",
         ]
         read_only_fields = ["created_at", "updated_at"]
+
+class CommunityPostSerializer(serializers.ModelSerializer):
+    pass
