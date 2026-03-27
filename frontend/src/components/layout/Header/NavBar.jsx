@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
 
 const icons = {
   Vegetables: (
@@ -60,6 +61,7 @@ const categories = [
 
 export default function NavBar() {
   const [active, setActive] = useState(null);
+  const { user } = useAuth();
 
   return (
     <nav className="navbar">
@@ -82,20 +84,22 @@ export default function NavBar() {
         {/* Vertical Divider for separation */}
         <div style={{ width: '1px', background: '#e0e0e0', height: '24px', margin: '0 15px' }}></div>
 
-        {/* Producer Dashboard Link */}
-        <Link
-          to="/dashboard/producer"
-          className={`navitem${active === 'Producer' ? " navitem--active" : ""}`}
-          onClick={() => setActive('Producer')}
-          style={{ marginLeft: 'auto' }}
-        >
-          <span className="navitem__icon" style={{ color: '#2c5f2d' }}>
-            {icons.Producer}
-          </span>
-          <span className="navitem__text" style={{ color: '#2c5f2d', fontWeight: 'bold' }}>
-            Producer Hub
-          </span>
-        </Link>
+        {/* Producer Dashboard Link — only visible to producers and admins */}
+        {user && ['producer', 'admin'].includes(user.role) && (
+          <Link
+            to="/dashboard/producer"
+            className={`navitem${active === 'Producer' ? " navitem--active" : ""}`}
+            onClick={() => setActive('Producer')}
+            style={{ marginLeft: 'auto' }}
+          >
+            <span className="navitem__icon" style={{ color: '#2c5f2d' }}>
+              {icons.Producer}
+            </span>
+            <span className="navitem__text" style={{ color: '#2c5f2d', fontWeight: 'bold' }}>
+              Producer Hub
+            </span>
+          </Link>
+        )}
       </div>
     </nav>
   );
