@@ -38,6 +38,12 @@ in terminal run
 ### Run the webpage
 npm install react-router-dom
 ```
+
+### Setting up development server to show the webpage
+```bash
+docker-compose up
+```
+
 ```bash
 npm run dev
 ```
