@@ -8,6 +8,7 @@ import Header from "./components/layout/Header/Header";
 import Login from "./pages/Login";
 import RegisterCustomer from "./pages/RegisterCustomer";
 import RegisterProducer from "./pages/RegisterProducer";
+import IncomingOrders from "./pages/IncomingOrders";
 
 function Home() {
   return (
@@ -42,6 +43,7 @@ function App() {
         <Route path="/register/customer" element={<RegisterCustomer />} />
         <Route path="/register/producer" element={<RegisterProducer />} />
         <Route path="/producer" element={<ProducerDashboard />} />
+        <Route path="/producer/orders" element={<IncomingOrders />} />
       </Routes>
     </Router>
   );
