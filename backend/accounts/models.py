@@ -24,6 +24,11 @@ class User(AbstractUser):
         choices=Role.choices,
     )
 
+    def save(self, *args, **kwargs):
+        if not self.username:
+            self.username = self.email
+        super().save(*args, **kwargs)
+
     def __str__(self) -> str:
         return self.email
 

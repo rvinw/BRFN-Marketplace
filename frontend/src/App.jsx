@@ -17,6 +17,7 @@ import CartPage from './components/Pages/CartPage';
 import CheckoutPage from './components/Pages/CheckoutPage';
 import CustomerDashboardPage from './components/Pages/CustomerDashboardPage';
 import ProducerDashboardPage from './components/Pages/ProducerDashboardPage';
+import AdminDashboardPage from './components/Pages/AdminDashboardPage';
 import './App.css';
 
 export default function App() {
@@ -51,6 +52,13 @@ export default function App() {
         <Route path="/dashboard/producer" element={
           <ProtectedRoute allowedRoles={['producer', 'admin']}>
             <ProducerDashboardPage />
+          </ProtectedRoute>
+        } />
+
+        {/* Protected: admins only */}
+        <Route path="/dashboard/admin" element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <AdminDashboardPage />
           </ProtectedRoute>
         } />
       </Routes>
