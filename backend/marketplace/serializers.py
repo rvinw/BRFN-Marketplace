@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Allergen, Category, Product, ProductAvailabilityWindow, ProductDeal, ProductImage
+from .models import Allergen, Category, Product, ProductAvailabilityWindow, ProductDeal, ProductImage, CommunityPost, AddProduct
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -27,23 +27,31 @@ class ProductAvailabilityWindowSerializer(serializers.ModelSerializer):
 
 
 class AddProductSerializer(serializers.ModelSerializer):
-    images = ProductImageSerializer(many=True, read_only=True)
-    deals = ProductDealSerializer(many=True, read_only=True)
-    availability_windows = ProductAvailabilityWindowSerializer(many=True, read_only=True)
-    category_name = serializers.ReadOnlyField(source="category.category_name")
-    producer_name = serializers.ReadOnlyField(source="producer.business_name")
-
     class Meta:
-        model = Product
+        model = AddProduct
         fields = [
-            "id", "product_name", "product_description", "current_price",
-            "product_unit", "stock_quantity", "organic_status",
-            "is_available", "harvest_date", "best_before_date",
-            "created_at", "updated_at",
-            "category", "category_name",
-            "producer_name", "images", "deals", "availability_windows",
+            'id', 'name', 'category', 'description', 'price',
+            'unit_amount', 'availability', 'stock_quantity',
+            'allergy_info', 'harvest_date', 'product_image'
         ]
-        read_only_fields = ["created_at", "updated_at"]
+
+    def validate_price(self, value):
+        if value <= 0:
+            raise serializers.ValidationError("Price must be greater than 0.")
+        return value
+
+    def validate_stock_quantity(self, value):
+        if value < 0 or value > 1000:
+            raise serializers.ValidationError("Stock must be between 0 and 1000.")
+        return value
+
+    def validate_name(self, value):
+        if len(value.strip()) < 2:
+            raise serializers.ValidationError("Product name must be at least 2 characters.")
+        return value
 
 class CommunityPostSerializer(serializers.ModelSerializer):
-    pass
+    class Meta:
+        model = CommunityPost
+        fields = ['id', 'post_type', 'is_public', 'title', 'description', 'created_at']
+        read_only_fields = ['id', 'created_at']
