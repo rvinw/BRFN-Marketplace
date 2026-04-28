@@ -23,7 +23,9 @@ from marketplace.admin_views import (
 )
 
 router = DefaultRouter()
-router.register(r'products', AddProductViewSet)
+# router.register(r"categories", CategoryViewSet, basename="category")
+# router.register(r"products", ProductViewSet, basename="product")
+router.register(r'products', AddProductViewSet, basename='products')
 router.register(r'community-posts', CommunityPostViewSet)
 
 admin_urlpatterns = [

@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from .models import Address, CustomerProfile, ProducerProfile, User
-
+from marketplace.models import CommunityPost
 
 # ── Inlines ──────────────────────────────────────────────
 
@@ -73,3 +73,10 @@ class ProducerProfileAdmin(admin.ModelAdmin):
     @admin.action(description="Mark selected producers as verified")
     def verify_producers(self, request, queryset):
         queryset.update(is_verified=True)
+        
+class CommunityPostAdmin(admin.ModelAdmin):
+    list_display = ['title', 'post_type', 'is_public', 'created_at']
+    list_filter = ['post_type', 'is_public']
+    search_fields = ['title', 'description']
+
+admin.site.register(CommunityPost, CommunityPostAdmin)
