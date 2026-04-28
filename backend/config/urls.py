@@ -9,7 +9,7 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 # router.register(r"categories", CategoryViewSet, basename="category")
 # router.register(r"products", ProductViewSet, basename="product")
-router.register(r'products', AddProductViewSet)
+router.register(r'products', AddProductViewSet, basename='products')
 router.register(r'community-posts', CommunityPostViewSet)
 urlpatterns = [
     path("admin/", admin.site.urls),
