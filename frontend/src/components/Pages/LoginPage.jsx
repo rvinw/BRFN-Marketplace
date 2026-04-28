@@ -35,8 +35,8 @@ export default function LoginPage() {
       const role = data.user.role_name.toLowerCase();
       login({ name: data.user.full_name, email: data.user.email, role });
 
-      if (role === 'producer') navigate('/dashboard/producer');
-      else if (role === 'admin') navigate('/dashboard/producer');
+      if (role === 'admin') navigate('/dashboard/admin');
+      else if (role === 'producer') navigate('/dashboard/producer');
       else navigate('/dashboard/customer');
 
     } catch (err) {

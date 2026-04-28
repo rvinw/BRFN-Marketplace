@@ -48,6 +48,11 @@ const icons = {
       <path d="M9 22V12h6v10" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   ),
+  Admin: (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
 };
 
 const categories = [
@@ -97,6 +102,22 @@ export default function NavBar() {
             </span>
             <span className="navitem__text" style={{ color: '#2c5f2d', fontWeight: 'bold' }}>
               Producer Hub
+            </span>
+          </Link>
+        )}
+
+        {/* Admin Dashboard Link — only visible to admins */}
+        {user && user.role === 'admin' && (
+          <Link
+            to="/dashboard/admin"
+            className={`navitem${active === 'Admin' ? " navitem--active" : ""}`}
+            onClick={() => setActive('Admin')}
+          >
+            <span className="navitem__icon" style={{ color: '#854d0e' }}>
+              {icons.Admin}
+            </span>
+            <span className="navitem__text" style={{ color: '#854d0e', fontWeight: 'bold' }}>
+              Admin
             </span>
           </Link>
         )}
