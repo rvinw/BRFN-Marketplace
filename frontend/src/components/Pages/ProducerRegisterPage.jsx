@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { apiFetch } from '../../utils/api';
+import './AuthForms.css';
 
 export default function ProducerRegisterPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     full_name: '',
@@ -24,7 +27,7 @@ export default function ProducerRegisterPage() {
 
   const set = (field) => (e) => setForm({ ...form, [field]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
@@ -33,104 +36,93 @@ export default function ProducerRegisterPage() {
       return;
     }
 
-    // TODO: Replace with real API call
-    // const res = await fetch('/api/register/producer', { method: 'POST', body: JSON.stringify(form) })
-    // const data = await res.json()
-    // login({ name: data.full_name, email: data.email, role: 'producer' })
-    login({ name: form.full_name, email: form.email, role: 'producer' });
-    navigate('/dashboard/producer');
+    setLoading(true);
+    try {
+      const res = await apiFetch('/auth/register/producer/', {
+        method: 'POST',
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Registration failed. Please try again.');
+        return;
+      }
+
+      localStorage.setItem('brfn_token', data.token);
+      login({ name: data.user.full_name, email: data.user.email, role: data.user.role_name.toLowerCase() });
+      navigate('/dashboard/producer');
+    } catch {
+      setError('Could not connect to server. Is the backend running?');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const inputStyle = { padding: 10, borderRadius: 6, border: '1px solid #ccc', width: '100%' };
-  const labelStyle = { display: 'flex', flexDirection: 'column', gap: 4, fontSize: 14, color: '#444' };
-
   return (
-    <div style={{ maxWidth: 480, margin: '60px auto', padding: '0 16px' }}>
-      <h2>Register as a Producer</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+    <div className="auth-page">
+      <div className="auth-card">
+        <h2 className="auth-title">Register as a Producer</h2>
+        {error && <p className="auth-error">{error}</p>}
 
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <form onSubmit={handleSubmit} className="auth-form">
 
-        <h4 style={{ margin: 0, color: '#2c5f2d' }}>Account Details</h4>
+          <h4 className="auth-section-title">Account Details</h4>
 
-        <label style={labelStyle}>
-          Full Name *
-          <input style={inputStyle} type="text" value={form.full_name} onChange={set('full_name')} required />
-        </label>
+          <label className="auth-label">Full Name *
+            <input className="auth-input" type="text" value={form.full_name} onChange={set('full_name')} required />
+          </label>
+          <label className="auth-label">Email *
+            <input className="auth-input" type="email" value={form.email} onChange={set('email')} required />
+          </label>
+          <label className="auth-label">Password *
+            <input className="auth-input" type="password" value={form.password} onChange={set('password')} minLength={8} required />
+          </label>
+          <label className="auth-label">Confirm Password *
+            <input className="auth-input" type="password" value={form.confirmPassword} onChange={set('confirmPassword')} required />
+          </label>
+          <label className="auth-label">Phone
+            <input className="auth-input" type="tel" value={form.phone} onChange={set('phone')} />
+          </label>
 
-        <label style={labelStyle}>
-          Email *
-          <input style={inputStyle} type="email" value={form.email} onChange={set('email')} required />
-        </label>
+          <h4 className="auth-section-title">Business Details</h4>
 
-        <label style={labelStyle}>
-          Password *
-          <input style={inputStyle} type="password" value={form.password} onChange={set('password')} required />
-        </label>
+          <label className="auth-label">Business Name *
+            <input className="auth-input" type="text" value={form.business_name} onChange={set('business_name')} required />
+          </label>
+          <label className="auth-label">Contact Name
+            <input className="auth-input" type="text" value={form.contact_name} onChange={set('contact_name')} />
+          </label>
+          <label className="auth-label">Lead Time (hours)
+            <input className="auth-input" type="number" min="0" value={form.lead_time_hours} onChange={set('lead_time_hours')} />
+          </label>
 
-        <label style={labelStyle}>
-          Confirm Password *
-          <input style={inputStyle} type="password" value={form.confirmPassword} onChange={set('confirmPassword')} required />
-        </label>
+          <h4 className="auth-section-title">Business Address</h4>
 
-        <label style={labelStyle}>
-          Phone
-          <input style={inputStyle} type="tel" value={form.phone} onChange={set('phone')} />
-        </label>
+          <label className="auth-label">Address Line 1 *
+            <input className="auth-input" type="text" value={form.address_line_1} onChange={set('address_line_1')} required />
+          </label>
+          <label className="auth-label">Address Line 2
+            <input className="auth-input" type="text" value={form.address_line_2} onChange={set('address_line_2')} />
+          </label>
+          <div className="auth-row">
+            <label className="auth-label">City *
+              <input className="auth-input" type="text" value={form.city} onChange={set('city')} required />
+            </label>
+            <label className="auth-label">Postcode *
+              <input className="auth-input" type="text" value={form.postcode} onChange={set('postcode')} required />
+            </label>
+          </div>
 
-        <h4 style={{ margin: 0, color: '#2c5f2d' }}>Business Details</h4>
+          <button type="submit" className="auth-btn" disabled={loading}>
+            {loading ? 'Creating Account...' : 'Register as Producer'}
+          </button>
+        </form>
 
-        <label style={labelStyle}>
-          Business Name *
-          <input style={inputStyle} type="text" value={form.business_name} onChange={set('business_name')} required />
-        </label>
-
-        <label style={labelStyle}>
-          Contact Name
-          <input style={inputStyle} type="text" value={form.contact_name} onChange={set('contact_name')} />
-        </label>
-
-        <label style={labelStyle}>
-          Lead Time (hours) *
-          <input style={inputStyle} type="number" min="0" value={form.lead_time_hours} onChange={set('lead_time_hours')} required />
-        </label>
-
-        <h4 style={{ margin: 0, color: '#2c5f2d' }}>Business Address</h4>
-
-        <label style={labelStyle}>
-          Address Line 1 *
-          <input style={inputStyle} type="text" value={form.address_line_1} onChange={set('address_line_1')} required />
-        </label>
-
-        <label style={labelStyle}>
-          Address Line 2
-          <input style={inputStyle} type="text" value={form.address_line_2} onChange={set('address_line_2')} />
-        </label>
-
-        <label style={labelStyle}>
-          City *
-          <input style={inputStyle} type="text" value={form.city} onChange={set('city')} required />
-        </label>
-
-        <label style={labelStyle}>
-          Postcode *
-          <input style={inputStyle} type="text" value={form.postcode} onChange={set('postcode')} required />
-        </label>
-
-        <button type="submit" style={{
-          padding: 12, background: '#2c5f2d', color: '#fff',
-          border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 'bold'
-        }}>
-          Register as Producer
-        </button>
-      </form>
-
-      <p style={{ marginTop: 16 }}>
-        Already have an account? <Link to="/login">Login</Link>
-      </p>
-      <p>
-        Registering as a customer? <Link to="/register/customer">Customer sign up</Link>
-      </p>
+        <p className="auth-footer">Already have an account? <Link to="/login">Login</Link></p>
+        <p className="auth-footer">Registering as a customer? <Link to="/register/customer">Customer sign up</Link></p>
+      </div>
     </div>
   );
 }
