@@ -71,6 +71,13 @@ export default function NavBar() {
   return (
     <nav className="navbar">
       <div className="navbar__inner">
+        {/* All Products link */}
+        <Link to="/products" className="navitem" onClick={() => setActive(null)}>
+          <span className="navitem__text" style={{ fontWeight: 'bold' }}>Shop All</span>
+        </Link>
+
+        <div style={{ width: '1px', background: '#e0e0e0', height: '24px', margin: '0 8px' }}></div>
+
         {/* Render Category Links */}
         {categories.map((c) => (
           <Link

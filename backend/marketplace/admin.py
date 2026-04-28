@@ -2,7 +2,12 @@ from django.contrib import admin
 
 from .models import (
     Allergen,
+    Cart,
+    CartItem,
     Category,
+    Order,
+    OrderItem,
+    OrderProducer,
     Product,
     ProductAllergen,
     ProductAvailabilityWindow,
@@ -102,3 +107,42 @@ class ProductDealAdmin(admin.ModelAdmin):
     list_filter = ["is_active"]
     search_fields = ["product__product_name"]
     list_editable = ["is_active"]
+
+
+# ── Orders ────────────────────────────────────────────────
+
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 0
+    readonly_fields = ["product", "quantity", "unit_price_gbp", "total_cost"]
+
+
+class OrderProducerInline(admin.TabularInline):
+    model = OrderProducer
+    extra = 0
+    readonly_fields = ["producer", "status"]
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ["id", "customer", "order_status", "total_amount", "placed_at"]
+    list_filter = ["order_status"]
+    search_fields = ["customer__user__email"]
+    readonly_fields = ["customer", "delivery_address", "placed_at", "total_amount"]
+    list_editable = ["order_status"]
+    ordering = ["-placed_at"]
+    inlines = [OrderProducerInline]
+
+
+# ── Cart ──────────────────────────────────────────────────
+
+class CartItemInline(admin.TabularInline):
+    model = CartItem
+    extra = 0
+
+@admin.register(Cart)
+class CartAdmin(admin.ModelAdmin):
+    list_display = ["id", "customer", "created_at"]
+    inlines = [CartItemInline]
+
+
