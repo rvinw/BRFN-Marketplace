@@ -87,3 +87,52 @@ def register_customer(request):
     )
 
     return _token_response(user, status=201)
+
+
+@api_view(['POST'])
+@authentication_classes([])
+@permission_classes([AllowAny])
+def register_producer(request):
+    email         = request.data.get('email', '').strip().lower()
+    password      = request.data.get('password', '')
+    full_name     = request.data.get('full_name', '').strip()
+    business_name = request.data.get('business_name', '').strip()
+    address_line_1 = request.data.get('address_line_1', '').strip()
+    city          = request.data.get('city', '').strip()
+    postcode      = request.data.get('postcode', '').strip()
+
+    if not all([email, password, full_name, business_name, address_line_1, city, postcode]):
+        return Response({'error': 'Please fill in all required fields.'}, status=400)
+
+    if len(password) < 8:
+        return Response({'error': 'Password must be at least 8 characters.'}, status=400)
+
+    if User.objects.filter(email=email).exists():
+        return Response({'error': 'An account with this email already exists.'}, status=400)
+
+    address = Address.objects.create(
+        line_1=address_line_1,
+        line_2=request.data.get('address_line_2') or None,
+        city=city,
+        postcode=postcode,
+    )
+
+    user = User.objects.create_user(
+        username=email,
+        email=email,
+        password=password,
+        full_name=full_name,
+        phone=request.data.get('phone') or None,
+        role_name='PRODUCER',
+    )
+
+    from accounts.models import ProducerProfile
+    ProducerProfile.objects.create(
+        user=user,
+        business_name=business_name,
+        contact_name=request.data.get('contact_name') or None,
+        lead_time_hours=request.data.get('lead_time_hours') or 48,
+        address=address,
+    )
+
+    return _token_response(user, status=201)
