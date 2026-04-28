@@ -4,7 +4,25 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from accounts.admin_views import IsAdminRole
-from .models import AddProduct, Category, CommunityPost, Order
+from .models import Category, CommunityPost, Order, Product
+from accounts.models import ProducerProfile
+
+
+def _product_data(p):
+    return {
+        'id': p.id,
+        'name': p.product_name,
+        'category': p.category.category_name if p.category else '',
+        'category_id': p.category_id,
+        'price': str(p.current_price),
+        'unit_amount': p.product_unit,
+        'availability': p.is_available,
+        'stock_quantity': str(p.stock_quantity),
+        'organic_status': p.organic_status,
+        'producer_id': p.producer_id,
+        'producer_name': p.producer.business_name if p.producer else '',
+        'harvest_date': p.harvest_date.isoformat() if p.harvest_date else None,
+    }
 
 
 class AdminProductListView(APIView):
@@ -12,19 +30,25 @@ class AdminProductListView(APIView):
     permission_classes = [IsAdminRole]
 
     def get(self, request):
-        products = AddProduct.objects.all().order_by('-id')
-        data = [{
-            'id': p.id,
-            'name': p.name,
-            'category': p.category,
-            'price': str(p.price),
-            'unit_amount': p.unit_amount,
-            'availability': p.availability,
-            'stock_quantity': p.stock_quantity,
-            'allergy_info': p.allergy_info,
-            'harvest_date': p.harvest_date.isoformat() if p.harvest_date else None,
-        } for p in products]
-        return Response(data)
+        products = Product.objects.select_related('category', 'producer').order_by('-created_at')
+        return Response([_product_data(p) for p in products])
+
+    def post(self, request):
+        try:
+            product = Product.objects.create(
+                product_name=request.data.get('name', '').strip(),
+                product_description=request.data.get('description', '').strip(),
+                current_price=request.data.get('price'),
+                product_unit=request.data.get('unit_amount', 'EACH'),
+                stock_quantity=request.data.get('stock_quantity', 0),
+                organic_status=request.data.get('organic_status', 'NON_ORGANIC'),
+                is_available=request.data.get('availability', True),
+                category_id=request.data.get('category_id'),
+                producer_id=request.data.get('producer_id'),
+            )
+            return Response(_product_data(product), status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AdminProductDetailView(APIView):
@@ -33,8 +57,8 @@ class AdminProductDetailView(APIView):
 
     def get_object(self, pk):
         try:
-            return AddProduct.objects.get(pk=pk)
-        except AddProduct.DoesNotExist:
+            return Product.objects.select_related('category', 'producer').get(pk=pk)
+        except Product.DoesNotExist:
             return None
 
     def patch(self, request, pk):
@@ -42,16 +66,21 @@ class AdminProductDetailView(APIView):
         if not product:
             return Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
 
-        for field in ['name', 'category', 'price', 'unit_amount', 'availability', 'stock_quantity', 'allergy_info']:
-            if field in request.data:
-                setattr(product, field, request.data[field])
+        field_map = {
+            'name': 'product_name',
+            'description': 'product_description',
+            'price': 'current_price',
+            'unit_amount': 'product_unit',
+            'availability': 'is_available',
+            'stock_quantity': 'stock_quantity',
+            'organic_status': 'organic_status',
+            'category_id': 'category_id',
+        }
+        for frontend_field, model_field in field_map.items():
+            if frontend_field in request.data:
+                setattr(product, model_field, request.data[frontend_field])
         product.save()
-        return Response({
-            'id': product.id,
-            'name': product.name,
-            'availability': product.availability,
-            'stock_quantity': product.stock_quantity,
-        })
+        return Response(_product_data(product))
 
     def delete(self, request, pk):
         product = self.get_object(pk)

@@ -1,57 +1,61 @@
 from rest_framework import serializers
-from .models import Allergen, Category, Product, ProductAvailabilityWindow, ProductDeal, ProductImage, CommunityPost, AddProduct
+from .models import Category, Product, CommunityPost, AddProduct
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    product_count = serializers.IntegerField(source='products.count', read_only=True)
+
     class Meta:
         model = Category
-        fields = ["id", "category_name", "category_description"]
+        fields = ['id', 'category_name', 'category_description', 'product_count']
 
 
-class ProductImageSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
+    # Alias field names so the frontend doesn't need to change
+    name         = serializers.CharField(source='product_name')
+    description  = serializers.CharField(source='product_description')
+    price        = serializers.DecimalField(source='current_price', max_digits=10, decimal_places=2)
+    unit_amount  = serializers.CharField(source='product_unit')
+    availability = serializers.BooleanField(source='is_available')
+    category     = serializers.CharField(source='category.category_name', read_only=True)
+    category_id  = serializers.PrimaryKeyRelatedField(
+        source='category', queryset=Category.objects.all(), write_only=True
+    )
+    producer_name = serializers.CharField(source='producer.business_name', read_only=True)
+    producer_id   = serializers.PrimaryKeyRelatedField(
+        source='producer', read_only=True
+    )
+    image = serializers.SerializerMethodField()
+
+    def get_image(self, obj):
+        first = obj.images.first()
+        return first.image_url if first else None
+
     class Meta:
-        model = ProductImage
-        fields = ["id", "image_url", "image_sort_order"]
-
-
-class ProductDealSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductDeal
-        fields = ["id", "discount_percentage", "expires_at", "note", "is_active"]
-
-
-class ProductAvailabilityWindowSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductAvailabilityWindow
-        fields = ["id", "availability_type", "start_month", "end_month"]
-
-
-class AddProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AddProduct
+        model = Product
         fields = [
-            'id', 'name', 'category', 'description', 'price',
-            'unit_amount', 'availability', 'stock_quantity',
-            'allergy_info', 'harvest_date', 'product_image'
+            'id', 'name', 'description', 'price', 'unit_amount',
+            'availability', 'category', 'category_id',
+            'stock_quantity', 'organic_status',
+            'image', 'producer_name', 'producer_id',
+            'harvest_date', 'created_at',
         ]
+        read_only_fields = ['created_at']
 
-    def validate_price(self, value):
-        if value <= 0:
-            raise serializers.ValidationError("Price must be greater than 0.")
-        return value
-
-    def validate_stock_quantity(self, value):
-        if value < 0 or value > 1000:
-            raise serializers.ValidationError("Stock must be between 0 and 1000.")
-        return value
-
-    def validate_name(self, value):
-        if len(value.strip()) < 2:
-            raise serializers.ValidationError("Product name must be at least 2 characters.")
-        return value
 
 class CommunityPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommunityPost
         fields = ['id', 'post_type', 'is_public', 'title', 'description', 'created_at']
         read_only_fields = ['id', 'created_at']
+
+
+# Kept for any existing references — no longer used by web-facing endpoints
+class AddProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AddProduct
+        fields = [
+            'id', 'name', 'category', 'description', 'price',
+            'unit_amount', 'availability', 'stock_quantity',
+            'allergy_info', 'harvest_date', 'product_image',
+        ]

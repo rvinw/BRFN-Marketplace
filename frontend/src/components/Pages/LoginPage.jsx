@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { apiFetch } from '../../utils/api';
+import './AuthForms.css';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -15,9 +17,8 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:8000/api/auth/login/', {
+      const res = await apiFetch('/auth/login/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: form.email, password: form.password }),
       });
 
@@ -28,10 +29,7 @@ export default function LoginPage() {
         return;
       }
 
-      // Save token for future API calls
       localStorage.setItem('brfn_token', data.token);
-
-      // role_name from DB is "CUSTOMER", "PRODUCER", "ADMIN" — lowercase it
       const role = data.user.role_name.toLowerCase();
       login({ name: data.user.full_name, email: data.user.email, role });
 
@@ -39,7 +37,7 @@ export default function LoginPage() {
       else if (role === 'producer') navigate('/dashboard/producer');
       else navigate('/dashboard/customer');
 
-    } catch (err) {
+    } catch {
       setError('Could not connect to server. Is the backend running?');
     } finally {
       setLoading(false);
@@ -47,40 +45,41 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: '80px auto', padding: '0 16px' }}>
-      <h2>Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <input
-          type="email" placeholder="Email"
-          value={form.email}
-          onChange={e => setForm({ ...form, email: e.target.value })}
-          style={{ padding: 10, borderRadius: 6, border: '1px solid #ccc' }}
-          required
-        />
-        <input
-          type="password" placeholder="Password"
-          value={form.password}
-          onChange={e => setForm({ ...form, password: e.target.value })}
-          style={{ padding: 10, borderRadius: 6, border: '1px solid #ccc' }}
-          required
-        />
-        <button
-          type="submit"
-          disabled={loading}
-          style={{ padding: 10, background: '#2c5f2d', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer' }}
-        >
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
+    <div className="auth-page">
+      <div className="auth-card">
+        <h2 className="auth-title">Login</h2>
+        {error && <p className="auth-error">{error}</p>}
 
-      <p style={{ marginTop: 16 }}>
-        New customer? <Link to="/register/customer">Register here</Link>
-      </p>
-      <p>
-        Registering as a producer? <Link to="/register/producer">Producer sign up here</Link>
-      </p>
+        <form onSubmit={handleSubmit} className="auth-form">
+          <label className="auth-label">
+            Email *
+            <input
+              className="auth-input"
+              type="email"
+              value={form.email}
+              onChange={e => setForm({ ...form, email: e.target.value })}
+              placeholder="jane@example.com"
+              required
+            />
+          </label>
+          <label className="auth-label">
+            Password *
+            <input
+              className="auth-input"
+              type="password"
+              value={form.password}
+              onChange={e => setForm({ ...form, password: e.target.value })}
+              required
+            />
+          </label>
+          <button type="submit" className="auth-btn" disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+        </form>
+
+        <p className="auth-footer">New customer? <Link to="/register/customer">Register here</Link></p>
+        <p className="auth-footer">Registering as a producer? <Link to="/register/producer">Producer sign up here</Link></p>
+      </div>
     </div>
   );
 }
-

@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.urls import include, path
-from marketplace.views import health
-from accounts.views import login_view
-from marketplace.views import AddProductViewSet, CommunityPostViewSet
 from rest_framework.routers import DefaultRouter
+
+from marketplace.views import health, ProductViewSet, CommunityPostViewSet
+from marketplace.customer_views import place_order
+from accounts.views import login_view, register_customer
 
 from accounts.admin_views import (
     AdminUserListView,
@@ -23,9 +24,7 @@ from marketplace.admin_views import (
 )
 
 router = DefaultRouter()
-# router.register(r"categories", CategoryViewSet, basename="category")
-# router.register(r"products", ProductViewSet, basename="product")
-router.register(r'products', AddProductViewSet, basename='products')
+router.register(r'products', ProductViewSet, basename='products')
 router.register(r'community-posts', CommunityPostViewSet)
 
 admin_urlpatterns = [
@@ -44,9 +43,11 @@ admin_urlpatterns = [
 ]
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("api/health/", health),
-    path("api/auth/login/", login_view),
-    path("api/admin/", include(admin_urlpatterns)),
-    path("api/", include(router.urls)),
+    path('admin/', admin.site.urls),
+    path('api/health/', health),
+    path('api/auth/login/', login_view),
+    path('api/auth/register/customer/', register_customer),
+    path('api/admin/', include(admin_urlpatterns)),
+    path('api/orders/', place_order),
+    path('api/', include(router.urls)),
 ]

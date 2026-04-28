@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
+import { useCart } from "../../../context/CartContext";
 import SearchBar from "./SearchBar";
 
 const PinIcon = () => (
@@ -35,9 +36,11 @@ export default function TopBar() {
   const [postcodeOpen, setPostcodeOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, logout } = useAuth();
+  const { clearCart } = useCart();
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    clearCart();
     logout();
     setMenuOpen(false);
     navigate('/');

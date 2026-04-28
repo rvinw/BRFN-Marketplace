@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 import ProtectedRoute from './components/routing/ProtectedRoute';
 
 import Header from './components/layout/Header/Header';
@@ -23,6 +24,7 @@ import './App.css';
 export default function App() {
   return (
     <AuthProvider>
+    <CartProvider>
       <Header />
       <Routes>
         {/* Public routes — anyone can access */}
@@ -63,6 +65,7 @@ export default function App() {
         } />
       </Routes>
       <Footer />
+    </CartProvider>
     </AuthProvider>
   );
 }
