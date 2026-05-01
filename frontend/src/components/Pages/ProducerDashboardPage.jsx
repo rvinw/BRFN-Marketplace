@@ -8,6 +8,9 @@ export default function ProducerDashboardPage() {
   const [orders, setOrders] = useState([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [ordersError, setOrdersError] = useState("");
+  const [payout, setPayout] = useState(null);
+  const [payoutLoading, setPayoutLoading] = useState(false);
+  const [payoutError, setPayoutError] = useState("");
 
   const menuItems = [
     { id: "home", label: "My Products" },
@@ -66,6 +69,43 @@ export default function ProducerDashboardPage() {
       setOrdersLoading(false);
     }
   };
+
+
+  const fetchWeeklyPayout = async () => {
+  setPayoutLoading(true);
+  setPayoutError("");
+
+  try {
+    const token =
+      localStorage.getItem("brfn_token") ||
+      localStorage.getItem("access") ||
+      localStorage.getItem("token");
+
+    const response = await fetch(
+      "http://localhost:8000/api/producer/weekly-payout/",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      setPayoutError(data.error || "Failed to load payout.");
+      return;
+    }
+
+    setPayout(data);
+
+  } catch (error) {
+    console.error(error);
+    setPayoutError("Could not connect to backend.");
+  } finally {
+    setPayoutLoading(false);
+  }
+};
 
   const updateItemStatus = async (itemId, status) => {
     try {
@@ -136,6 +176,11 @@ export default function ProducerDashboardPage() {
     if (view === "orders") {
       fetchIncomingOrders();
     }
+
+    if (view === "payout") {
+      fetchWeeklyPayout();
+    }
+
   }, [view]);
 
   return (
@@ -333,9 +378,84 @@ export default function ProducerDashboardPage() {
         )}
 
         {view === "payout" && (
-          <div className="producer-card">
-            <h1 className="page-title">Weekly Payout</h1>
-            <p>Track your earnings and upcoming transfers.</p>
+          <div className="payout-page">
+            <h1 className="payout-title">Weekly Payout</h1>
+
+            {payoutLoading && <p className="incoming-orders-message">Loading payout...</p>}
+
+            {payoutError && <p className="incoming-orders-error">{payoutError}</p>}
+
+            {!payoutLoading && !payoutError && payout && (
+              <div className="payout-card">
+                <p><strong>Week:</strong> {payout.week_start} to {payout.week_end}</p>
+
+                <div className="payout-summary">
+                  <div>
+                    <span>Gross Earnings</span>
+                    <strong>£{payout.gross_amount}</strong>
+                  </div>
+
+                  <div>
+                    <span>BRFN Commission 5%</span>
+                    <strong>£{payout.commission_amount}</strong>
+                  </div>
+
+                  <div>
+                    <span>Net Payout</span>
+                    <strong>£{payout.net_amount}</strong>
+                  </div>
+                </div>
+
+                <p>
+                  <strong>Status:</strong> {payout.request_status}
+                </p>
+
+                {payout.request_status === "NOT_REQUESTED" ? (
+                  <button
+                    className="request-payout-btn"
+                    onClick={async () => {
+                      const response = await fetch(
+                        "http://localhost:8000/api/producer/weekly-payout/",
+                        {
+                          method: "POST",
+                          headers: {
+                            Authorization: `Bearer ${getToken()}`,
+                            "Content-Type": "application/json",
+                          },
+                        }
+                      );
+
+                      const data = await response.json();
+
+                      if (!response.ok) {
+                        alert(data.error || "Failed to request payout.");
+                        return;
+                      }
+
+                      fetchWeeklyPayout();
+                    }}
+                  >
+                    Request Payout
+                  </button>
+                ) : (
+                  <p className="payout-requested">Payout requested. Awaiting BRFN approval.</p>
+                )}
+
+                <h2>Delivered Items Included</h2>
+
+                {payout.items.length === 0 ? (
+                  <p>No delivered items for this week yet.</p>
+                ) : (
+                  payout.items.map((item) => (
+                    <div key={item.id} className="payout-item">
+                      <span>{item.product_name}</span>
+                      <span>Qty: {item.quantity}</span>
+                      <strong>£{item.total_cost}</strong>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
           </div>
         )}
 
