@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { apiFetch } from "../../utils/api";
-import "./ProductsPage.css";
 
 const CATEGORY_LABELS = [
   "Vegetables",
