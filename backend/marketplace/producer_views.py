@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from marketplace.models import Category, Product
+from marketplace.models import Category, Product, OrderItem
 
 
 UNIT_MAP = {
@@ -85,3 +85,110 @@ def producer_add_product(request):
         'category': product.category.category_name,
         'price': str(product.current_price),
     }, status=201)
+
+
+@api_view(["PATCH"])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def cancel_order_item(request, item_id):
+
+    if request.user.role_name != "PRODUCER":
+        return Response(
+            {"error": "Only producers can cancel items."},
+            status=403
+        )
+
+    try:
+        item = OrderItem.objects.select_related(
+            "order_producer__producer__user"
+        ).get(id=item_id)
+
+    except OrderItem.DoesNotExist:
+        return Response(
+            {"error": "Order item not found."},
+            status=404
+        )
+
+    producer_user = item.order_producer.producer.user
+
+    if producer_user != request.user:
+        return Response(
+            {"error": "You do not own this order item."},
+            status=403
+        )
+
+    item.status = "CANCELLED"
+    item.save()
+
+    return Response({
+        "message": "Order item cancelled successfully.",
+        "item_id": item.id,
+        "status": item.status,
+    })
+
+@api_view(["PATCH"])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def update_order_item_status(request, item_id):
+    if request.user.role_name != "PRODUCER":
+        return Response({"error": "Only producers can update items."}, status=403)
+
+    new_status = request.data.get("status")
+
+    allowed_statuses = ["CONFIRMED", "READY", "DELIVERED", "CANCELLED"]
+
+    if new_status not in allowed_statuses:
+        return Response({"error": "Invalid status."}, status=400)
+
+    try:
+        item = OrderItem.objects.select_related(
+            "order_producer__producer__user"
+        ).get(id=item_id)
+    except OrderItem.DoesNotExist:
+        return Response({"error": "Order item not found."}, status=404)
+
+    if item.order_producer.producer.user != request.user:
+        return Response({"error": "You do not own this item."}, status=403)
+
+    if item.status in ["DELIVERED", "CANCELLED"]:
+        return Response(
+            {"error": "Delivered or cancelled items cannot be changed."},
+            status=400,
+        )
+
+    valid_transitions = {
+        "PENDING": ["CONFIRMED", "CANCELLED"],
+        "CONFIRMED": ["READY", "CANCELLED"],
+        "READY": ["DELIVERED"],
+    }
+
+    if new_status not in valid_transitions.get(item.status, []):
+        return Response(
+            {"error": f"Cannot change from {item.status} to {new_status}."},
+            status=400,
+        )
+
+    item.status = new_status
+    item.save()
+
+    order_producer = item.order_producer
+    statuses = list(order_producer.items.values_list("status", flat=True))
+
+    if all(status == "DELIVERED" for status in statuses):
+        order_producer.status = "DELIVERED"
+    elif all(status == "CANCELLED" for status in statuses):
+        order_producer.status = "CANCELLED"
+    elif any(status == "READY" for status in statuses):
+        order_producer.status = "READY"
+    elif any(status in ["CONFIRMED", "DELIVERED"] for status in statuses):
+        order_producer.status = "CONFIRMED"
+    else:
+        order_producer.status = "PENDING"
+
+    order_producer.save()
+
+    return Response({
+        "message": "Item status updated successfully.",
+        "item_id": item.id,
+        "status": item.status,
+    })

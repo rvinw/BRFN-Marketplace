@@ -4,6 +4,8 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
+
+
 # ----------------------------------|
 # CATALOGUE-------------------------|
 # ----------------------------------|
@@ -259,6 +261,13 @@ class OrderProducer(models.Model):
 
 
 class OrderItem(models.Model):
+    class ItemStatus(models.TextChoices):
+        PENDING = "PENDING", "Pending"
+        CONFIRMED = "CONFIRMED", "Confirmed"
+        READY = "READY", "Ready"
+        DELIVERED = "DELIVERED", "Delivered"
+        CANCELLED = "CANCELLED", "Cancelled"
+
     order_producer = models.ForeignKey(
         OrderProducer, on_delete=models.CASCADE, related_name="items"
     )
@@ -271,6 +280,12 @@ class OrderItem(models.Model):
     )
     unit_price_gbp = models.DecimalField(max_digits=10, decimal_places=2)
     total_cost = models.DecimalField(max_digits=12, decimal_places=2)
+
+    status = models.CharField(
+        max_length=20,
+        choices=ItemStatus.choices,
+        default=ItemStatus.PENDING,
+    )
 
     def __str__(self):
         return f"{self.product.product_name} x {self.quantity}"
