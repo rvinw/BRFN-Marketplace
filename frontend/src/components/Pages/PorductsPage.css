@@ -1,0 +1,287 @@
+/* ── Products Page ── */
+.products-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+    font-family: "DM Sans", sans-serif;
+}
+
+/* Header row */
+.products-page__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.products-page__title {
+    font-family: "Playfair Display", serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-primary, #2a2420);
+    margin: 0 0 0.25rem;
+}
+
+.products-page__subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted, #9a8f84);
+    margin: 0;
+}
+
+/* Search */
+.products-page__search-wrap {
+    flex: 0 0 auto;
+    width: 260px;
+}
+
+.products-page__search {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border, #ddd7cc);
+    border-radius: var(--radius-md, 12px);
+    background: var(--white, #fff);
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    color: var(--text-primary, #2a2420);
+    outline: none;
+    box-shadow: var(--shadow-sm, 0 1px 3px rgba(42, 36, 32, 0.08));
+    transition:
+        border-color 0.18s,
+        box-shadow 0.18s;
+}
+
+.products-page__search:focus {
+    border-color: var(--border-focus, #b8a98e);
+    box-shadow: 0 0 0 3px rgba(184, 169, 142, 0.2);
+}
+
+.products-page__search::placeholder {
+    color: var(--text-muted, #9a8f84);
+}
+
+/* Filter pills */
+.products-page__filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.filter-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 16px;
+    border-radius: var(--radius-pill, 999px);
+    border: 1px solid var(--border, #ddd7cc);
+    background: var(--white, #fff);
+    font-family: "DM Sans", sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-primary, #2a2420);
+    cursor: pointer;
+    transition:
+        background 0.18s,
+        border-color 0.18s,
+        color 0.18s;
+}
+
+.filter-pill:hover {
+    background: var(--cream-hover, #f4efe6);
+    border-color: var(--border-focus, #b8a98e);
+}
+
+.filter-pill--active {
+    background: var(--accent, #c0622a);
+    border-color: var(--accent, #c0622a);
+    color: #fff;
+}
+
+.filter-pill--active:hover {
+    background: var(--accent-hover, #a8521f);
+    border-color: var(--accent-hover, #a8521f);
+}
+
+/* State messages */
+.products-page__state {
+    padding: 3rem 0;
+    color: var(--text-muted, #9a8f84);
+    font-size: 1rem;
+}
+
+.products-page__state--error {
+    color: #dc2626;
+}
+
+.products-page__empty {
+    padding: 4rem 0;
+    text-align: center;
+    color: var(--text-muted, #9a8f84);
+}
+
+/* Grid */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Product card */
+.product-card {
+    background: var(--white, #fff);
+    border: 1px solid var(--border, #ddd7cc);
+    border-radius: var(--radius-md, 12px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-sm, 0 1px 3px rgba(42, 36, 32, 0.08));
+    transition:
+        box-shadow 0.18s,
+        transform 0.18s;
+}
+
+.product-card:hover {
+    box-shadow: var(--shadow-md, 0 4px 16px rgba(42, 36, 32, 0.1));
+    transform: translateY(-2px);
+}
+
+/* Image area */
+.product-card__image-wrap {
+    position: relative;
+    display: block;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.product-card__image {
+    width: 100%;
+    height: 185px;
+    object-fit: cover;
+    display: block;
+}
+
+.product-card__image--placeholder {
+    height: 185px;
+    background: var(--cream-deep, #ede7db);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted, #9a8f84);
+    font-size: 0.85rem;
+}
+
+.product-card__badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #16a34a;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: var(--radius-pill, 999px);
+    letter-spacing: 0.3px;
+}
+
+/* Body */
+.product-card__body {
+    padding: 1rem 1.1rem 1.1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.product-card__category {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--accent, #c0622a);
+}
+
+.product-card__name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary, #2a2420);
+    margin: 0;
+    line-height: 1.3;
+}
+
+.product-card__desc {
+    font-size: 0.82rem;
+    color: var(--text-muted, #9a8f84);
+    margin: 0;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.product-card__producer {
+    font-size: 0.78rem;
+    color: var(--text-muted, #9a8f84);
+    margin: 0;
+    font-style: italic;
+}
+
+.product-card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+}
+
+.product-card__price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.product-card__price {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary, #2a2420);
+}
+
+.product-card__unit {
+    font-size: 0.78rem;
+    color: var(--text-muted, #9a8f84);
+}
+
+.product-card__in-cart {
+    font-size: 0.78rem;
+    color: var(--text-muted, #9a8f84);
+    background: var(--cream-deep, #ede7db);
+    padding: 2px 8px;
+    border-radius: var(--radius-pill, 999px);
+}
+
+/* Add to cart button */
+.product-card__btn {
+    margin-top: 10px;
+    width: 100%;
+    padding: 9px 0;
+    border-radius: var(--radius-sm, 8px);
+    border: none;
+    cursor: pointer;
+    font-family: "DM Sans", sans-serif;
+    font-weight: 600;
+    font-size: 0.88rem;
+    background: var(--accent, #c0622a);
+    color: #fff;
+    transition:
+        background 0.18s,
+        transform 0.12s;
+}
+
+.product-card__btn:hover {
+    background: var(--accent-hover, #a8521f);
+    transform: translateY(-1px);
+}
+
+.product-card__btn--added {
+    background: #16a34a !important;
+}
