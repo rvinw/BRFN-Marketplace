@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { apiFetch } from "../../utils/api";
-import "./CommunityPage.css";
 
 const TYPE_TABS = ["All", "Farm Story", "Recipe"];
 
