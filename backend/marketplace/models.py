@@ -352,3 +352,43 @@ class CommunityPost(models.Model):
     
     def __str__(self):
         return self.title
+
+
+class PayoutRequest(models.Model):
+    class PayoutStatus(models.TextChoices):
+        PENDING = "PENDING", "Pending"
+        APPROVED = "APPROVED", "Approved"
+        PAID = "PAID", "Paid"
+        REJECTED = "REJECTED", "Rejected"
+
+    producer = models.ForeignKey(
+        ProducerProfile,
+        on_delete=models.PROTECT,
+        related_name="payout_requests",
+    )
+
+    week_start = models.DateField()
+    week_end = models.DateField()
+
+    gross_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    commission_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    net_amount = models.DecimalField(max_digits=12, decimal_places=2)
+
+    status = models.CharField(
+        max_length=20,
+        choices=PayoutStatus.choices,
+        default=PayoutStatus.PENDING,
+    )
+
+    requested_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["producer", "week_start", "week_end"],
+                name="unique_weekly_payout_request",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.producer.business_name} payout {self.week_start} - {self.week_end}"
