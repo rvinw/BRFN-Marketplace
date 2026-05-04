@@ -7,18 +7,42 @@ from accounts.models import Address, CustomerProfile
 from marketplace.models import Order
 
 
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
-def place_order(request):
+def orders(request):
     if request.user.role_name not in ('CUSTOMER', 'COMMUNITY_GROUP', 'RESTAURANT'):
-        return Response({'error': 'Only customer accounts can place orders.'}, status=403)
+        return Response({'error': 'Only customer accounts can access orders.'}, status=403)
 
+    if request.method == 'GET':
+        try:
+            customer_profile = request.user.customer_profile
+        except CustomerProfile.DoesNotExist:
+            return Response([], status=200)
+
+        orders_qs = Order.objects.filter(customer=customer_profile).order_by('-placed_at')
+        data = []
+        for order in orders_qs:
+            addr = order.delivery_address
+            data.append({
+                'id': order.id,
+                'placed_at': order.placed_at,
+                'order_status': order.order_status,
+                'total_amount': str(order.total_amount),
+                'delivery_address': {
+                    'line_1': addr.line_1,
+                    'line_2': addr.line_2,
+                    'city': addr.city,
+                    'postcode': addr.postcode,
+                },
+            })
+        return Response(data, status=200)
+
+    # POST — place a new order
     delivery = request.data.get('delivery', {})
     items    = request.data.get('items', [])
     total    = request.data.get('total', 0)
 
-    # Validate delivery address
     required = ['address1', 'city', 'postcode']
     if any(not delivery.get(f, '').strip() for f in required):
         return Response({'error': 'Delivery address is incomplete.'}, status=400)

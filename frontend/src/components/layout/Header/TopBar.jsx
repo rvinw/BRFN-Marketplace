@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { useCart } from "../../../context/CartContext";
+import { usePostcode } from "../../../context/PostcodeContext";
 import SearchBar from "./SearchBar";
 
 const PinIcon = () => (
@@ -37,6 +38,8 @@ export default function TopBar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, logout } = useAuth();
   const { clearCart } = useCart();
+  const { postcode, savePostcode } = usePostcode();
+  const [draft, setDraft] = useState('');
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -64,10 +67,10 @@ export default function TopBar() {
           <button
             className="postcode-chip"
             type="button"
-            onClick={() => setPostcodeOpen(true)}
+            onClick={() => { setDraft(postcode); setPostcodeOpen(true); }}
           >
             <span className="postcode-chip__icon"><PinIcon /></span>
-            Enter postcode
+            {postcode || 'Enter postcode'}
           </button>
         ) : (
           <div className="postcode-edit">
@@ -77,11 +80,17 @@ export default function TopBar() {
               placeholder="e.g. BS1 5XX"
               type="text"
               autoFocus
+              value={draft}
+              onChange={e => setDraft(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') { savePostcode(draft); setPostcodeOpen(false); }
+                if (e.key === 'Escape') setPostcodeOpen(false);
+              }}
             />
             <button
               className="postcode-save"
               type="button"
-              onClick={() => setPostcodeOpen(false)}
+              onClick={() => { savePostcode(draft); setPostcodeOpen(false); }}
             >
               Save
             </button>

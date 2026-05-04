@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import { PostcodeProvider } from './context/PostcodeContext';
 import ProtectedRoute from './components/routing/ProtectedRoute';
 
 import Header from './components/layout/Header/Header';
@@ -19,11 +20,13 @@ import CheckoutPage from './components/Pages/CheckoutPage';
 import CustomerDashboardPage from './components/Pages/CustomerDashboardPage';
 import ProducerDashboardPage from './components/Pages/ProducerDashboardPage';
 import AdminDashboardPage from './components/Pages/AdminDashboardPage';
+import ProducerMapPage from './components/Pages/ProducerMapPage';
 import './App.css';
 
 export default function App() {
   return (
     <AuthProvider>
+    <PostcodeProvider>
     <CartProvider>
       <Header />
       <Routes>
@@ -63,9 +66,13 @@ export default function App() {
             <AdminDashboardPage />
           </ProtectedRoute>
         } />
+
+        {/* Public: producer map */}
+        <Route path="/map" element={<ProducerMapPage />} />
       </Routes>
       <Footer />
     </CartProvider>
+    </PostcodeProvider>
     </AuthProvider>
   );
 }
