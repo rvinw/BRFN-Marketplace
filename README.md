@@ -67,14 +67,26 @@ The database is kept in sync across the team using two fixture files:
 
 Every time Docker starts, `backend/entrypoint.py` automatically runs migrations and loads both files.
 
-### Sharing your database with the team
-After adding data (producers, products, categories, etc.) that you want everyone to have, run:
+### Sharing your database with the team — follow these steps in order
+
+> **Important:** dumping replaces the fixture files entirely with whatever is in YOUR database.
+> If you dump without first loading the latest shared data, you will overwrite your teammates' data.
+> Always follow these steps in order:
+
 ```bash
+# 1. Pull the latest code and fixture files
+git pull
+
+# 2. Wipe your local database and reload from the latest shared fixtures
+docker-compose down -v
+docker-compose up --build
+
+# 3. Add your data via the app (new producers, products, etc.)
+
+# 4. Dump your database back to the fixture files (now contains shared + your data)
 docker-compose exec web python manage.py dump
-```
-This updates both fixture files with your current database contents.
-Then commit and push:
-```bash
+
+# 5. Commit and push
 git add backend/accounts/fixtures/initial_data.json backend/marketplace/fixtures/initial_data.json
 git commit -m "update shared database"
 git push
