@@ -710,6 +710,38 @@
   }
 },
 {
+  "model": "marketplace.addproduct",
+  "pk": 1,
+  "fields": {
+    "name": "test",
+    "category": "Veg",
+    "description": "test",
+    "price": "1.30",
+    "unit_amount": "test",
+    "availability": true,
+    "stock_quantity": 1,
+    "allergy_info": "test",
+    "harvest_date": "2026-03-25T11:11:00Z",
+    "product_image": ""
+  }
+},
+{
+  "model": "marketplace.addproduct",
+  "pk": 2,
+  "fields": {
+    "name": "test",
+    "category": "Fruit",
+    "description": "test",
+    "price": "1.11",
+    "unit_amount": "20",
+    "availability": true,
+    "stock_quantity": 5,
+    "allergy_info": "",
+    "harvest_date": "2026-04-28T10:10:00Z",
+    "product_image": ""
+  }
+},
+{
   "model": "marketplace.communitypost",
   "pk": 1,
   "fields": {
@@ -762,6 +794,17 @@
     "title": "Winter Cover Crop Update (Internal)",
     "description": "Overwinter rye and vetch across fields 3 and 4 looking healthy. Ploughing back in late April ahead of the brassica beds. Internal record only.",
     "created_at": "2026-04-23T23:49:01.384Z"
+  }
+},
+{
+  "model": "marketplace.communitypost",
+  "pk": 6,
+  "fields": {
+    "post_type": "Farm Story",
+    "is_public": true,
+    "title": "test",
+    "description": "test",
+    "created_at": "2026-04-28T14:38:30.213Z"
   }
 }
 ]
