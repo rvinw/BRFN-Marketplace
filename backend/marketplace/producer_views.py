@@ -2,8 +2,11 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from decimal import Decimal
+from django.utils import timezone
+from django.db.models import Sum
 
-from marketplace.models import Category, Product
+from marketplace.models import Category, Product, OrderItem, PayoutRequest
 
 
 UNIT_MAP = {
@@ -85,3 +88,190 @@ def producer_add_product(request):
         'category': product.category.category_name,
         'price': str(product.current_price),
     }, status=201)
+
+
+@api_view(["PATCH"])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def cancel_order_item(request, item_id):
+
+    if request.user.role_name != "PRODUCER":
+        return Response(
+            {"error": "Only producers can cancel items."},
+            status=403
+        )
+
+    try:
+        item = OrderItem.objects.select_related(
+            "order_producer__producer__user"
+        ).get(id=item_id)
+
+    except OrderItem.DoesNotExist:
+        return Response(
+            {"error": "Order item not found."},
+            status=404
+        )
+
+    producer_user = item.order_producer.producer.user
+
+    if producer_user != request.user:
+        return Response(
+            {"error": "You do not own this order item."},
+            status=403
+        )
+
+    item.status = "CANCELLED"
+    item.save()
+
+    return Response({
+        "message": "Order item cancelled successfully.",
+        "item_id": item.id,
+        "status": item.status,
+    })
+
+@api_view(["PATCH"])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def update_order_item_status(request, item_id):
+    if request.user.role_name != "PRODUCER":
+        return Response({"error": "Only producers can update items."}, status=403)
+
+    new_status = request.data.get("status")
+
+    allowed_statuses = ["CONFIRMED", "READY", "DELIVERED", "CANCELLED"]
+
+    if new_status not in allowed_statuses:
+        return Response({"error": "Invalid status."}, status=400)
+
+    try:
+        item = OrderItem.objects.select_related(
+            "order_producer__producer__user"
+        ).get(id=item_id)
+    except OrderItem.DoesNotExist:
+        return Response({"error": "Order item not found."}, status=404)
+
+    if item.order_producer.producer.user != request.user:
+        return Response({"error": "You do not own this item."}, status=403)
+
+    if item.status in ["DELIVERED", "CANCELLED"]:
+        return Response(
+            {"error": "Delivered or cancelled items cannot be changed."},
+            status=400,
+        )
+
+    valid_transitions = {
+        "PENDING": ["CONFIRMED", "CANCELLED"],
+        "CONFIRMED": ["READY", "CANCELLED"],
+        "READY": ["DELIVERED"],
+    }
+
+    if new_status not in valid_transitions.get(item.status, []):
+        return Response(
+            {"error": f"Cannot change from {item.status} to {new_status}."},
+            status=400,
+        )
+
+    item.status = new_status
+    item.save()
+
+    order_producer = item.order_producer
+    statuses = list(order_producer.items.values_list("status", flat=True))
+
+    if all(status == "DELIVERED" for status in statuses):
+        order_producer.status = "DELIVERED"
+    elif all(status == "CANCELLED" for status in statuses):
+        order_producer.status = "CANCELLED"
+    elif any(status == "READY" for status in statuses):
+        order_producer.status = "READY"
+    elif any(status in ["CONFIRMED", "DELIVERED"] for status in statuses):
+        order_producer.status = "CONFIRMED"
+    else:
+        order_producer.status = "PENDING"
+
+    order_producer.save()
+
+    return Response({
+        "message": "Item status updated successfully.",
+        "item_id": item.id,
+        "status": item.status,
+    })
+
+@api_view(["GET", "POST"])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def weekly_payout(request):
+    if request.user.role_name != "PRODUCER":
+        return Response({"error": "Only producers can access payout."}, status=403)
+
+    try:
+        producer = request.user.producer_profile
+    except Exception:
+        return Response({"error": "Producer profile not found."}, status=404)
+
+    today = timezone.now().date()
+    week_start = today - timezone.timedelta(days=today.weekday())
+    week_end = week_start + timezone.timedelta(days=6)
+
+    delivered_items = OrderItem.objects.filter(
+        order_producer__producer=producer,
+        status="DELIVERED",
+        order_producer__order__placed_at__date__gte=week_start,
+        order_producer__order__placed_at__date__lte=week_end,
+    )
+
+    gross_amount = delivered_items.aggregate(total=Sum("total_cost"))["total"] or Decimal("0.00")
+    commission_amount = gross_amount * Decimal("0.05")
+    net_amount = gross_amount - commission_amount
+
+    existing_request = PayoutRequest.objects.filter(
+        producer=producer,
+        week_start=week_start,
+        week_end=week_end,
+    ).first()
+
+    if request.method == "POST":
+        if existing_request:
+            return Response(
+                {"error": "Payout already requested for this week."},
+                status=400,
+            )
+
+        payout = PayoutRequest.objects.create(
+            producer=producer,
+            week_start=week_start,
+            week_end=week_end,
+            gross_amount=gross_amount,
+            commission_amount=commission_amount,
+            net_amount=net_amount,
+            status="PENDING",
+        )
+
+        return Response(
+            {
+                "message": "Payout requested successfully.",
+                "status": payout.status,
+                "requested_at": payout.requested_at,
+            },
+            status=201,
+        )
+
+    return Response(
+        {
+            "week_start": week_start,
+            "week_end": week_end,
+            "gross_amount": gross_amount,
+            "commission_amount": commission_amount,
+            "net_amount": net_amount,
+            "request_status": existing_request.status if existing_request else "NOT_REQUESTED",
+            "requested_at": existing_request.requested_at if existing_request else None,
+            "items": [
+                {
+                    "id": item.id,
+                    "product_name": item.product.product_name,
+                    "quantity": item.quantity,
+                    "total_cost": item.total_cost,
+                }
+                for item in delivered_items.select_related("product")
+            ],
+        }
+    )

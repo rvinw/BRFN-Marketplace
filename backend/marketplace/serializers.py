@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Product, CommunityPost, AddProduct
+from .models import Category, Product, CommunityPost, AddProduct, OrderItem, OrderProducer
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -58,4 +58,40 @@ class AddProductSerializer(serializers.ModelSerializer):
             'id', 'name', 'category', 'description', 'price',
             'unit_amount', 'availability', 'stock_quantity',
             'allergy_info', 'harvest_date', 'product_image',
+        ]
+
+
+
+class IncomingOrderItemSerializer(serializers.ModelSerializer):
+    product_name = serializers.ReadOnlyField(source="product.product_name")
+
+    class Meta:
+        model = OrderItem
+        fields = [
+            "id",
+            "product_name",
+            "quantity",
+            "unit_price_gbp",
+            "total_cost",
+            "status",
+        ]
+
+
+class IncomingOrderProducerSerializer(serializers.ModelSerializer):
+    order_id = serializers.ReadOnlyField(source="order.id")
+    customer_email = serializers.ReadOnlyField(source="order.customer.user.email")
+    delivery_postcode = serializers.ReadOnlyField(source="order.delivery_address.postcode")
+    placed_at = serializers.ReadOnlyField(source="order.placed_at")
+    items = IncomingOrderItemSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = OrderProducer
+        fields = [
+            "id",
+            "order_id",
+            "status",
+            "customer_email",
+            "delivery_postcode",
+            "placed_at",
+            "items",
         ]
