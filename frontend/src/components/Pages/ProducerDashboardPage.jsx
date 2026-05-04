@@ -209,10 +209,8 @@ export default function ProducerDashboardPage() {
 
         {view === "add" && (
           <div className="form-container">
-            <h1 style={{ color: "#a3e635" }}>Add New Product</h1>
-            <div style={{ color: "#333" }}>
-              <AddProductForm onNavigate={setView} />
-            </div>
+            <h1>Add New Product</h1>
+            <AddProductForm onNavigate={setView} />
           </div>
         )}
 

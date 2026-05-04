@@ -76,6 +76,11 @@
   pointer-events: none;
 }
 
+/* ── Pin icon ── */
+.producer-map-pin-icon {
+  flex-shrink: 0;
+}
+
 /* ── Info window ── */
 .map-info-window {
   display: flex;

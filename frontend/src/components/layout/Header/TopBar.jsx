@@ -27,6 +27,12 @@ const CartIcon = () => (
   </svg>
 );
 
+const MapIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+    <path d="M9 20l-5.447-2.724A1 1 0 0 1 3 16.382V5.618a1 1 0 0 1 1.447-.894L9 7m0 13V7m0 13 6-3M9 7l6-3m0 17 5.447-2.724A1 1 0 0 0 21 17.382V6.618a1 1 0 0 0-1.447-.894L15 8m0 13V8" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
 const DASHBOARD_ROUTES = {
   customer: '/dashboard/customer',
   producer: '/dashboard/producer',
@@ -63,6 +69,11 @@ export default function TopBar() {
 
       {/* Right */}
       <div className="topbar_right">
+        <Link to="/map" className="topbar-btn">
+          <MapIcon />
+          Producer Map
+        </Link>
+
         {!postcodeOpen ? (
           <button
             className="postcode-chip"
