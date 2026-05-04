@@ -4,6 +4,8 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
+
+
 # ----------------------------------|
 # CATALOGUE-------------------------|
 # ----------------------------------|
@@ -259,6 +261,13 @@ class OrderProducer(models.Model):
 
 
 class OrderItem(models.Model):
+    class ItemStatus(models.TextChoices):
+        PENDING = "PENDING", "Pending"
+        CONFIRMED = "CONFIRMED", "Confirmed"
+        READY = "READY", "Ready"
+        DELIVERED = "DELIVERED", "Delivered"
+        CANCELLED = "CANCELLED", "Cancelled"
+
     order_producer = models.ForeignKey(
         OrderProducer, on_delete=models.CASCADE, related_name="items"
     )
@@ -271,6 +280,12 @@ class OrderItem(models.Model):
     )
     unit_price_gbp = models.DecimalField(max_digits=10, decimal_places=2)
     total_cost = models.DecimalField(max_digits=12, decimal_places=2)
+
+    status = models.CharField(
+        max_length=20,
+        choices=ItemStatus.choices,
+        default=ItemStatus.PENDING,
+    )
 
     def __str__(self):
         return f"{self.product.product_name} x {self.quantity}"
@@ -337,3 +352,43 @@ class CommunityPost(models.Model):
     
     def __str__(self):
         return self.title
+
+
+class PayoutRequest(models.Model):
+    class PayoutStatus(models.TextChoices):
+        PENDING = "PENDING", "Pending"
+        APPROVED = "APPROVED", "Approved"
+        PAID = "PAID", "Paid"
+        REJECTED = "REJECTED", "Rejected"
+
+    producer = models.ForeignKey(
+        ProducerProfile,
+        on_delete=models.PROTECT,
+        related_name="payout_requests",
+    )
+
+    week_start = models.DateField()
+    week_end = models.DateField()
+
+    gross_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    commission_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    net_amount = models.DecimalField(max_digits=12, decimal_places=2)
+
+    status = models.CharField(
+        max_length=20,
+        choices=PayoutStatus.choices,
+        default=PayoutStatus.PENDING,
+    )
+
+    requested_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["producer", "week_start", "week_end"],
+                name="unique_weekly_payout_request",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.producer.business_name} payout {self.week_start} - {self.week_end}"
