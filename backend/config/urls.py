@@ -3,9 +3,9 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from marketplace.views import health, ProductViewSet, CommunityPostViewSet
-from marketplace.customer_views import place_order
+from marketplace.customer_views import orders
 from marketplace.producer_views import producer_add_product
-from accounts.views import login_view, register_customer, register_producer
+from accounts.views import login_view, register_customer, register_producer, producer_locations
 
 from accounts.admin_views import (
     AdminUserListView,
@@ -50,7 +50,8 @@ urlpatterns = [
     path('api/auth/register/customer/', register_customer),
     path('api/auth/register/producer/', register_producer),
     path('api/admin/', include(admin_urlpatterns)),
-    path('api/orders/', place_order),
+    path('api/producers/', producer_locations),
+    path('api/orders/', orders),
     path('api/producer/products/', producer_add_product),
     path('api/', include(router.urls)),
 ]

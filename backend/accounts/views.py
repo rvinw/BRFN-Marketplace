@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from accounts.models import Address, CustomerProfile
+from accounts.models import Address, CustomerProfile, ProducerProfile
 
 User = get_user_model()
 
@@ -136,3 +136,21 @@ def register_producer(request):
     )
 
     return _token_response(user, status=201)
+
+
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([AllowAny])
+def producer_locations(request):
+    producers = ProducerProfile.objects.filter(is_verified=True).select_related('address')
+    data = [
+        {
+            'id': p.id,
+            'business_name': p.business_name,
+            'postcode': p.address.postcode,
+            'city': p.address.city,
+            'address': f"{p.address.line_1}, {p.address.city}, {p.address.postcode}",
+        }
+        for p in producers
+    ]
+    return Response(data)

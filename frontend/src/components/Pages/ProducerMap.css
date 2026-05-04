@@ -1,0 +1,95 @@
+.producer-map-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px); /* fill below header */
+}
+
+/* ── Header bar ── */
+.producer-map-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.producer-map-header h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 2px;
+}
+
+.producer-map-subtitle {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.producer-map-postcode-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: #374151;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  padding: 4px 12px;
+}
+
+/* ── Map container ── */
+.producer-map-body {
+  flex: 1;
+  position: relative;
+}
+
+.producer-map-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Loading / Error ── */
+.producer-map-loading,
+.producer-map-error {
+  padding: 2rem;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.producer-map-error {
+  color: #b91c1c;
+}
+
+.producer-map-overlay {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 0.8rem;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  pointer-events: none;
+}
+
+/* ── Info window ── */
+.map-info-window {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+  min-width: 160px;
+}
+
+.map-info-window strong {
+  font-size: 0.95rem;
+  color: #111827;
+}
+
+.map-info-window span {
+  color: #6b7280;
+}

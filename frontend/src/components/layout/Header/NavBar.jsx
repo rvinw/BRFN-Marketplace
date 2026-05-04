@@ -53,6 +53,11 @@ const icons = {
       <path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   ),
+  Map: (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <path d="M9 20l-5.447-2.724A1 1 0 0 1 3 16.382V5.618a1 1 0 0 1 1.447-.894L9 7m0 13V7m0 13 6-3M9 7l6-3m0 17 5.447-2.724A1 1 0 0 0 21 17.382V6.618a1 1 0 0 0-1.447-.894L15 8m0 13V8" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
 };
 
 const categories = [
@@ -92,6 +97,16 @@ export default function NavBar() {
             <span className="navitem__text">{c.label}</span>
           </Link>
         ))}
+
+        {/* Producer Map link */}
+        <Link
+          to="/map"
+          className={`navitem${active === 'Map' ? " navitem--active" : ""}`}
+          onClick={() => setActive('Map')}
+        >
+          <span className="navitem__icon">{icons.Map}</span>
+          <span className="navitem__text">Producer Map</span>
+        </Link>
 
         {/* Vertical Divider for separation */}
         <div style={{ width: '1px', background: '#e0e0e0', height: '24px', margin: '0 15px' }}></div>
