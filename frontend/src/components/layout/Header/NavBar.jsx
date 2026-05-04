@@ -98,16 +98,6 @@ export default function NavBar() {
           </Link>
         ))}
 
-        {/* Producer Map link */}
-        <Link
-          to="/map"
-          className={`navitem${active === 'Map' ? " navitem--active" : ""}`}
-          onClick={() => setActive('Map')}
-        >
-          <span className="navitem__icon">{icons.Map}</span>
-          <span className="navitem__text">Producer Map</span>
-        </Link>
-
         {/* Vertical Divider for separation */}
         <div style={{ width: '1px', background: '#e0e0e0', height: '24px', margin: '0 15px' }}></div>
 
