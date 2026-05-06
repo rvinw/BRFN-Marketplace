@@ -300,6 +300,17 @@ class OrderItem(models.Model):
     quantity = models.DecimalField(
         max_digits=12, decimal_places=3, validators=[MinValueValidator(0.001)]
     )
+
+    fulfilled_quantity = models.DecimalField(
+    max_digits=12,
+    decimal_places=3,
+    validators=[MinValueValidator(0)],
+    blank=True,
+    null=True,
+    )
+
+    availability_note = models.TextField(blank=True, null=True)
+
     unit_price_gbp = models.DecimalField(max_digits=10, decimal_places=2)
     total_cost = models.DecimalField(max_digits=12, decimal_places=2)
 

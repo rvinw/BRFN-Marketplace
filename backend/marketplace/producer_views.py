@@ -332,3 +332,60 @@ def weekly_payout(request):
             ],
         }
     )
+
+
+@api_view(["PATCH"])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def update_order_item_availability(request, item_id):
+    if request.user.role_name != "PRODUCER":
+        return Response({"error": "Only producers can update items."}, status=403)
+
+    try:
+        item = OrderItem.objects.select_related(
+            "order_producer__producer__user"
+        ).get(id=item_id)
+    except OrderItem.DoesNotExist:
+        return Response({"error": "Order item not found."}, status=404)
+
+    if item.order_producer.producer.user != request.user:
+        return Response({"error": "You do not own this item."}, status=403)
+
+    fulfilled_quantity = request.data.get("fulfilled_quantity")
+    availability_note = request.data.get("availability_note", "")
+
+    if fulfilled_quantity is not None:
+        try:
+            fulfilled_quantity = Decimal(str(fulfilled_quantity))
+        except:
+            return Response({"error": "Invalid fulfilled quantity."}, status=400)
+
+        if fulfilled_quantity < 0:
+            return Response({"error": "Fulfilled quantity cannot be negative."}, status=400)
+
+        if fulfilled_quantity > item.quantity:
+            return Response(
+                {"error": "Fulfilled quantity cannot be greater than ordered quantity."},
+                status=400,
+            )
+
+        item.fulfilled_quantity = fulfilled_quantity
+
+        if fulfilled_quantity == 0:
+            item.status = "CANCELLED"
+            item.availability_note = availability_note or "Item unavailable."
+        elif fulfilled_quantity < item.quantity:
+            item.availability_note = availability_note or "Partial quantity available."
+        else:
+            item.availability_note = availability_note
+
+    item.save()
+
+    return Response({
+        "message": "Item availability updated successfully.",
+        "item_id": item.id,
+        "ordered_quantity": item.quantity,
+        "fulfilled_quantity": item.fulfilled_quantity,
+        "availability_note": item.availability_note,
+        "status": item.status,
+    })

@@ -31,6 +31,7 @@ from marketplace.customer_views import orders, producer_incoming_orders
 from marketplace.producer_views import (
     cancel_order_item,
     producer_add_product,
+    update_order_item_availability,
     update_order_item_status,
     weekly_payout,
 )
@@ -69,31 +70,16 @@ urlpatterns = [
     path("api/auth/register/producer/", register_producer),
     path("api/admin/", include(admin_urlpatterns)),
     path("api/producers/", producer_locations),
-    path("api/orders/", orders),  # GET list / POST place order
+    path("api/orders/", orders),
     path("api/cart/", cart_detail),
     path("api/cart/items/", cart_add_item),
     path("api/cart/items/<int:product_id>/", cart_item_detail),
     path("api/producer/products/", producer_add_product),
     path("api/", include(router.urls)),
-    path(
-        "api/producer/orders/incoming/",
-        producer_incoming_orders,
-        name="producer-incoming-orders",
-    ),
-    path(
-        "api/producer/order-items/<int:item_id>/cancel/",
-        cancel_order_item,
-        name="cancel-order-item",
-    ),
-    path(
-        "api/producer/order-items/<int:item_id>/status/",
-        update_order_item_status,
-        name="update-order-item-status",
-    ),
+    path("api/producer/orders/incoming/", producer_incoming_orders, name="producer-incoming-orders"),
+    path("api/producer/order-items/<int:item_id>/cancel/", cancel_order_item, name="cancel-order-item"),
+    path("api/producer/order-items/<int:item_id>/status/", update_order_item_status, name="update-order-item-status"),
+    path("api/producer/order-items/<int:item_id>/availability/", update_order_item_availability, name="update-order-item-availability"),
     path("api/producer/weekly-payout/", weekly_payout, name="weekly-payout"),
-    path(
-        "api/products/<int:product_id>/reviews/",
-        product_reviews,
-        name="product-reviews",
-    ),
+    path("api/products/<int:product_id>/reviews/", product_reviews, name="product-reviews"),
 ]

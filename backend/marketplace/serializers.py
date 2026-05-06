@@ -37,10 +37,17 @@ class ProductSerializer(serializers.ModelSerializer):
     )
     producer_id = serializers.PrimaryKeyRelatedField(source="producer", read_only=True)
     image = serializers.SerializerMethodField()
+    producer_name = serializers.ReadOnlyField(source="producer.business_name")
+    stock_status = serializers.SerializerMethodField()
 
     def get_image(self, obj):
         first = obj.images.first()
         return first.image_url if first else None
+    
+    def get_stock_status(self, obj):
+        if obj.stock_quantity <= 0 or not obj.is_available:
+            return "SOLD_OUT"
+        return "IN_STOCK"
 
     class Meta:
         model = Product
@@ -60,6 +67,8 @@ class ProductSerializer(serializers.ModelSerializer):
             "producer_id",
             "harvest_date",
             "created_at",
+            "is_available",
+            "stock_status",
         ]
         read_only_fields = ["created_at"]
 
@@ -111,6 +120,8 @@ class IncomingOrderItemSerializer(serializers.ModelSerializer):
             "id",
             "product_name",
             "quantity",
+            "fulfilled_quantity",
+            "availability_note",
             "unit_price_gbp",
             "total_cost",
             "status",
