@@ -4,8 +4,6 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-
-
 # ----------------------------------|
 # CATALOGUE-------------------------|
 # ----------------------------------|
@@ -159,6 +157,30 @@ class ProductDeal(models.Model):
 
     def __str__(self):
         return f"{self.product.product_name} - {self.discount_percentage}%"
+
+
+class Review(models.Model):
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="reviews"
+    )
+    customer = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="reviews"
+    )
+    rating = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)]
+    )
+    comment = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["product", "customer"], name="unique_product_review"
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.customer.email} — {self.product.product_name} ({self.rating}★)"
 
 
 # -----------------------------------|
@@ -331,25 +353,26 @@ class AddProduct(models.Model):
     unit_amount = models.CharField(max_length=50)
     availability = models.BooleanField(default=True)
     stock_quantity = models.IntegerField(default=0)
-    allergy_info = models.CharField(max_length=500, blank= True)
+    allergy_info = models.CharField(max_length=500, blank=True)
     harvest_date = models.DateTimeField(null=True, blank=True)
-    product_image = models.ImageField(upload_to='products/', null=True, blank=True)
-    
+    product_image = models.ImageField(upload_to="products/", null=True, blank=True)
+
     def __str__(self):
         return self.name
-    
+
+
 class CommunityPost(models.Model):
     POST_TYPE_CHOICES = [
-        ('Farm Story', 'Farm Story'),
-        ('Recipe', 'Recipe'),
+        ("Farm Story", "Farm Story"),
+        ("Recipe", "Recipe"),
     ]
-    
+
     post_type = models.CharField(max_length=50, choices=POST_TYPE_CHOICES)
     is_public = models.BooleanField(default=False)
     title = models.CharField(max_length=200)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     def __str__(self):
         return self.title
 
@@ -391,4 +414,6 @@ class PayoutRequest(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.producer.business_name} payout {self.week_start} - {self.week_end}"
+        return (
+            f"{self.producer.business_name} payout {self.week_start} - {self.week_end}"
+        )

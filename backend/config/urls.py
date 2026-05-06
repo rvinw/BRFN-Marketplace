@@ -30,6 +30,7 @@ from marketplace.producer_views import (
     update_order_item_status,
     weekly_payout,
 )
+from marketplace.review_views import product_reviews
 from marketplace.views import CommunityPostViewSet, ProductViewSet, health
 from rest_framework.routers import DefaultRouter
 
@@ -82,4 +83,9 @@ urlpatterns = [
         name="update-order-item-status",
     ),
     path("api/producer/weekly-payout/", weekly_payout, name="weekly-payout"),
+    path(
+        "api/products/<int:product_id>/reviews/",
+        product_reviews,
+        name="product-reviews",
+    ),
 ]
