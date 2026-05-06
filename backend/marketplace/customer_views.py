@@ -84,6 +84,24 @@ def place_order(request):
         unit_price = product.current_price
         total_cost = unit_price * quantity
 
+        if product.stock_quantity < quantity:
+            return Response(
+                {
+                    "error": f"Not enough stock for {product.product_name}. "
+                            f"Available: {product.stock_quantity}"
+                },
+                status=400,
+            )
+
+        product.stock_quantity -= quantity
+
+        if product.stock_quantity <= 0:
+            product.stock_quantity = 0
+            product.is_available = False
+
+        product.save()
+
+
         OrderItem.objects.create(
             order_producer=order_producer,
             product=product,

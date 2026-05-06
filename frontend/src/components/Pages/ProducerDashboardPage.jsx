@@ -142,6 +142,44 @@ export default function ProducerDashboardPage() {
     }
   };
 
+  const updateItemAvailability = async (itemId, fulfilledQuantity, availabilityNote) => {
+  try {
+    const token = getToken();
+
+    if (!token) {
+      alert("No login token found. Please log in again.");
+      return;
+    }
+
+    const response = await fetch(
+      `http://localhost:8000/api/producer/order-items/${itemId}/availability/`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fulfilled_quantity: fulfilledQuantity,
+          availability_note: availabilityNote,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.error || data.detail || "Failed to update availability.");
+      return;
+    }
+
+    fetchIncomingOrders();
+  } catch (error) {
+    console.error("Update availability error:", error);
+    alert("Error updating availability.");
+  }
+};
+
   const getPrepareBy = (placedAt) => {
     const placedDate = new Date(placedAt);
 
@@ -287,20 +325,61 @@ export default function ProducerDashboardPage() {
                       order.items.map((item) => (
                         <div key={item.id} className="order-item">
                           <div className="order-item-top">
-                            <span className="product-name">
-                              {item.product_name}
-                            </span>
+                            <span className="product-name">{item.product_name}</span>
 
                             <div className="item-meta">
-                              <span>Qty: {item.quantity}</span>
+                              <span>Ordered: {item.quantity}</span>
+                              <span>
+                                Fulfilled: {item.fulfilled_quantity ?? item.quantity}
+                              </span>
                               <strong>£{item.total_cost}</strong>
                             </div>
                           </div>
 
-                          <div className="order-item-actions">
-                            <span
-                              className={`item-status ${item.status?.toLowerCase()}`}
+                          <div className="availability-editor">
+                            <label>
+                              Fulfilled Qty
+                              <input
+                                type="number"
+                                min="0"
+                                max={item.quantity}
+                                step="0.001"
+                                defaultValue={item.fulfilled_quantity ?? item.quantity}
+                                id={`qty-${item.id}`}
+                              />
+                            </label>
+
+                            <label>
+                              Availability Note
+                              <input
+                                type="text"
+                                placeholder="e.g. Partial stock available"
+                                defaultValue={item.availability_note || ""}
+                                id={`note-${item.id}`}
+                              />
+                            </label>
+
+                            <button
+                              className="update-availability-btn"
+                              onClick={() => {
+                                const qty = document.getElementById(`qty-${item.id}`).value;
+                                const note = document.getElementById(`note-${item.id}`).value;
+
+                                updateItemAvailability(item.id, qty, note);
+                              }}
                             >
+                              Update Availability
+                            </button>
+                          </div>
+
+                          {item.availability_note && (
+                            <p className="availability-note">
+                              Note: {item.availability_note}
+                            </p>
+                          )}
+
+                          <div className="order-item-actions">
+                            <span className={`item-status ${item.status?.toLowerCase()}`}>
                               {item.status}
                             </span>
 
@@ -308,21 +387,12 @@ export default function ProducerDashboardPage() {
                               <>
                                 <button
                                   className="confirm-item-btn"
-                                  onClick={() =>
-                                    updateItemStatus(item.id, "CONFIRMED")
-                                  }
+                                  onClick={() => updateItemStatus(item.id, "CONFIRMED")}
                                 >
                                   Confirm
                                 </button>
 
-                                <button
-                                  className="cancel-item-btn"
-                                  onClick={() =>
-                                    updateItemStatus(item.id, "CANCELLED")
-                                  }
-                                >
-                                  Cancel
-                                </button>
+                               
                               </>
                             )}
 
@@ -330,18 +400,14 @@ export default function ProducerDashboardPage() {
                               <>
                                 <button
                                   className="ready-item-btn"
-                                  onClick={() =>
-                                    updateItemStatus(item.id, "READY")
-                                  }
+                                  onClick={() => updateItemStatus(item.id, "READY")}
                                 >
                                   Mark Ready
                                 </button>
 
                                 <button
                                   className="cancel-item-btn"
-                                  onClick={() =>
-                                    updateItemStatus(item.id, "CANCELLED")
-                                  }
+                                  onClick={() => updateItemStatus(item.id, "CANCELLED")}
                                 >
                                   Cancel
                                 </button>
@@ -351,9 +417,7 @@ export default function ProducerDashboardPage() {
                             {item.status === "READY" && (
                               <button
                                 className="delivered-item-btn"
-                                onClick={() =>
-                                  updateItemStatus(item.id, "DELIVERED")
-                                }
+                                onClick={() => updateItemStatus(item.id, "DELIVERED")}
                               >
                                 Delivered
                               </button>

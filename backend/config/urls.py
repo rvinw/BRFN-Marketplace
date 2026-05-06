@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 
 from marketplace.views import health, ProductViewSet, CommunityPostViewSet
 from marketplace.customer_views import place_order
-from marketplace.producer_views import producer_add_product, cancel_order_item, update_order_item_status, weekly_payout
+from marketplace.producer_views import producer_add_product, cancel_order_item, update_order_item_status, weekly_payout, update_order_item_availability
 from accounts.views import login_view, register_customer, register_producer
 from marketplace.customer_views import producer_incoming_orders
 
@@ -58,6 +58,7 @@ urlpatterns = [
     path("api/producer/order-items/<int:item_id>/cancel/", cancel_order_item, name="cancel-order-item"),
     path("api/producer/order-items/<int:item_id>/status/", update_order_item_status, name="update-order-item-status"),
     path("api/producer/weekly-payout/", weekly_payout, name="weekly-payout"),
+    path("api/producer/order-items/<int:item_id>/availability/", update_order_item_availability,name="update-order-item-availability",),
 ]
 
 

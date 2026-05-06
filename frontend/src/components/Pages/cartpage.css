@@ -304,3 +304,33 @@
   font-weight: 300;
   line-height: 1.6;
 }
+
+.badge--stock {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge--sold-out {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.cart-item--warning {
+  border: 1px solid #fca5a5;
+  background: #fff7f7;
+}
+
+.stock-warning {
+  margin-top: 0.6rem;
+  color: #b91c1c;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.checkout-warning {
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 10px;
+  padding: 0.8rem;
+  font-weight: 700;
+}
