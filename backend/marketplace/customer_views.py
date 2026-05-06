@@ -1,7 +1,9 @@
+from collections import defaultdict
 from decimal import Decimal
 
 from accounts.models import Address, CustomerProfile
 from django.db import transaction
+from django.db.models import F
 from rest_framework.decorators import (
     api_view,
     authentication_classes,
@@ -119,6 +121,21 @@ def orders(request):
             {"error": f"Some products no longer exist: {missing}"}, status=400
         )
 
+    # Accumulate total quantity needed per product and check stock
+    qty_per_product = defaultdict(Decimal)
+    for item in items:
+        pid = int(item.get("id") or item.get("product_id"))
+        qty_per_product[pid] += Decimal(str(item.get("quantity", 1)))
+
+    for pid, qty_needed in qty_per_product.items():
+        product = products_by_id[pid]
+        if product.stock_quantity < qty_needed:
+            return Response(
+                {"error": f"Not enough stock for '{product.product_name}'. "
+                          f"Available: {product.stock_quantity}, requested: {qty_needed}"},
+                status=400,
+            )
+
     with transaction.atomic():
         address = Address.objects.create(
             line_1=delivery["address1"].strip(),
@@ -168,6 +185,10 @@ def orders(request):
                     quantity=quantity,
                     unit_price_gbp=unit_price,
                     total_cost=unit_price * quantity,
+                )
+                # Decrement stock atomically
+                Product.objects.filter(pk=product.pk).update(
+                    stock_quantity=F('stock_quantity') - quantity
                 )
 
     return Response(

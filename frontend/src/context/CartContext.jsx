@@ -9,7 +9,7 @@ import { apiFetch } from "../utils/api";
 
 const CartContext = createContext(null);
 
-const isLoggedIn = () => !!localStorage.getItem("brfn_token");
+const isLoggedIn = () => !!sessionStorage.getItem("brfn_token");
 
 // Normalise the API response shape to the same shape the rest of the
 // app already uses: { id, name, price, unit, category, image, quantity }

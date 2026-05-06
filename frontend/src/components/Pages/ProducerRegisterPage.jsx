@@ -50,7 +50,7 @@ export default function ProducerRegisterPage() {
         return;
       }
 
-      localStorage.setItem('brfn_token', data.token);
+      sessionStorage.setItem('brfn_token', data.token);
       login({ name: data.user.full_name, email: data.user.email, role: data.user.role_name.toLowerCase() });
       navigate('/dashboard/producer');
     } catch {

@@ -1,7 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
 
 function fetchWithAuth(url, options = {}) {
-  const token = localStorage.getItem('brfn_token');
+  const token = sessionStorage.getItem('brfn_token');
   return fetch(url, {
     ...options,
     headers: {
