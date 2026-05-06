@@ -23,10 +23,40 @@ def orders(request):
         except CustomerProfile.DoesNotExist:
             return Response([], status=200)
 
-        orders_qs = Order.objects.filter(customer=customer_profile).order_by('-placed_at')
+        orders_qs = (
+            Order.objects
+            .filter(customer=customer_profile)
+            .select_related('delivery_address')
+            .prefetch_related(
+                'producer_orders__producer',
+                'producer_orders__items__product',
+            )
+            .order_by('-placed_at')
+        )
+
         data = []
         for order in orders_qs:
             addr = order.delivery_address
+            producers = []
+            for op in order.producer_orders.all():
+                items = []
+                for item in op.items.all():
+                    items.append({
+                        'product_id': item.product_id,
+                        'product_name': item.product.product_name,
+                        'quantity': str(item.quantity),
+                        'unit': item.product.product_unit,
+                        'unit_price_gbp': str(item.unit_price_gbp),
+                        'total_cost': str(item.total_cost),
+                        'status': item.status,
+                        'is_available': item.product.is_available,
+                    })
+                producers.append({
+                    'producer_name': op.producer.business_name,
+                    'status': op.status,
+                    'items': items,
+                })
+
             data.append({
                 'id': order.id,
                 'placed_at': order.placed_at,
@@ -38,6 +68,7 @@ def orders(request):
                     'city': addr.city,
                     'postcode': addr.postcode,
                 },
+                'producers': producers,
             })
         return Response(data, status=200)
 

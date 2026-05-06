@@ -22,6 +22,10 @@ from marketplace.admin_views import (
     AdminOrderDetailView,
     AdminCommunityPostListView,
     AdminCommunityPostDetailView,
+    AdminFinanceReportView,
+    AdminPayoutDetailView,
+    AdminFinanceOrderReportView,
+    AdminFinanceCSVView,
 )
 
 router = DefaultRouter()
@@ -41,6 +45,10 @@ admin_urlpatterns = [
     path('orders/<int:pk>/', AdminOrderDetailView.as_view()),
     path('community-posts/', AdminCommunityPostListView.as_view()),
     path('community-posts/<int:pk>/', AdminCommunityPostDetailView.as_view()),
+    path('finance/report/', AdminFinanceReportView.as_view()),
+    path('finance/payouts/<int:pk>/', AdminPayoutDetailView.as_view()),
+    path('finance/orders-report/', AdminFinanceOrderReportView.as_view()),
+    path('finance/orders-report/csv/', AdminFinanceCSVView.as_view()),
 ]
 
 urlpatterns = [

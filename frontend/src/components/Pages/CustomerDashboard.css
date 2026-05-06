@@ -116,3 +116,112 @@
   color: #b91c1c;
   border: 1px solid #fca5a5;
 }
+
+/* ── Order card extras ── */
+.order-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.order-card-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #6b7280;
+  padding: 0;
+}
+
+.order-card-toggle:hover { color: #111827; }
+
+.order-card-reorder {
+  padding: 5px 14px;
+  border: 1px solid #a3e635;
+  background: #f7fee7;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #3f6212;
+  transition: background 0.15s;
+}
+
+.order-card-reorder:hover { background: #d9f99d; }
+
+/* ── Expanded order detail ── */
+.order-detail {
+  margin-top: 12px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.order-producer-group {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.order-producer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #f3f4f6;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.order-producer-name {
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: #111827;
+}
+
+.order-producer-status {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.order-items-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.order-items-table th {
+  padding: 6px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #6b7280;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.order-items-table td {
+  padding: 7px 12px;
+  border-bottom: 1px solid #f3f4f6;
+  color: #374151;
+}
+
+.order-items-table tr:last-child td { border-bottom: none; }
+
+/* ── Reorder banner ── */
+.reorder-banner {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 0.875rem;
+  color: #15803d;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}

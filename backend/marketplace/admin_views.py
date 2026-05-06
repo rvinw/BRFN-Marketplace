@@ -1,10 +1,18 @@
+import csv
+from datetime import date
+from decimal import Decimal
+
+from django.db.models import Count, Sum
+from django.db.models.functions import TruncMonth
+from django.http import HttpResponse
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from accounts.admin_views import IsAdminRole
-from .models import Category, CommunityPost, Order, Product
+from .models import Category, CommunityPost, Order, PayoutRequest, Product
 from accounts.models import ProducerProfile
 
 
@@ -235,3 +243,235 @@ class AdminCommunityPostDetailView(APIView):
             return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+PAYOUT_STATUSES = ['PENDING', 'APPROVED', 'PAID', 'REJECTED']
+
+
+def _payout_data(p):
+    return {
+        'id': p.id,
+        'producer_id': p.producer_id,
+        'producer_name': p.producer.business_name if p.producer else '',
+        'week_start': p.week_start.isoformat(),
+        'week_end': p.week_end.isoformat(),
+        'gross_amount': str(p.gross_amount),
+        'commission_amount': str(p.commission_amount),
+        'net_amount': str(p.net_amount),
+        'status': p.status,
+        'requested_at': p.requested_at.isoformat() if p.requested_at else None,
+    }
+
+
+class AdminFinanceReportView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminRole]
+
+    def get(self, request):
+        payouts = PayoutRequest.objects.select_related('producer').order_by('-requested_at')
+
+        agg = payouts.aggregate(
+            total_gross=Sum('gross_amount'),
+            total_commission=Sum('commission_amount'),
+            total_net=Sum('net_amount'),
+        )
+        pending_agg = payouts.filter(status='PENDING').aggregate(
+            amount=Sum('net_amount'),
+        )
+
+        total_order_revenue = Order.objects.filter(
+            order_status='PAID'
+        ).aggregate(revenue=Sum('total_amount'))['revenue'] or Decimal('0.00')
+
+        summary = {
+            'commission_rate': '5%',
+            'total_order_revenue': str(total_order_revenue),
+            'total_commission_collected': str(agg['total_commission'] or Decimal('0.00')),
+            'total_net_payouts': str(agg['total_net'] or Decimal('0.00')),
+            'pending_payouts_count': payouts.filter(status='PENDING').count(),
+            'pending_payouts_amount': str(pending_agg['amount'] or Decimal('0.00')),
+        }
+
+        return Response({
+            'summary': summary,
+            'payouts': [_payout_data(p) for p in payouts],
+        })
+
+
+class AdminPayoutDetailView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminRole]
+
+    def patch(self, request, pk):
+        try:
+            payout = PayoutRequest.objects.select_related('producer').get(pk=pk)
+        except PayoutRequest.DoesNotExist:
+            return Response({'error': 'Payout request not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        new_status = request.data.get('status')
+        if new_status not in PAYOUT_STATUSES:
+            return Response({'error': f'Invalid status. Choose from: {PAYOUT_STATUSES}'}, status=status.HTTP_400_BAD_REQUEST)
+
+        payout.status = new_status
+        payout.save()
+        return Response(_payout_data(payout))
+
+
+_COMMISSION_RATE = Decimal('0.05')
+
+
+def _parse_date_range(request):
+    today = timezone.now().date()
+    from_str = request.query_params.get('from', '')
+    to_str = request.query_params.get('to', '')
+    try:
+        from_date = date.fromisoformat(from_str) if from_str else today - timezone.timedelta(days=14)
+    except ValueError:
+        from_date = today - timezone.timedelta(days=14)
+    try:
+        to_date = date.fromisoformat(to_str) if to_str else today
+    except ValueError:
+        to_date = today
+    return from_date, to_date
+
+
+def _orders_in_range(from_date, to_date):
+    return (
+        Order.objects
+        .filter(order_status='PAID', placed_at__date__gte=from_date, placed_at__date__lte=to_date)
+        .select_related('customer__user')
+        .prefetch_related('producer_orders__producer', 'producer_orders__items')
+        .order_by('-placed_at')
+    )
+
+
+def _order_to_dict(order):
+    commission = (order.total_amount * _COMMISSION_RATE).quantize(Decimal('0.01'))
+    producers = []
+    for op in order.producer_orders.all():
+        gross = sum((i.total_cost for i in op.items.all()), Decimal('0.00'))
+        p_commission = (gross * _COMMISSION_RATE).quantize(Decimal('0.01'))
+        producers.append({
+            'producer_name': op.producer.business_name,
+            'status': op.status,
+            'gross': str(gross),
+            'commission': str(p_commission),
+            'net': str((gross - p_commission).quantize(Decimal('0.01'))),
+        })
+    return {
+        'id': order.id,
+        'placed_at': order.placed_at.isoformat(),
+        'customer_name': order.customer.user.full_name,
+        'order_status': order.order_status,
+        'total_amount': str(order.total_amount),
+        'commission': str(commission),
+        'net_to_producers': str((order.total_amount - commission).quantize(Decimal('0.01'))),
+        'producers': producers,
+    }
+
+
+class AdminFinanceOrderReportView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminRole]
+
+    def get(self, request):
+        from_date, to_date = _parse_date_range(request)
+        orders_qs = _orders_in_range(from_date, to_date)
+
+        orders_data = [_order_to_dict(o) for o in orders_qs]
+        period_total = sum((Decimal(o['total_amount']) for o in orders_data), Decimal('0.00'))
+        period_commission = (period_total * _COMMISSION_RATE).quantize(Decimal('0.01'))
+
+        # Year-to-date
+        ytd_start = date(timezone.now().year, 1, 1)
+        ytd_agg = Order.objects.filter(
+            order_status='PAID', placed_at__date__gte=ytd_start
+        ).aggregate(total=Sum('total_amount'), count=Count('id'))
+        ytd_total = ytd_agg['total'] or Decimal('0.00')
+        ytd_commission = (ytd_total * _COMMISSION_RATE).quantize(Decimal('0.01'))
+
+        # Monthly breakdown (last 12 months, all time)
+        monthly_raw = (
+            Order.objects
+            .filter(order_status='PAID')
+            .annotate(month=TruncMonth('placed_at'))
+            .values('month')
+            .annotate(count=Count('id'), total=Sum('total_amount'))
+            .order_by('-month')[:12]
+        )
+        monthly = []
+        for m in monthly_raw:
+            mv = m['total'] or Decimal('0.00')
+            mc = (mv * _COMMISSION_RATE).quantize(Decimal('0.01'))
+            monthly.append({
+                'month': m['month'].strftime('%B %Y') if m['month'] else '',
+                'order_count': m['count'],
+                'total_value': str(mv),
+                'commission': str(mc),
+                'net': str((mv - mc).quantize(Decimal('0.01'))),
+            })
+
+        return Response({
+            'period': {'from': str(from_date), 'to': str(to_date)},
+            'commission_rate': '5%',
+            'summary': {
+                'order_count': len(orders_data),
+                'total_order_value': str(period_total),
+                'total_commission': str(period_commission),
+                'total_net': str((period_total - period_commission).quantize(Decimal('0.01'))),
+            },
+            'ytd': {
+                'order_count': ytd_agg['count'] or 0,
+                'total_order_value': str(ytd_total),
+                'total_commission': str(ytd_commission),
+            },
+            'monthly': monthly,
+            'orders': orders_data,
+        })
+
+
+class AdminFinanceCSVView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminRole]
+
+    def get(self, request):
+        from_date, to_date = _parse_date_range(request)
+        orders_qs = _orders_in_range(from_date, to_date)
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = (
+            f'attachment; filename="brfn_commission_{from_date}_{to_date}.csv"'
+        )
+        writer = csv.writer(response)
+        writer.writerow([
+            'Order ID', 'Date', 'Customer', 'Order Status',
+            'Order Total (£)', 'Commission 5% (£)', 'Net to Producers (£)',
+            'Producer', 'Producer Gross (£)', 'Producer Commission (£)', 'Producer Net (£)',
+        ])
+
+        for order in orders_qs:
+            commission = (order.total_amount * _COMMISSION_RATE).quantize(Decimal('0.01'))
+            net = (order.total_amount - commission).quantize(Decimal('0.01'))
+            date_str = order.placed_at.strftime('%d/%m/%Y')
+            customer = order.customer.user.full_name
+            ops = list(order.producer_orders.all())
+
+            for i, op in enumerate(ops):
+                gross = sum((item.total_cost for item in op.items.all()), Decimal('0.00'))
+                pc = (gross * _COMMISSION_RATE).quantize(Decimal('0.01'))
+                pn = (gross - pc).quantize(Decimal('0.01'))
+                prefix = (
+                    [f'#{order.id}', date_str, customer, order.order_status,
+                     f'{order.total_amount:.2f}', f'{commission:.2f}', f'{net:.2f}']
+                    if i == 0 else ['', '', '', '', '', '', '']
+                )
+                writer.writerow(prefix + [op.producer.business_name, f'{gross:.2f}', f'{pc:.2f}', f'{pn:.2f}'])
+
+            if not ops:
+                writer.writerow([
+                    f'#{order.id}', date_str, customer, order.order_status,
+                    f'{order.total_amount:.2f}', f'{commission:.2f}', f'{net:.2f}',
+                    '—', '—', '—', '—',
+                ])
+
+        return response
