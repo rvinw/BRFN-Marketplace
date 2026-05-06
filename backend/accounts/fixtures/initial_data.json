@@ -24,7 +24,7 @@
   "model": "accounts.user",
   "pk": 2,
   "fields": {
-    "password": "",
+    "password": "pbkdf2_sha256$1200000$jpeLVMQei1ljL1hBomRaUP$1CPPt0Tz5PrATDmRh2QbQjX0tnuVE4qtoI2rQSfrkaw=",
     "last_login": null,
     "is_superuser": false,
     "username": "greenvalley@farm.com",
@@ -45,7 +45,7 @@
   "model": "accounts.user",
   "pk": 3,
   "fields": {
-    "password": "",
+    "password": "pbkdf2_sha256$1200000$0vWcLDt5mfga5BGxgyX439$PovdGpqDowifm3l3/PyEJfT1Bx8FXPeyGaG/kwY+1ag=",
     "last_login": null,
     "is_superuser": false,
     "username": "sunnymeadow@dairy.com",
@@ -66,7 +66,7 @@
   "model": "accounts.user",
   "pk": 4,
   "fields": {
-    "password": "",
+    "password": "pbkdf2_sha256$1200000$ABeiUUJYhz59OdFxozGPK4$lg3DQCv4PqqsiCLeGODleqnL/jaJ09jUBD2oROkSpII=",
     "last_login": null,
     "is_superuser": false,
     "username": "ceridwenorchard@farm.com",
@@ -87,7 +87,7 @@
   "model": "accounts.user",
   "pk": 5,
   "fields": {
-    "password": "",
+    "password": "pbkdf2_sha256$1200000$wWJ1e048WF9uHQMjsEKMkR$3SC5x5CbmXKJzU9LVGgfhOu6kau8N55WqCupeYFxB50=",
     "last_login": null,
     "is_superuser": false,
     "username": "alice@example.com",
@@ -108,7 +108,7 @@
   "model": "accounts.user",
   "pk": 6,
   "fields": {
-    "password": "",
+    "password": "pbkdf2_sha256$1200000$5LGs0DiXNmYlH7VFPNzKBz$/29uXio/IgneFJmO/mWMWjxl8ILIp67C6jZzvF46Fok=",
     "last_login": null,
     "is_superuser": false,
     "username": "theoakrestaurant@local.com",
@@ -129,7 +129,7 @@
   "model": "accounts.user",
   "pk": 7,
   "fields": {
-    "password": "",
+    "password": "pbkdf2_sha256$1200000$kAds4FjOCje4b64hG1hkqp$XcZUCFRShY7u5dZyMfn67nhXB6OZIu//QkfK6fuvNEo=",
     "last_login": null,
     "is_superuser": false,
     "username": "brfnhub@community.com",
@@ -171,7 +171,7 @@
   "model": "accounts.user",
   "pk": 9,
   "fields": {
-    "password": "pbkdf2_sha256$1200000$bWk8nqBjp8pzKFgP7wRW1d$dS60Oj6fpUCsaC3IpTD8WhTZq40Ky5SR3fdKZpDTKlo=",
+    "password": "pbkdf2_sha256$1200000$oZ9GnmatqzvwublX4rrDW2$u+GyKnNdFsBusGcughKetMDF+xsM68PIR7LcI5HxsFM=",
     "last_login": "2026-04-23T23:56:08Z",
     "is_superuser": true,
     "username": "admin",
@@ -186,22 +186,18 @@
     "role_name": "ADMIN",
     "groups": [],
     "user_permissions": [
-      21,
-      22,
-      23,
-      24,
-      29,
-      30,
-      31,
-      32,
-      33,
-      34,
-      35,
-      36,
-      25,
-      26,
-      27,
-      28,
+      85,
+      86,
+      87,
+      88,
+      93,
+      94,
+      95,
+      96,
+      89,
+      90,
+      91,
+      92,
       1,
       2,
       3,
@@ -214,18 +210,18 @@
       6,
       7,
       8,
-      37,
-      38,
-      39,
-      40,
       13,
       14,
       15,
       16,
-      93,
-      94,
-      95,
-      96,
+      73,
+      74,
+      75,
+      76,
+      21,
+      22,
+      23,
+      24,
       49,
       50,
       51,
@@ -234,50 +230,54 @@
       70,
       71,
       72,
-      89,
-      90,
-      91,
-      92,
-      41,
-      42,
-      43,
-      44,
-      73,
-      74,
-      75,
-      76,
-      81,
-      82,
-      83,
-      84,
+      25,
+      26,
+      27,
+      28,
       77,
       78,
       79,
       80,
-      85,
-      86,
-      87,
-      88,
-      45,
-      46,
-      47,
-      48,
-      65,
-      66,
-      67,
-      68,
       53,
       54,
       55,
       56,
-      57,
-      58,
-      59,
-      60,
       61,
       62,
       63,
       64,
+      57,
+      58,
+      59,
+      60,
+      65,
+      66,
+      67,
+      68,
+      81,
+      82,
+      83,
+      84,
+      29,
+      30,
+      31,
+      32,
+      45,
+      46,
+      47,
+      48,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
       17,
       18,
       19,
@@ -289,10 +289,10 @@
   "model": "accounts.user",
   "pk": 10,
   "fields": {
-    "password": "pbkdf2_sha256$1200000$vZY3LQoHgRZy3M1HKBFszr$c3wRtDpYN4Iw9Yzy5XVLkQ/TEglQ+ds57oGkA3tFLhM=",
+    "password": "pbkdf2_sha256$1200000$vPHBAOZMj0DMKSfkzqp6E0$phbLrI/PPkb/3DNqpWH352olVq689gN+JE3m6NjQu+A=",
     "last_login": null,
     "is_superuser": false,
-    "username": "",
+    "username": "customer@gmail.com",
     "first_name": "",
     "last_name": "",
     "is_staff": false,
@@ -310,7 +310,7 @@
   "model": "accounts.user",
   "pk": 13,
   "fields": {
-    "password": "pbkdf2_sha256$1200000$4gsuwTfZmqk963d4kGGUn8$UZByMHSXP5z9ObRWUG4CbweLA1rON7i1feLJ8nejK0I=",
+    "password": "pbkdf2_sha256$1200000$9PBB3xfkdmteAvDnZxA05n$5j4W72q3eiCfgzz9ABlETDeYBHejJYlxNfwp/+xtz14=",
     "last_login": null,
     "is_superuser": false,
     "username": "producer@gmail.com",
@@ -352,7 +352,7 @@
   "model": "accounts.user",
   "pk": 15,
   "fields": {
-    "password": "pbkdf2_sha256$1200000$qaTZirnbzwxCkd93o2X2Yd$fZpxj5SyW4kO4EyzPtKTSai0S+V1TwHMRsTgKpCAV9Y=",
+    "password": "pbkdf2_sha256$1200000$vBw08DuOhWrFQFYlOehfDi$07J1w71WZZeNs46b1x5OuAGd+IRF6muS7lFdq9vXArk=",
     "last_login": null,
     "is_superuser": false,
     "username": "alex@alex.com",
@@ -364,6 +364,48 @@
     "email": "alex@alex.com",
     "full_name": "Alex",
     "phone": "077777777777",
+    "role_name": "PRODUCER",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "pk": 16,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$vR0FEELEfBNznDRj5JOHBP$lpElVRlM2KBrOepW23WC7BoAAQNRYVn7L3aL0pon4VQ=",
+    "last_login": "2026-05-06T15:11:55.330Z",
+    "is_superuser": true,
+    "username": "Jake",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-05-06T15:11:46.602Z",
+    "email": "jakerichardsonprice@gmail.com",
+    "full_name": "",
+    "phone": null,
+    "role_name": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "pk": 17,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$UqQf6gjHQoce3bcDF8j73y$xroBh8bojPpJq9lKkbQskoqrGLKKW78sqkepzggEyIU=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "jakeprod@gmail.com",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-06T15:43:48.196Z",
+    "email": "jakeprod@gmail.com",
+    "full_name": "JakeProd",
+    "phone": "00000000000",
     "role_name": "PRODUCER",
     "groups": [],
     "user_permissions": []
@@ -440,6 +482,216 @@
   }
 },
 {
+  "model": "accounts.address",
+  "pk": 8,
+  "fields": {
+    "line_1": "Transom",
+    "line_2": "Victoria road",
+    "city": "Bristol",
+    "postcode": "BS1 6AH"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 9,
+  "fields": {
+    "line_1": "Jake",
+    "line_2": "Bristol",
+    "city": "Bristol",
+    "postcode": "bs7 8eb"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 10,
+  "fields": {
+    "line_1": "Jake",
+    "line_2": "Bristol",
+    "city": "Bristol",
+    "postcode": "bs7 8be"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 11,
+  "fields": {
+    "line_1": "Hillside Farm, Brook Lane",
+    "line_2": null,
+    "city": "Stroud",
+    "postcode": "GL5 1AA"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 12,
+  "fields": {
+    "line_1": "5 Oak Street",
+    "line_2": null,
+    "city": "Aberystwyth",
+    "postcode": "SY23 1DE"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 13,
+  "fields": {
+    "line_1": "12 Marine Terrace",
+    "line_2": null,
+    "city": "Aberystwyth",
+    "postcode": "SY23 2AZ"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 14,
+  "fields": {
+    "line_1": "Community Centre, Bridge Street",
+    "line_2": null,
+    "city": "Aberystwyth",
+    "postcode": "SY23 2EQ"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 15,
+  "fields": {
+    "line_1": "22 High Street",
+    "line_2": null,
+    "city": "Bristol",
+    "postcode": "BS1 2AB"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 16,
+  "fields": {
+    "line_1": "5 Oak Street",
+    "line_2": null,
+    "city": "Aberystwyth",
+    "postcode": "SY23 1DE"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 17,
+  "fields": {
+    "line_1": "12 Marine Terrace",
+    "line_2": null,
+    "city": "Aberystwyth",
+    "postcode": "SY23 2AZ"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 18,
+  "fields": {
+    "line_1": "22 High Street",
+    "line_2": null,
+    "city": "Bristol",
+    "postcode": "BS1 2AB"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 19,
+  "fields": {
+    "line_1": "Community Centre, Bridge Street",
+    "line_2": null,
+    "city": "Aberystwyth",
+    "postcode": "SY23 2EQ"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 20,
+  "fields": {
+    "line_1": "5 Oak Street",
+    "line_2": null,
+    "city": "Aberystwyth",
+    "postcode": "SY23 1DE"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 21,
+  "fields": {
+    "line_1": "22 High Street",
+    "line_2": null,
+    "city": "Bristol",
+    "postcode": "BS1 2AB"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 22,
+  "fields": {
+    "line_1": "12 Marine Terrace",
+    "line_2": null,
+    "city": "Aberystwyth",
+    "postcode": "SY23 2AZ"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 23,
+  "fields": {
+    "line_1": "Community Centre, Bridge Street",
+    "line_2": null,
+    "city": "Aberystwyth",
+    "postcode": "SY23 2EQ"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 24,
+  "fields": {
+    "line_1": "5 Oak Street",
+    "line_2": null,
+    "city": "Aberystwyth",
+    "postcode": "SY23 1DE"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 25,
+  "fields": {
+    "line_1": "12 Marine Terrace",
+    "line_2": null,
+    "city": "Aberystwyth",
+    "postcode": "SY23 2AZ"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 26,
+  "fields": {
+    "line_1": "Community Centre, Bridge Street",
+    "line_2": null,
+    "city": "Aberystwyth",
+    "postcode": "SY23 2EQ"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 27,
+  "fields": {
+    "line_1": "5 Oak Street",
+    "line_2": null,
+    "city": "Aberystwyth",
+    "postcode": "SY23 1DE"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 28,
+  "fields": {
+    "line_1": "22 High Street",
+    "line_2": null,
+    "city": "Bristol",
+    "postcode": "BS1 2AB"
+  }
+},
+{
   "model": "accounts.customerprofile",
   "pk": 1,
   "fields": {
@@ -467,6 +719,16 @@
     "customer_type": "COMMUNITY_GROUP",
     "org_name": "BRFN Community Hub",
     "address": 6
+  }
+},
+{
+  "model": "accounts.customerprofile",
+  "pk": 4,
+  "fields": {
+    "user": 10,
+    "customer_type": "INDIVIDUAL",
+    "org_name": null,
+    "address": 7
   }
 },
 {
@@ -513,6 +775,30 @@
     "business_name": "Alex Farms",
     "contact_name": "Alex Farms",
     "address": 7,
+    "lead_time_hours": 48,
+    "is_verified": true
+  }
+},
+{
+  "model": "accounts.producerprofile",
+  "pk": 5,
+  "fields": {
+    "user": 17,
+    "business_name": "JakeProducer",
+    "contact_name": "JakeProducer",
+    "address": 9,
+    "lead_time_hours": 48,
+    "is_verified": false
+  }
+},
+{
+  "model": "accounts.producerprofile",
+  "pk": 6,
+  "fields": {
+    "user": 13,
+    "business_name": "Hillside Farm",
+    "contact_name": null,
+    "address": 11,
     "lead_time_hours": 48,
     "is_verified": true
   }

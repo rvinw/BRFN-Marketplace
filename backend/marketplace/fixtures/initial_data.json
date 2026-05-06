@@ -32,6 +32,30 @@
   }
 },
 {
+  "model": "marketplace.category",
+  "pk": 5,
+  "fields": {
+    "category_name": "Bakery",
+    "category_description": null
+  }
+},
+{
+  "model": "marketplace.category",
+  "pk": 6,
+  "fields": {
+    "category_name": "Honey & Preserves",
+    "category_description": "Local honeys, jams, chutneys and preserves"
+  }
+},
+{
+  "model": "marketplace.category",
+  "pk": 7,
+  "fields": {
+    "category_name": "Meat & Poultry",
+    "category_description": "Pasture-raised meat and poultry from local farms"
+  }
+},
+{
   "model": "marketplace.product",
   "pk": 1,
   "fields": {
@@ -412,6 +436,266 @@
   }
 },
 {
+  "model": "marketplace.product",
+  "pk": 20,
+  "fields": {
+    "producer": 5,
+    "category": 5,
+    "product_name": "JakeFood (bread)",
+    "product_description": "Bread",
+    "current_price": "7.85",
+    "product_unit": "EACH",
+    "stock_quantity": "20.000",
+    "product_stock_threshold": null,
+    "harvest_date": "2026-05-06",
+    "best_before_date": null,
+    "organic_status": "NON_ORGANIC",
+    "is_available": true,
+    "created_at": "2026-05-06T15:44:36.628Z",
+    "updated_at": "2026-05-06T15:53:01.606Z"
+  }
+},
+{
+  "model": "marketplace.product",
+  "pk": 21,
+  "fields": {
+    "producer": 4,
+    "category": 3,
+    "product_name": "Alex Farm Eggs (dozen)",
+    "product_description": "Free-range eggs from our happy hens.",
+    "current_price": "3.50",
+    "product_unit": "DOZEN",
+    "stock_quantity": "60.000",
+    "product_stock_threshold": null,
+    "harvest_date": null,
+    "best_before_date": null,
+    "organic_status": "NON_ORGANIC",
+    "is_available": true,
+    "created_at": "2026-05-06T17:22:56.467Z",
+    "updated_at": "2026-05-06T17:22:56.467Z"
+  }
+},
+{
+  "model": "marketplace.product",
+  "pk": 22,
+  "fields": {
+    "producer": 4,
+    "category": 3,
+    "product_name": "Duck Eggs (half dozen)",
+    "product_description": "Rich, creamy duck eggs — great for baking.",
+    "current_price": "2.80",
+    "product_unit": "EACH",
+    "stock_quantity": "30.000",
+    "product_stock_threshold": null,
+    "harvest_date": null,
+    "best_before_date": null,
+    "organic_status": "NON_ORGANIC",
+    "is_available": true,
+    "created_at": "2026-05-06T17:22:56.476Z",
+    "updated_at": "2026-05-06T17:22:56.476Z"
+  }
+},
+{
+  "model": "marketplace.product",
+  "pk": 23,
+  "fields": {
+    "producer": 4,
+    "category": 3,
+    "product_name": "Goat's Cheese (200 g)",
+    "product_description": "Soft, tangy goat's cheese made on-site.",
+    "current_price": "4.50",
+    "product_unit": "EACH",
+    "stock_quantity": "25.000",
+    "product_stock_threshold": null,
+    "harvest_date": null,
+    "best_before_date": null,
+    "organic_status": "NON_ORGANIC",
+    "is_available": true,
+    "created_at": "2026-05-06T17:22:56.481Z",
+    "updated_at": "2026-05-06T17:22:56.481Z"
+  }
+},
+{
+  "model": "marketplace.product",
+  "pk": 24,
+  "fields": {
+    "producer": 4,
+    "category": 7,
+    "product_name": "Whole Chicken (approx 1.5 kg)",
+    "product_description": "Pasture-raised, slow-grown chicken. Delivered fresh.",
+    "current_price": "12.00",
+    "product_unit": "EACH",
+    "stock_quantity": "15.000",
+    "product_stock_threshold": null,
+    "harvest_date": null,
+    "best_before_date": null,
+    "organic_status": "NON_ORGANIC",
+    "is_available": true,
+    "created_at": "2026-05-06T17:22:56.488Z",
+    "updated_at": "2026-05-06T17:22:56.488Z"
+  }
+},
+{
+  "model": "marketplace.product",
+  "pk": 25,
+  "fields": {
+    "producer": 6,
+    "category": 1,
+    "product_name": "Baby Spinach (200 g bag)",
+    "product_description": "Tender young spinach leaves picked twice weekly.",
+    "current_price": "2.00",
+    "product_unit": "EACH",
+    "stock_quantity": "50.000",
+    "product_stock_threshold": null,
+    "harvest_date": null,
+    "best_before_date": null,
+    "organic_status": "ORGANIC",
+    "is_available": true,
+    "created_at": "2026-05-06T17:22:56.493Z",
+    "updated_at": "2026-05-06T17:22:56.493Z"
+  }
+},
+{
+  "model": "marketplace.product",
+  "pk": 26,
+  "fields": {
+    "producer": 6,
+    "category": 1,
+    "product_name": "Curly Kale (bunch)",
+    "product_description": "Packed with flavour and nutrients. Great stir-fried.",
+    "current_price": "1.80",
+    "product_unit": "BUNCH",
+    "stock_quantity": "40.000",
+    "product_stock_threshold": null,
+    "harvest_date": null,
+    "best_before_date": null,
+    "organic_status": "ORGANIC",
+    "is_available": true,
+    "created_at": "2026-05-06T17:22:56.497Z",
+    "updated_at": "2026-05-06T17:22:56.497Z"
+  }
+},
+{
+  "model": "marketplace.product",
+  "pk": 27,
+  "fields": {
+    "producer": 6,
+    "category": 1,
+    "product_name": "Beetroot (bunch of 4)",
+    "product_description": "Deep red, earthy beetroot. Roast whole or grate raw.",
+    "current_price": "1.60",
+    "product_unit": "BUNCH",
+    "stock_quantity": "35.000",
+    "product_stock_threshold": null,
+    "harvest_date": null,
+    "best_before_date": null,
+    "organic_status": "ORGANIC",
+    "is_available": true,
+    "created_at": "2026-05-06T17:22:56.502Z",
+    "updated_at": "2026-05-06T17:22:56.502Z"
+  }
+},
+{
+  "model": "marketplace.product",
+  "pk": 28,
+  "fields": {
+    "producer": 6,
+    "category": 1,
+    "product_name": "Radishes (bunch)",
+    "product_description": "Crisp and peppery — perfect for salads.",
+    "current_price": "1.50",
+    "product_unit": "BUNCH",
+    "stock_quantity": "30.000",
+    "product_stock_threshold": null,
+    "harvest_date": null,
+    "best_before_date": null,
+    "organic_status": "ORGANIC",
+    "is_available": true,
+    "created_at": "2026-05-06T17:22:56.506Z",
+    "updated_at": "2026-05-06T17:22:56.506Z"
+  }
+},
+{
+  "model": "marketplace.product",
+  "pk": 29,
+  "fields": {
+    "producer": 5,
+    "category": 5,
+    "product_name": "Sourdough Loaf",
+    "product_description": "Long-fermented sourdough with a crispy crust.",
+    "current_price": "4.50",
+    "product_unit": "EACH",
+    "stock_quantity": "20.000",
+    "product_stock_threshold": null,
+    "harvest_date": null,
+    "best_before_date": null,
+    "organic_status": "NON_ORGANIC",
+    "is_available": true,
+    "created_at": "2026-05-06T17:22:56.510Z",
+    "updated_at": "2026-05-06T17:22:56.510Z"
+  }
+},
+{
+  "model": "marketplace.product",
+  "pk": 30,
+  "fields": {
+    "producer": 5,
+    "category": 5,
+    "product_name": "Seeded Wholemeal Loaf",
+    "product_description": "Dense, seeded wholemeal baked fresh each morning.",
+    "current_price": "3.80",
+    "product_unit": "EACH",
+    "stock_quantity": "20.000",
+    "product_stock_threshold": null,
+    "harvest_date": null,
+    "best_before_date": null,
+    "organic_status": "NON_ORGANIC",
+    "is_available": true,
+    "created_at": "2026-05-06T17:22:56.515Z",
+    "updated_at": "2026-05-06T17:22:56.515Z"
+  }
+},
+{
+  "model": "marketplace.product",
+  "pk": 31,
+  "fields": {
+    "producer": 5,
+    "category": 6,
+    "product_name": "Raw Wildflower Honey (340 g)",
+    "product_description": "Unfiltered honey from our hives on the Mendip Hills.",
+    "current_price": "5.50",
+    "product_unit": "EACH",
+    "stock_quantity": "40.000",
+    "product_stock_threshold": null,
+    "harvest_date": null,
+    "best_before_date": null,
+    "organic_status": "ORGANIC",
+    "is_available": true,
+    "created_at": "2026-05-06T17:22:56.519Z",
+    "updated_at": "2026-05-06T17:22:56.519Z"
+  }
+},
+{
+  "model": "marketplace.product",
+  "pk": 32,
+  "fields": {
+    "producer": 5,
+    "category": 6,
+    "product_name": "Apple Cider Vinegar (500 ml)",
+    "product_description": "Raw, unfiltered ACV with the mother. Unpasteurised.",
+    "current_price": "3.20",
+    "product_unit": "EACH",
+    "stock_quantity": "30.000",
+    "product_stock_threshold": null,
+    "harvest_date": null,
+    "best_before_date": null,
+    "organic_status": "ORGANIC",
+    "is_available": true,
+    "created_at": "2026-05-06T17:22:56.523Z",
+    "updated_at": "2026-05-06T17:22:56.523Z"
+  }
+},
+{
   "model": "marketplace.allergen",
   "pk": 1,
   "fields": {
@@ -710,6 +994,15 @@
   }
 },
 {
+  "model": "marketplace.cart",
+  "pk": 1,
+  "fields": {
+    "customer": 4,
+    "created_at": "2026-05-06T17:25:59.372Z",
+    "updated_at": "2026-05-06T17:25:59.372Z"
+  }
+},
+{
   "model": "marketplace.addproduct",
   "pk": 1,
   "fields": {
@@ -805,6 +1098,528 @@
     "title": "test",
     "description": "test",
     "created_at": "2026-04-28T14:38:30.213Z"
+  }
+},
+{
+  "model": "marketplace.communitypost",
+  "pk": 7,
+  "fields": {
+    "post_type": "Farm Story",
+    "is_public": true,
+    "title": "Meet the Bees Behind Our Honey",
+    "description": "JakeProducer runs 12 hives across the Mendip Hills. This spring we extracted our first wildflower crop and the results are incredible — deep amber with notes of clover and heather. All honey is raw, cold-extracted and never heated above 40°C. Come and see the hives at our open day on 15th May!",
+    "created_at": "2026-05-06T17:22:57.198Z"
+  }
+},
+{
+  "model": "marketplace.communitypost",
+  "pk": 8,
+  "fields": {
+    "post_type": "Recipe",
+    "is_public": true,
+    "title": "Roasted Beetroot & Goat's Cheese Tart",
+    "description": "Ingredients: 4 Hillside Farm beetroot, 200g Alex Farms goat's cheese, 1 sheet shortcrust pastry, 2 tbsp balsamic glaze, handful of Green Valley rocket, salt & pepper.\n\nRoast beetroot whole at 200°C for 45 min. Cool, peel and slice. Line a tart tin with pastry, blind bake 15 min. Layer beetroot, dot with goat's cheese, drizzle balsamic. Bake 20 min. Serve with rocket. Serves 4.",
+    "created_at": "2026-05-06T17:22:57.204Z"
+  }
+},
+{
+  "model": "marketplace.communitypost",
+  "pk": 9,
+  "fields": {
+    "post_type": "Farm Story",
+    "is_public": true,
+    "title": "Hillside Farm's Organic Journey",
+    "description": "We completed our 3-year organic conversion in March and are now fully certified. That means no synthetic fertilisers or pesticides on any of our fields. Our spinach, kale and beetroot are now verified organic — look for the Soil Association logo on our packaging. It's been a challenging transition but the soil health improvements are already visible.",
+    "created_at": "2026-05-06T17:22:57.208Z"
+  }
+},
+{
+  "model": "marketplace.communitypost",
+  "pk": 10,
+  "fields": {
+    "post_type": "Farm Story",
+    "is_public": false,
+    "title": "Cold Storage Upgrade — Internal Update",
+    "description": "We have installed two new 4°C cold rooms at the distribution hub. From next week all leafy greens will be stored at the hub rather than collected directly from farms. Producers: please ensure deliveries arrive by 7am on collection days. This is an internal update — not for public display.",
+    "created_at": "2026-05-06T17:22:57.213Z"
+  }
+},
+{
+  "model": "marketplace.communitypost",
+  "pk": 11,
+  "fields": {
+    "post_type": "Recipe",
+    "is_public": true,
+    "title": "Sourdough French Toast with Wildflower Honey",
+    "description": "Ingredients: 4 thick slices Jake's sourdough, 3 Sunny Meadow free-range eggs, 100ml whole milk, 1 tsp vanilla, 2 tbsp butter, 2 tbsp JakeProducer wildflower honey, fresh strawberries.\n\nWhisk eggs, milk and vanilla. Dip bread slices and fry in butter 2-3 min each side until golden. Drizzle with honey and serve with sliced strawberries. Perfect weekend breakfast.",
+    "created_at": "2026-05-06T17:22:57.217Z"
+  }
+},
+{
+  "model": "marketplace.communitypost",
+  "pk": 12,
+  "fields": {
+    "post_type": "Farm Story",
+    "is_public": true,
+    "title": "BRFN Spring Market — Save the Date",
+    "description": "Our Spring Market returns to Aberystwyth town centre on Saturday 23rd May, 9am–2pm. All BRFN producers are invited to have a stall — contact the hub to register. Last year we had over 400 visitors and sold out of most produce by midday. This year we're expanding to the lower square to accommodate more producers.",
+    "created_at": "2026-05-06T17:22:57.221Z"
+  }
+},
+{
+  "model": "marketplace.communitypost",
+  "pk": 13,
+  "fields": {
+    "post_type": "Farm Story",
+    "is_public": true,
+    "title": "Alex Farms Welcomes a New Flock",
+    "description": "We've just taken delivery of 200 new point-of-lay hens — a mix of Leghorn and Rhode Island Red. They'll be producing eggs within the next 2-3 weeks, which means we can increase our weekly egg allocation to marketplace customers. Duck egg numbers are also up this season.",
+    "created_at": "2026-05-06T17:22:57.226Z"
+  }
+},
+{
+  "model": "marketplace.communitypost",
+  "pk": 14,
+  "fields": {
+    "post_type": "Recipe",
+    "is_public": true,
+    "title": "Kale & Potato Soup",
+    "description": "Ingredients: 1 bunch Hillside kale, 500g Green Valley new potatoes, 1 onion, 2 cloves garlic, 1L vegetable stock, 200ml Sunny Meadow whole milk, salt & pepper.\n\nSweat onion and garlic. Add diced potatoes and stock, simmer 15 min. Add roughly chopped kale and cook 5 more minutes. Stir in milk, season and serve. Hearty and simple. Serves 4.",
+    "created_at": "2026-05-06T17:22:57.229Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 1,
+  "fields": {
+    "producer": 1,
+    "week_start": "2026-04-14",
+    "week_end": "2026-04-20",
+    "gross_amount": "8.60",
+    "commission_amount": "0.43",
+    "net_amount": "8.17",
+    "status": "PAID",
+    "requested_at": "2026-04-22T10:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 2,
+  "fields": {
+    "producer": 2,
+    "week_start": "2026-04-14",
+    "week_end": "2026-04-20",
+    "gross_amount": "11.80",
+    "commission_amount": "0.59",
+    "net_amount": "11.21",
+    "status": "APPROVED",
+    "requested_at": "2026-04-22T11:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 3,
+  "fields": {
+    "producer": 1,
+    "week_start": "2026-04-21",
+    "week_end": "2026-04-27",
+    "gross_amount": "12.80",
+    "commission_amount": "0.64",
+    "net_amount": "12.16",
+    "status": "PAID",
+    "requested_at": "2026-04-29T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 4,
+  "fields": {
+    "producer": 3,
+    "week_start": "2026-04-21",
+    "week_end": "2026-04-27",
+    "gross_amount": "11.40",
+    "commission_amount": "0.57",
+    "net_amount": "10.83",
+    "status": "REJECTED",
+    "requested_at": "2026-04-29T10:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 5,
+  "fields": {
+    "producer": 1,
+    "week_start": "2026-04-28",
+    "week_end": "2026-05-04",
+    "gross_amount": "13.60",
+    "commission_amount": "0.68",
+    "net_amount": "12.92",
+    "status": "PENDING",
+    "requested_at": "2026-05-06T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 6,
+  "fields": {
+    "producer": 2,
+    "week_start": "2026-04-28",
+    "week_end": "2026-05-04",
+    "gross_amount": "15.60",
+    "commission_amount": "0.78",
+    "net_amount": "14.82",
+    "status": "PENDING",
+    "requested_at": "2026-05-06T10:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 7,
+  "fields": {
+    "producer": 3,
+    "week_start": "2026-04-28",
+    "week_end": "2026-05-04",
+    "gross_amount": "14.20",
+    "commission_amount": "0.71",
+    "net_amount": "13.49",
+    "status": "PAID",
+    "requested_at": "2026-05-06T11:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 8,
+  "fields": {
+    "producer": 5,
+    "week_start": "2026-05-04",
+    "week_end": "2026-05-10",
+    "gross_amount": "23.55",
+    "commission_amount": "1.18",
+    "net_amount": "22.37",
+    "status": "PAID",
+    "requested_at": "2026-05-06T15:48:07.017Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 9,
+  "fields": {
+    "producer": 1,
+    "week_start": "2026-03-30",
+    "week_end": "2026-04-05",
+    "gross_amount": "20.30",
+    "commission_amount": "1.02",
+    "net_amount": "19.28",
+    "status": "PAID",
+    "requested_at": "2026-04-07T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 10,
+  "fields": {
+    "producer": 2,
+    "week_start": "2026-03-30",
+    "week_end": "2026-04-05",
+    "gross_amount": "11.80",
+    "commission_amount": "0.59",
+    "net_amount": "11.21",
+    "status": "PAID",
+    "requested_at": "2026-04-07T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 11,
+  "fields": {
+    "producer": 3,
+    "week_start": "2026-03-30",
+    "week_end": "2026-04-05",
+    "gross_amount": "13.60",
+    "commission_amount": "0.68",
+    "net_amount": "12.92",
+    "status": "PAID",
+    "requested_at": "2026-04-07T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 12,
+  "fields": {
+    "producer": 6,
+    "week_start": "2026-04-06",
+    "week_end": "2026-04-12",
+    "gross_amount": "9.60",
+    "commission_amount": "0.48",
+    "net_amount": "9.12",
+    "status": "PAID",
+    "requested_at": "2026-04-14T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 13,
+  "fields": {
+    "producer": 1,
+    "week_start": "2026-04-06",
+    "week_end": "2026-04-12",
+    "gross_amount": "4.50",
+    "commission_amount": "0.22",
+    "net_amount": "4.28",
+    "status": "PAID",
+    "requested_at": "2026-04-14T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 14,
+  "fields": {
+    "producer": 2,
+    "week_start": "2026-04-06",
+    "week_end": "2026-04-12",
+    "gross_amount": "27.40",
+    "commission_amount": "1.37",
+    "net_amount": "26.03",
+    "status": "PAID",
+    "requested_at": "2026-04-14T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 15,
+  "fields": {
+    "producer": 5,
+    "week_start": "2026-04-13",
+    "week_end": "2026-04-19",
+    "gross_amount": "24.50",
+    "commission_amount": "1.22",
+    "net_amount": "23.28",
+    "status": "APPROVED",
+    "requested_at": "2026-04-21T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 16,
+  "fields": {
+    "producer": 1,
+    "week_start": "2026-04-13",
+    "week_end": "2026-04-19",
+    "gross_amount": "21.80",
+    "commission_amount": "1.09",
+    "net_amount": "20.71",
+    "status": "APPROVED",
+    "requested_at": "2026-04-21T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 17,
+  "fields": {
+    "producer": 2,
+    "week_start": "2026-04-13",
+    "week_end": "2026-04-19",
+    "gross_amount": "11.80",
+    "commission_amount": "0.59",
+    "net_amount": "11.21",
+    "status": "APPROVED",
+    "requested_at": "2026-04-21T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 18,
+  "fields": {
+    "producer": 3,
+    "week_start": "2026-04-13",
+    "week_end": "2026-04-19",
+    "gross_amount": "16.70",
+    "commission_amount": "0.84",
+    "net_amount": "15.86",
+    "status": "APPROVED",
+    "requested_at": "2026-04-21T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 19,
+  "fields": {
+    "producer": 4,
+    "week_start": "2026-04-13",
+    "week_end": "2026-04-19",
+    "gross_amount": "11.50",
+    "commission_amount": "0.58",
+    "net_amount": "10.92",
+    "status": "APPROVED",
+    "requested_at": "2026-04-21T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 20,
+  "fields": {
+    "producer": 5,
+    "week_start": "2026-04-20",
+    "week_end": "2026-04-26",
+    "gross_amount": "21.80",
+    "commission_amount": "1.09",
+    "net_amount": "20.71",
+    "status": "PAID",
+    "requested_at": "2026-04-28T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 21,
+  "fields": {
+    "producer": 6,
+    "week_start": "2026-04-20",
+    "week_end": "2026-04-26",
+    "gross_amount": "6.40",
+    "commission_amount": "0.32",
+    "net_amount": "6.08",
+    "status": "APPROVED",
+    "requested_at": "2026-04-28T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 22,
+  "fields": {
+    "producer": 1,
+    "week_start": "2026-04-20",
+    "week_end": "2026-04-26",
+    "gross_amount": "23.20",
+    "commission_amount": "1.16",
+    "net_amount": "22.04",
+    "status": "APPROVED",
+    "requested_at": "2026-04-28T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 23,
+  "fields": {
+    "producer": 2,
+    "week_start": "2026-04-20",
+    "week_end": "2026-04-26",
+    "gross_amount": "29.60",
+    "commission_amount": "1.48",
+    "net_amount": "28.12",
+    "status": "APPROVED",
+    "requested_at": "2026-04-28T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 24,
+  "fields": {
+    "producer": 3,
+    "week_start": "2026-04-20",
+    "week_end": "2026-04-26",
+    "gross_amount": "26.30",
+    "commission_amount": "1.32",
+    "net_amount": "24.98",
+    "status": "APPROVED",
+    "requested_at": "2026-04-28T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 25,
+  "fields": {
+    "producer": 4,
+    "week_start": "2026-04-20",
+    "week_end": "2026-04-26",
+    "gross_amount": "28.10",
+    "commission_amount": "1.40",
+    "net_amount": "26.70",
+    "status": "APPROVED",
+    "requested_at": "2026-04-28T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 26,
+  "fields": {
+    "producer": 5,
+    "week_start": "2026-04-27",
+    "week_end": "2026-05-03",
+    "gross_amount": "45.90",
+    "commission_amount": "2.30",
+    "net_amount": "43.60",
+    "status": "PENDING",
+    "requested_at": "2026-05-05T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 27,
+  "fields": {
+    "producer": 6,
+    "week_start": "2026-04-27",
+    "week_end": "2026-05-03",
+    "gross_amount": "21.20",
+    "commission_amount": "1.06",
+    "net_amount": "20.14",
+    "status": "PENDING",
+    "requested_at": "2026-05-05T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 28,
+  "fields": {
+    "producer": 1,
+    "week_start": "2026-04-27",
+    "week_end": "2026-05-03",
+    "gross_amount": "28.50",
+    "commission_amount": "1.42",
+    "net_amount": "27.08",
+    "status": "PENDING",
+    "requested_at": "2026-05-05T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 29,
+  "fields": {
+    "producer": 2,
+    "week_start": "2026-04-27",
+    "week_end": "2026-05-03",
+    "gross_amount": "28.40",
+    "commission_amount": "1.42",
+    "net_amount": "26.98",
+    "status": "PENDING",
+    "requested_at": "2026-05-05T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 30,
+  "fields": {
+    "producer": 3,
+    "week_start": "2026-04-27",
+    "week_end": "2026-05-03",
+    "gross_amount": "23.40",
+    "commission_amount": "1.17",
+    "net_amount": "22.23",
+    "status": "PENDING",
+    "requested_at": "2026-05-05T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 31,
+  "fields": {
+    "producer": 4,
+    "week_start": "2026-04-27",
+    "week_end": "2026-05-03",
+    "gross_amount": "16.00",
+    "commission_amount": "0.80",
+    "net_amount": "15.20",
+    "status": "PENDING",
+    "requested_at": "2026-05-05T09:00:00Z"
   }
 }
 ]
