@@ -408,7 +408,7 @@ export default function ProducerDashboardPage() {
                   <strong>Status:</strong> {payout.request_status}
                 </p>
 
-                {payout.request_status === "NOT_REQUESTED" ? (
+                {payout.request_status === "NOT_REQUESTED" && (
                   <button
                     className="request-payout-btn"
                     onClick={async () => {
@@ -435,8 +435,18 @@ export default function ProducerDashboardPage() {
                   >
                     Request Payout
                   </button>
-                ) : (
-                  <p className="payout-requested">Payout requested. Awaiting BRFN approval.</p>
+                )}
+
+                {payout.request_status === "PENDING" && (
+                  <p className="payout-requested">
+                    ⏳ Payout request submitted — awaiting BRFN approval.
+                  </p>
+                )}
+
+                {payout.request_status === "PAID" && (
+                  <p className="payout-requested" style={{ color: "#16a34a" }}>
+                    ✓ Payout has been paid out to you.
+                  </p>
                 )}
 
                 <h2>Delivered Items Included</h2>

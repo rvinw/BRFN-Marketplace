@@ -56,6 +56,14 @@
   }
 },
 {
+  "model": "marketplace.category",
+  "pk": 8,
+  "fields": {
+    "category_name": "Dairy",
+    "category_description": null
+  }
+},
+{
   "model": "marketplace.product",
   "pk": 1,
   "fields": {
@@ -696,6 +704,26 @@
   }
 },
 {
+  "model": "marketplace.product",
+  "pk": 33,
+  "fields": {
+    "producer": 5,
+    "category": 8,
+    "product_name": "MilkTest",
+    "product_description": "Milk",
+    "current_price": "2.80",
+    "product_unit": "EACH",
+    "stock_quantity": "40.000",
+    "product_stock_threshold": null,
+    "harvest_date": "2026-05-06",
+    "best_before_date": null,
+    "organic_status": "NON_ORGANIC",
+    "is_available": true,
+    "created_at": "2026-05-06T18:18:03.710Z",
+    "updated_at": "2026-05-06T18:18:03.710Z"
+  }
+},
+{
   "model": "marketplace.allergen",
   "pk": 1,
   "fields": {
@@ -1190,112 +1218,14 @@
 },
 {
   "model": "marketplace.payoutrequest",
-  "pk": 1,
-  "fields": {
-    "producer": 1,
-    "week_start": "2026-04-14",
-    "week_end": "2026-04-20",
-    "gross_amount": "8.60",
-    "commission_amount": "0.43",
-    "net_amount": "8.17",
-    "status": "PAID",
-    "requested_at": "2026-04-22T10:00:00Z"
-  }
-},
-{
-  "model": "marketplace.payoutrequest",
-  "pk": 2,
-  "fields": {
-    "producer": 2,
-    "week_start": "2026-04-14",
-    "week_end": "2026-04-20",
-    "gross_amount": "11.80",
-    "commission_amount": "0.59",
-    "net_amount": "11.21",
-    "status": "APPROVED",
-    "requested_at": "2026-04-22T11:00:00Z"
-  }
-},
-{
-  "model": "marketplace.payoutrequest",
-  "pk": 3,
-  "fields": {
-    "producer": 1,
-    "week_start": "2026-04-21",
-    "week_end": "2026-04-27",
-    "gross_amount": "12.80",
-    "commission_amount": "0.64",
-    "net_amount": "12.16",
-    "status": "PAID",
-    "requested_at": "2026-04-29T09:00:00Z"
-  }
-},
-{
-  "model": "marketplace.payoutrequest",
-  "pk": 4,
-  "fields": {
-    "producer": 3,
-    "week_start": "2026-04-21",
-    "week_end": "2026-04-27",
-    "gross_amount": "11.40",
-    "commission_amount": "0.57",
-    "net_amount": "10.83",
-    "status": "REJECTED",
-    "requested_at": "2026-04-29T10:00:00Z"
-  }
-},
-{
-  "model": "marketplace.payoutrequest",
-  "pk": 5,
-  "fields": {
-    "producer": 1,
-    "week_start": "2026-04-28",
-    "week_end": "2026-05-04",
-    "gross_amount": "13.60",
-    "commission_amount": "0.68",
-    "net_amount": "12.92",
-    "status": "PENDING",
-    "requested_at": "2026-05-06T09:00:00Z"
-  }
-},
-{
-  "model": "marketplace.payoutrequest",
-  "pk": 6,
-  "fields": {
-    "producer": 2,
-    "week_start": "2026-04-28",
-    "week_end": "2026-05-04",
-    "gross_amount": "15.60",
-    "commission_amount": "0.78",
-    "net_amount": "14.82",
-    "status": "PENDING",
-    "requested_at": "2026-05-06T10:00:00Z"
-  }
-},
-{
-  "model": "marketplace.payoutrequest",
-  "pk": 7,
-  "fields": {
-    "producer": 3,
-    "week_start": "2026-04-28",
-    "week_end": "2026-05-04",
-    "gross_amount": "14.20",
-    "commission_amount": "0.71",
-    "net_amount": "13.49",
-    "status": "PAID",
-    "requested_at": "2026-05-06T11:00:00Z"
-  }
-},
-{
-  "model": "marketplace.payoutrequest",
   "pk": 8,
   "fields": {
     "producer": 5,
     "week_start": "2026-05-04",
     "week_end": "2026-05-10",
-    "gross_amount": "23.55",
-    "commission_amount": "1.18",
-    "net_amount": "22.37",
+    "gross_amount": "589.85",
+    "commission_amount": "29.49",
+    "net_amount": "560.36",
     "status": "PAID",
     "requested_at": "2026-05-06T15:48:07.017Z"
   }
@@ -1394,7 +1324,7 @@
     "gross_amount": "24.50",
     "commission_amount": "1.22",
     "net_amount": "23.28",
-    "status": "APPROVED",
+    "status": "PAID",
     "requested_at": "2026-04-21T09:00:00Z"
   }
 },
@@ -1408,7 +1338,7 @@
     "gross_amount": "21.80",
     "commission_amount": "1.09",
     "net_amount": "20.71",
-    "status": "APPROVED",
+    "status": "PAID",
     "requested_at": "2026-04-21T09:00:00Z"
   }
 },
@@ -1422,7 +1352,7 @@
     "gross_amount": "11.80",
     "commission_amount": "0.59",
     "net_amount": "11.21",
-    "status": "APPROVED",
+    "status": "PAID",
     "requested_at": "2026-04-21T09:00:00Z"
   }
 },
@@ -1436,7 +1366,7 @@
     "gross_amount": "16.70",
     "commission_amount": "0.84",
     "net_amount": "15.86",
-    "status": "APPROVED",
+    "status": "PAID",
     "requested_at": "2026-04-21T09:00:00Z"
   }
 },
@@ -1450,7 +1380,7 @@
     "gross_amount": "11.50",
     "commission_amount": "0.58",
     "net_amount": "10.92",
-    "status": "APPROVED",
+    "status": "PAID",
     "requested_at": "2026-04-21T09:00:00Z"
   }
 },
@@ -1478,7 +1408,7 @@
     "gross_amount": "6.40",
     "commission_amount": "0.32",
     "net_amount": "6.08",
-    "status": "APPROVED",
+    "status": "PAID",
     "requested_at": "2026-04-28T09:00:00Z"
   }
 },
@@ -1492,7 +1422,7 @@
     "gross_amount": "23.20",
     "commission_amount": "1.16",
     "net_amount": "22.04",
-    "status": "APPROVED",
+    "status": "PAID",
     "requested_at": "2026-04-28T09:00:00Z"
   }
 },
@@ -1506,7 +1436,7 @@
     "gross_amount": "29.60",
     "commission_amount": "1.48",
     "net_amount": "28.12",
-    "status": "APPROVED",
+    "status": "PAID",
     "requested_at": "2026-04-28T09:00:00Z"
   }
 },
@@ -1520,7 +1450,7 @@
     "gross_amount": "26.30",
     "commission_amount": "1.32",
     "net_amount": "24.98",
-    "status": "APPROVED",
+    "status": "PAID",
     "requested_at": "2026-04-28T09:00:00Z"
   }
 },
@@ -1534,7 +1464,7 @@
     "gross_amount": "28.10",
     "commission_amount": "1.40",
     "net_amount": "26.70",
-    "status": "APPROVED",
+    "status": "PAID",
     "requested_at": "2026-04-28T09:00:00Z"
   }
 },

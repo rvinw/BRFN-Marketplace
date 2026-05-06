@@ -13,6 +13,12 @@ export default function OrdersPanel() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [actionMsg, setActionMsg] = useState('');
+
+  const flash = (msg, isErr = false) => {
+    setActionMsg({ text: msg, err: isErr });
+    setTimeout(() => setActionMsg(''), 3000);
+  };
 
   const load = async () => {
     setLoading(true);
@@ -37,6 +43,10 @@ export default function OrdersPanel() {
     if (res.ok) {
       const data = await res.json();
       setOrders(list => list.map(x => x.id === id ? { ...x, order_status: data.order_status } : x));
+      flash('Order status updated.');
+    } else {
+      flash('Failed to update order status.', true);
+      load();
     }
   };
 
@@ -52,7 +62,12 @@ export default function OrdersPanel() {
     <div>
       <div className="admin-panel-header">
         <h2>Orders <span className="admin-count">({orders.length})</span></h2>
-        <div style={{ display: 'flex', gap: 12 }}>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+          {actionMsg && (
+            <span style={{ fontSize: '0.85rem', color: actionMsg.err ? 'red' : 'green' }}>
+              {actionMsg.text}
+            </span>
+          )}
           {ORDER_STATUSES.map(s => {
             const sc = statusStyle[s];
             return (

@@ -151,6 +151,7 @@ class AdminCategoryDetailView(APIView):
             'id': cat.id,
             'category_name': cat.category_name,
             'category_description': cat.category_description,
+            'product_count': cat.products.count(),
         })
 
     def delete(self, request, pk):
@@ -245,7 +246,7 @@ class AdminCommunityPostDetailView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-PAYOUT_STATUSES = ['PENDING', 'APPROVED', 'PAID', 'REJECTED']
+PAYOUT_STATUSES = ['PENDING', 'PAID']
 
 
 def _payout_data(p):
@@ -275,9 +276,8 @@ class AdminFinanceReportView(APIView):
             total_commission=Sum('commission_amount'),
             total_net=Sum('net_amount'),
         )
-        pending_agg = payouts.filter(status='PENDING').aggregate(
-            amount=Sum('net_amount'),
-        )
+        pending_agg = payouts.filter(status='PENDING').aggregate(amount=Sum('net_amount'))
+        paid_agg    = payouts.filter(status='PAID').aggregate(amount=Sum('net_amount'))
 
         total_order_revenue = Order.objects.filter(
             order_status='PAID'
@@ -290,6 +290,8 @@ class AdminFinanceReportView(APIView):
             'total_net_payouts': str(agg['total_net'] or Decimal('0.00')),
             'pending_payouts_count': payouts.filter(status='PENDING').count(),
             'pending_payouts_amount': str(pending_agg['amount'] or Decimal('0.00')),
+            'approved_payouts_count': payouts.filter(status='PAID').count(),
+            'approved_payouts_amount': str(paid_agg['amount'] or Decimal('0.00')),
         }
 
         return Response({

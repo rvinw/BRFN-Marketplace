@@ -38,6 +38,8 @@ export default function CommunityPostsPanel() {
       const data = await res.json();
       setPosts(list => list.map(x => x.id === post.id ? { ...x, is_public: data.is_public } : x));
       flash(data.is_public ? 'Post published.' : 'Post hidden.');
+    } else {
+      flash('Failed to update post visibility.');
     }
   };
 
@@ -47,6 +49,8 @@ export default function CommunityPostsPanel() {
     if (res.ok) {
       setPosts(list => list.filter(x => x.id !== id));
       flash('Post deleted.');
+    } else {
+      flash('Failed to delete post.');
     }
   };
 

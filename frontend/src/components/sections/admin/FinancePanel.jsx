@@ -39,12 +39,10 @@ function SummaryCard({ label, value, sub, accent }) {
   );
 }
 
-const PAYOUT_STATUSES = ['PENDING', 'APPROVED', 'PAID', 'REJECTED'];
+const PAYOUT_STATUSES = ['PENDING', 'PAID'];
 const payoutStyle = {
-  PENDING:  { bg: '#fef3c7', text: '#92400e' },
-  APPROVED: { bg: '#dbeafe', text: '#1e40af' },
-  PAID:     { bg: '#dcfce7', text: '#166534' },
-  REJECTED: { bg: '#fee2e2', text: '#991b1b' },
+  PENDING: { bg: '#fef3c7', text: '#92400e' },
+  PAID:    { bg: '#dcfce7', text: '#166534' },
 };
 const producerStatusStyle = {
   PENDING:   { bg: '#fff7ed', text: '#c2410c' },
@@ -340,17 +338,19 @@ function PayoutRequests() {
 
   useEffect(() => { load(); }, []);
 
+  const [payoutMsg, setPayoutMsg] = useState('');
+  const flashPayout = (msg) => { setPayoutMsg(msg); setTimeout(() => setPayoutMsg(''), 3000); };
+
   const updateStatus = async (id, newStatus) => {
     const res = await adminFetch(`/finance/payouts/${id}/`, {
       method: 'PATCH',
       body: JSON.stringify({ status: newStatus }),
     });
     if (res.ok) {
-      const updated = await res.json();
-      setReport(prev => ({
-        ...prev,
-        payouts: prev.payouts.map(p => p.id === id ? updated : p),
-      }));
+      flashPayout(`Payout #${id} marked as ${newStatus}.`);
+      load();
+    } else {
+      flashPayout('Failed to update payout status.');
     }
   };
 
@@ -368,15 +368,19 @@ function PayoutRequests() {
         <h2 style={{ margin: 0 }}>
           Payout Requests <span className="admin-count">({payouts.length})</span>
         </h2>
-        <span style={{ fontSize: '0.85rem', color: '#6b7280' }}>
-          Commission rate: <strong style={{ color: '#000' }}>{summary.commission_rate}</strong>
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          {payoutMsg && <span style={{ fontSize: '0.85rem', color: 'green' }}>{payoutMsg}</span>}
+          <span style={{ fontSize: '0.85rem', color: '#6b7280' }}>
+            Commission rate: <strong style={{ color: '#000' }}>{summary.commission_rate}</strong>
+          </span>
+        </div>
       </div>
 
       <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 20 }}>
         <SummaryCard label="Total Commission Collected" value={gbp(summary.total_commission_collected)} sub="From all payout requests" accent />
         <SummaryCard label="Total Net Payouts" value={gbp(summary.total_net_payouts)} sub="Owed to producers" />
-        <SummaryCard label="Pending Payout Amount" value={gbp(summary.pending_payouts_amount)} sub={`${summary.pending_payouts_count} request(s) awaiting action`} />
+        <SummaryCard label="Paid Out" value={gbp(summary.approved_payouts_amount)} sub={`${summary.approved_payouts_count} request(s) marked as paid`} accent />
+        <SummaryCard label="Pending Payouts" value={gbp(summary.pending_payouts_amount)} sub={`${summary.pending_payouts_count} request(s) awaiting payment`} />
       </div>
 
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 14, flexWrap: 'wrap' }}>

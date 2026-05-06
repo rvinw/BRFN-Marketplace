@@ -190,6 +190,52 @@ def update_order_item_status(request, item_id):
 
     order_producer.save()
 
+    # Auto-update parent Order status when all producers have finished
+    order = order_producer.order
+    all_op_statuses = list(order.producer_orders.values_list("status", flat=True))
+
+    if all(s == "DELIVERED" for s in all_op_statuses):
+        order.order_status = "PAID"
+        order.save()
+    elif all(s == "CANCELLED" for s in all_op_statuses):
+        order.order_status = "CANCELLED"
+        order.save()
+
+    # Auto-create or update the weekly payout request when this producer's
+    # portion is fully delivered
+    if order_producer.status == "DELIVERED":
+        producer = order_producer.producer
+        order_date = order.placed_at.date()
+        week_start = order_date - timezone.timedelta(days=order_date.weekday())
+        week_end = week_start + timezone.timedelta(days=6)
+
+        gross = OrderItem.objects.filter(
+            order_producer__producer=producer,
+            status="DELIVERED",
+            order_producer__order__placed_at__date__gte=week_start,
+            order_producer__order__placed_at__date__lte=week_end,
+        ).aggregate(total=Sum("total_cost"))["total"] or Decimal("0.00")
+
+        commission = (gross * Decimal("0.05")).quantize(Decimal("0.01"))
+        net = gross - commission
+
+        pr, created = PayoutRequest.objects.get_or_create(
+            producer=producer,
+            week_start=week_start,
+            week_end=week_end,
+            defaults={
+                "gross_amount": gross,
+                "commission_amount": commission,
+                "net_amount": net,
+                "status": "PENDING",
+            },
+        )
+        if not created and pr.status == "PENDING":
+            pr.gross_amount = gross
+            pr.commission_amount = commission
+            pr.net_amount = net
+            pr.save()
+
     return Response({
         "message": "Item status updated successfully.",
         "item_id": item.id,

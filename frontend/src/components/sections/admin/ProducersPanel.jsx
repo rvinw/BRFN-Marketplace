@@ -5,6 +5,12 @@ export default function ProducersPanel() {
   const [producers, setProducers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [actionMsg, setActionMsg] = useState('');
+
+  const flash = (msg, isErr = false) => {
+    setActionMsg({ text: msg, err: isErr });
+    setTimeout(() => setActionMsg(''), 3000);
+  };
 
   const load = async () => {
     setLoading(true);
@@ -26,6 +32,9 @@ export default function ProducersPanel() {
     if (res.ok) {
       const data = await res.json();
       setProducers(p => p.map(x => x.id === id ? { ...x, is_verified: data.is_verified } : x));
+      flash(data.is_verified ? 'Producer verified.' : 'Verification revoked.');
+    } else {
+      flash('Failed to update verification status.', true);
     }
   };
 
@@ -36,9 +45,16 @@ export default function ProducersPanel() {
     <div>
       <div className="admin-panel-header">
         <h2>Producers <span className="admin-count">({producers.length})</span></h2>
-        <span className="admin-meta">
-          {producers.filter(p => p.is_verified).length} verified · {producers.filter(p => !p.is_verified).length} pending
-        </span>
+        <div className="admin-header-actions">
+          {actionMsg && (
+            <span style={{ fontSize: '0.9rem', color: actionMsg.err ? 'red' : 'green' }}>
+              {actionMsg.text}
+            </span>
+          )}
+          <span className="admin-meta">
+            {producers.filter(p => p.is_verified).length} verified · {producers.filter(p => !p.is_verified).length} pending
+          </span>
+        </div>
       </div>
 
       {producers.length === 0 ? (
