@@ -20,9 +20,14 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [added, setAdded] = useState({});
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(searchParams.get("search") || "");
 
   const activeCategory = searchParams.get("category") || "";
+
+  // Keep local search state in sync when URL search param changes (e.g. from top search bar)
+  useEffect(() => {
+    setSearch(searchParams.get("search") || "");
+  }, [searchParams.get("search")]);
 
   useEffect(() => {
     apiFetch("/products/")
@@ -188,7 +193,12 @@ export default function ProductsPage() {
 
               <div className="product-card__body">
                 <span className="product-card__category">{p.category}</span>
-                <h3 className="product-card__name">{p.name}</h3>
+                <Link
+                  to={`/products/${p.id}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <h3 className="product-card__name">{p.name}</h3>
+                </Link>
                 <p className="product-card__desc">{p.description}</p>
 
                 {p.producer_name && (
