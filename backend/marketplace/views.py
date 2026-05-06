@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -12,12 +13,28 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        return (
+        qs = (
             Product.objects
             .select_related('category', 'producer')
             .prefetch_related('images')
+            .filter(is_available=True)
             .order_by('-created_at')
         )
+
+        search = self.request.query_params.get('search', '').strip()
+        category = self.request.query_params.get('category', '').strip()
+
+        if search:
+            qs = qs.filter(
+                Q(product_name__icontains=search) |
+                Q(product_description__icontains=search) |
+                Q(producer__business_name__icontains=search)
+            )
+
+        if category:
+            qs = qs.filter(category__category_name__icontains=category)
+
+        return qs
 
 
 class CommunityPostViewSet(viewsets.ModelViewSet):

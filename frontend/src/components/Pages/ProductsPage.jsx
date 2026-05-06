@@ -1,62 +1,36 @@
-import { useState, useEffect, useMemo } from "react";
-import { useSearchParams, Link } from "react-router-dom";
-import { useCart } from "../../context/CartContext";
-import { apiFetch } from "../../utils/api";
+import { useState, useEffect } from 'react';
+import { useSearchParams, useNavigate, Link } from 'react-router-dom';
+import { useCart } from '../../context/CartContext';
+import { apiFetch } from '../../utils/api';
 
-const CATEGORY_LABELS = [
-  "Vegetables",
-  "Dairy",
-  "Bakery",
-  "Preserves",
-  "Seasonal",
-  "Meat",
-];
+const CATEGORY_LABELS = ['Vegetables', 'Dairy', 'Bakery', 'Preserves', 'Seasonal', 'Meat'];
 
 export default function ProductsPage() {
   const { addToCart, items } = useCart();
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const searchQuery = searchParams.get('search') || '';
+  const categoryQuery = searchParams.get('category') || '';
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [added, setAdded] = useState({});
-  const [search, setSearch] = useState(searchParams.get("search") || "");
-
-  const activeCategory = searchParams.get("category") || "";
-
-  // Keep local search state in sync when URL search param changes (e.g. from top search bar)
-  useEffect(() => {
-    setSearch(searchParams.get("search") || "");
-  }, [searchParams.get("search")]);
 
   useEffect(() => {
-    apiFetch("/products/")
-      .then((r) => r.json())
-      .then((data) =>
-        setProducts(Array.isArray(data) ? data : (data.results ?? [])),
-      )
-      .catch(() => setError("Could not load products."))
+    setLoading(true);
+    setError('');
+    const params = new URLSearchParams();
+    if (searchQuery) params.set('search', searchQuery);
+    if (categoryQuery) params.set('category', categoryQuery);
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    apiFetch(`/products/${qs}`)
+      .then(r => r.json())
+      .then(data => setProducts(Array.isArray(data) ? data : data.results ?? []))
+      .catch(() => setError('Could not load products.'))
       .finally(() => setLoading(false));
-  }, []);
-
-  const filtered = useMemo(() => {
-    let out = products;
-    if (activeCategory) {
-      out = out.filter(
-        (p) => p.category?.toLowerCase() === activeCategory.toLowerCase(),
-      );
-    }
-    if (search.trim()) {
-      const q = search.trim().toLowerCase();
-      out = out.filter(
-        (p) =>
-          p.name?.toLowerCase().includes(q) ||
-          p.description?.toLowerCase().includes(q) ||
-          p.category?.toLowerCase().includes(q),
-      );
-    }
-    return out;
-  }, [products, activeCategory, search]);
+  }, [searchQuery, categoryQuery]);
 
   const handleAdd = (product) => {
     addToCart({
@@ -67,165 +41,172 @@ export default function ProductsPage() {
       category: product.category,
       image: product.image || null,
     });
-    setAdded((prev) => ({ ...prev, [product.id]: true }));
-    setTimeout(
-      () => setAdded((prev) => ({ ...prev, [product.id]: false })),
-      1500,
-    );
+    setAdded(prev => ({ ...prev, [product.id]: true }));
+    setTimeout(() => setAdded(prev => ({ ...prev, [product.id]: false })), 1500);
   };
 
   const cartCount = (id) => {
-    const item = items.find((i) => i.id === id);
+    const item = items.find(i => i.id === id);
     return item ? item.quantity : 0;
   };
 
   const setCategory = (cat) => {
-    if (cat.toLowerCase() === activeCategory.toLowerCase()) {
+    if (cat.toLowerCase() === categoryQuery.toLowerCase()) {
       setSearchParams({});
     } else {
       setSearchParams({ category: cat.toLowerCase() });
     }
   };
 
-  const activeCategoryLabel = CATEGORY_LABELS.find(
-    (c) => c.toLowerCase() === activeCategory.toLowerCase(),
-  );
+  const clearFilter = (key) => {
+    const next = new URLSearchParams(searchParams);
+    next.delete(key);
+    navigate(`/products${next.toString() ? `?${next.toString()}` : ''}`);
+  };
+
+  const hasFilter = searchQuery || categoryQuery;
+  const pageTitle = categoryQuery
+    ? categoryQuery.charAt(0).toUpperCase() + categoryQuery.slice(1)
+    : searchQuery
+    ? `Results for "${searchQuery}"`
+    : 'All Products';
 
   return (
-    <div className="products-page">
-      {/* ── Page header ── */}
-      <div className="products-page__header">
-        <div>
-          <h1 className="products-page__title">
-            {activeCategoryLabel ? activeCategoryLabel : "All Products"}
-          </h1>
-          <p className="products-page__subtitle">
-            {loading
-              ? "Loading…"
-              : activeCategoryLabel
-                ? `${filtered.length} ${activeCategoryLabel.toLowerCase()} product${filtered.length !== 1 ? "s" : ""}`
-                : `${filtered.length} product${filtered.length !== 1 ? "s" : ""} from local producers`}
+    <div style={{ padding: '2rem', maxWidth: 1100, margin: '0 auto' }}>
+      <div style={{ marginBottom: '1.25rem' }}>
+        <h1 style={{ margin: '0 0 4px' }}>{pageTitle}</h1>
+        {!loading && (
+          <p style={{ margin: 0, color: '#6b7280', fontSize: '0.85rem' }}>
+            {products.length} product{products.length !== 1 ? 's' : ''} found
           </p>
-        </div>
-
-        <div className="products-page__search-wrap">
-          <input
-            className="products-page__search"
-            type="text"
-            placeholder="Search products…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
+        )}
       </div>
 
-      {/* ── Category filter pills ── */}
-      <div className="products-page__filters">
+      {/* Category filter pills */}
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: '1rem' }}>
         <button
-          className={`filter-pill ${!activeCategory ? "filter-pill--active" : ""}`}
-          onClick={() => {
-            setSearchParams({});
+          onClick={() => setSearchParams({})}
+          style={{
+            padding: '5px 14px', borderRadius: 20,
+            border: '1px solid #d1d5db',
+            background: !categoryQuery ? '#a3e635' : '#fff',
+            color: '#111', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 600,
           }}
         >
           All
         </button>
-        {CATEGORY_LABELS.map((cat) => (
+        {CATEGORY_LABELS.map(cat => (
           <button
             key={cat}
-            className={`filter-pill ${activeCategory.toLowerCase() === cat.toLowerCase() ? "filter-pill--active" : ""}`}
             onClick={() => setCategory(cat)}
+            style={{
+              padding: '5px 14px', borderRadius: 20,
+              border: '1px solid #d1d5db',
+              background: categoryQuery.toLowerCase() === cat.toLowerCase() ? '#a3e635' : '#fff',
+              color: '#111', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 600,
+            }}
           >
             {cat}
           </button>
         ))}
       </div>
 
-      {/* ── States ── */}
-      {loading && <p className="products-page__state">Loading products…</p>}
-      {error && (
-        <p className="products-page__state products-page__state--error">
-          {error}
-        </p>
+      {/* Active search tag */}
+      {hasFilter && (
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: '1rem', alignItems: 'center' }}>
+          {searchQuery && (
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              background: '#eff6ff', border: '1px solid #93c5fd',
+              borderRadius: 20, padding: '3px 10px', fontSize: '0.8rem', fontWeight: 'bold',
+            }}>
+              Search: "{searchQuery}"
+              <button
+                onClick={() => clearFilter('search')}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', fontWeight: 'bold', padding: 0, color: '#374151' }}
+                aria-label="Clear search"
+              >×</button>
+            </span>
+          )}
+          <button
+            onClick={() => navigate('/products')}
+            style={{ fontSize: '0.8rem', color: '#6b7280', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}
+          >
+            Clear all
+          </button>
+        </div>
       )}
 
-      {!loading && !error && filtered.length === 0 && (
-        <div className="products-page__empty">
-          <p>
-            No products found
-            {activeCategoryLabel ? ` in ${activeCategoryLabel}` : ""}.
-          </p>
-          {activeCategory && (
-            <button
-              className="filter-pill filter-pill--active"
-              style={{ marginTop: "1rem" }}
-              onClick={() => setSearchParams({})}
-            >
-              View all products
-            </button>
+      {loading && <p style={{ color: '#666' }}>Loading products…</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      {!loading && !error && products.length === 0 && (
+        <div style={{ padding: '3rem', textAlign: 'center', background: '#f9fafb', borderRadius: 12, color: '#6b7280' }}>
+          <p style={{ fontSize: '1.1rem', marginBottom: 8 }}>No products found.</p>
+          {hasFilter && (
+            <p style={{ fontSize: '0.9rem' }}>
+              Try a different search or{' '}
+              <button
+                onClick={() => navigate('/products')}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#2563eb', textDecoration: 'underline', fontSize: 'inherit' }}
+              >
+                browse all products
+              </button>.
+            </p>
           )}
         </div>
       )}
 
-      {/* ── Product grid ── */}
-      {!loading && !error && filtered.length > 0 && (
-        <div className="products-grid">
-          {filtered.map((p) => (
-            <div key={p.id} className="product-card">
-              <Link
-                to={`/products/${p.id}`}
-                className="product-card__image-wrap"
-              >
+      {!loading && !error && products.length > 0 && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1.5rem' }}>
+          {products.map(p => (
+            <div key={p.id} style={{ border: '1px solid #eee', borderRadius: 12, overflow: 'hidden', background: '#fff', display: 'flex', flexDirection: 'column' }}>
+              <Link to={`/products/${p.id}`} style={{ textDecoration: 'none', display: 'block', position: 'relative' }}>
                 {p.image ? (
-                  <img
-                    src={p.image}
-                    alt={p.name}
-                    className="product-card__image"
-                  />
+                  <img src={p.image} alt={p.name} style={{ width: '100%', height: 180, objectFit: 'cover', display: 'block' }} />
                 ) : (
-                  <div className="product-card__image product-card__image--placeholder">
-                    <span>No image</span>
+                  <div style={{ width: '100%', height: 180, background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af', fontSize: '0.85rem' }}>
+                    No image
                   </div>
                 )}
-                {p.organic_status === "ORGANIC" && (
-                  <span className="product-card__badge">Organic</span>
+                {p.organic_status === 'ORGANIC' && (
+                  <span style={{
+                    position: 'absolute', top: 10, left: 10,
+                    background: '#a3e635', color: '#000',
+                    fontSize: '0.7rem', fontWeight: 'bold',
+                    padding: '2px 8px', borderRadius: 10,
+                  }}>
+                    Organic
+                  </span>
                 )}
               </Link>
 
-              <div className="product-card__body">
-                <span className="product-card__category">{p.category}</span>
-                <Link
-                  to={`/products/${p.id}`}
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <h3 className="product-card__name">{p.name}</h3>
-                </Link>
-                <p className="product-card__desc">{p.description}</p>
-
+              <div style={{ padding: '1rem', flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#6b7280', textTransform: 'uppercase' }}>{p.category}</span>
+                <h3 style={{ margin: 0, fontSize: '1rem' }}>{p.name}</h3>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#555', flex: 1 }}>{p.description}</p>
                 {p.producer_name && (
-                  <p className="product-card__producer">by {p.producer_name}</p>
+                  <p style={{ margin: 0, fontSize: '0.78rem', color: '#9ca3af' }}>by {p.producer_name}</p>
                 )}
-
-                <div className="product-card__footer">
-                  <div className="product-card__price-row">
-                    <span className="product-card__price">
-                      £{parseFloat(p.price).toFixed(2)}
-                    </span>
-                    <span className="product-card__unit">
-                      / {p.unit_amount}
-                    </span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
+                  <div>
+                    <span style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>£{parseFloat(p.price).toFixed(2)}</span>
+                    <span style={{ color: '#888', fontSize: '0.8rem', marginLeft: 4 }}>/ {p.unit_amount}</span>
                   </div>
                   {cartCount(p.id) > 0 && (
-                    <span className="product-card__in-cart">
-                      × {cartCount(p.id)} in cart
-                    </span>
+                    <span style={{ fontSize: '0.8rem', color: '#666' }}>× {cartCount(p.id)} in cart</span>
                   )}
                 </div>
-
                 <button
-                  className={`product-card__btn ${added[p.id] ? "product-card__btn--added" : ""}`}
                   onClick={() => handleAdd(p)}
+                  style={{
+                    marginTop: 8, padding: '8px 0', borderRadius: 8,
+                    border: 'none', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.9rem',
+                    backgroundColor: added[p.id] ? '#16a34a' : '#a3e635',
+                    color: '#000', transition: 'background 0.2s',
+                  }}
                 >
-                  {added[p.id] ? "✓ Added" : "Add to Cart"}
+                  {added[p.id] ? '✓ Added' : 'Add to Cart'}
                 </button>
               </div>
             </div>

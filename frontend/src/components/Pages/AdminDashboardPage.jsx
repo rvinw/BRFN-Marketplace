@@ -6,6 +6,7 @@ import ProductsPanel from '../sections/admin/ProductsPanel';
 import OrdersPanel from '../sections/admin/OrdersPanel';
 import CategoriesPanel from '../sections/admin/CategoriesPanel';
 import CommunityPostsPanel from '../sections/admin/CommunityPostsPanel';
+import FinancePanel from '../sections/admin/FinancePanel';
 
 const tabs = [
   { id: 'users',      label: 'Users' },
@@ -14,6 +15,7 @@ const tabs = [
   { id: 'orders',     label: 'Orders' },
   { id: 'categories', label: 'Categories' },
   { id: 'posts',      label: 'Community Posts' },
+  { id: 'finance',    label: 'Finance' },
 ];
 
 export default function AdminDashboardPage() {
@@ -46,6 +48,7 @@ export default function AdminDashboardPage() {
         {view === 'orders'     && <OrdersPanel />}
         {view === 'categories' && <CategoriesPanel />}
         {view === 'posts'      && <CommunityPostsPanel />}
+        {view === 'finance'    && <FinancePanel />}
       </main>
     </div>
   );

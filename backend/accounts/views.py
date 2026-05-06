@@ -1,4 +1,7 @@
+import re
+
 from django.contrib.auth import authenticate, get_user_model
+from django.core.cache import cache
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -7,6 +10,23 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from accounts.models import Address, CustomerProfile, ProducerProfile
 
 User = get_user_model()
+
+_PASSWORD_RULES = (
+    'Password must be at least 8 characters, contain an uppercase letter, '
+    'a lowercase letter, and a number.'
+)
+
+
+def _validate_password(password):
+    if len(password) < 8:
+        return _PASSWORD_RULES
+    if not re.search(r'[A-Z]', password):
+        return _PASSWORD_RULES
+    if not re.search(r'[a-z]', password):
+        return _PASSWORD_RULES
+    if not re.search(r'[0-9]', password):
+        return _PASSWORD_RULES
+    return None
 
 
 def _token_response(user, status=200):
@@ -25,21 +45,32 @@ def _token_response(user, status=200):
 @authentication_classes([])
 @permission_classes([AllowAny])
 def login_view(request):
-    email = request.data.get('email', '').strip()
+    email = request.data.get('email', '').strip().lower()
     password = request.data.get('password', '')
 
     if not email or not password:
         return Response({'error': 'Email and password are required.'}, status=400)
 
+    rate_key = f'login_fail_{email}'
+    attempts = cache.get(rate_key, 0)
+    if attempts >= 5:
+        return Response(
+            {'error': 'Too many failed attempts. Please try again in 15 minutes.'},
+            status=429,
+        )
+
     try:
         username = User.objects.get(email=email).username
     except User.DoesNotExist:
+        cache.set(rate_key, attempts + 1, timeout=900)
         return Response({'error': 'Invalid credentials.'}, status=401)
 
     user = authenticate(request, username=username, password=password)
     if user is None:
+        cache.set(rate_key, attempts + 1, timeout=900)
         return Response({'error': 'Invalid credentials.'}, status=401)
 
+    cache.delete(rate_key)
     return _token_response(user)
 
 
@@ -57,8 +88,9 @@ def register_customer(request):
     if not all([email, password, full_name, address_line_1, city, postcode]):
         return Response({'error': 'Please fill in all required fields.'}, status=400)
 
-    if len(password) < 8:
-        return Response({'error': 'Password must be at least 8 characters.'}, status=400)
+    pw_error = _validate_password(password)
+    if pw_error:
+        return Response({'error': pw_error}, status=400)
 
     if User.objects.filter(email=email).exists():
         return Response({'error': 'An account with this email already exists.'}, status=400)
@@ -104,8 +136,9 @@ def register_producer(request):
     if not all([email, password, full_name, business_name, address_line_1, city, postcode]):
         return Response({'error': 'Please fill in all required fields.'}, status=400)
 
-    if len(password) < 8:
-        return Response({'error': 'Password must be at least 8 characters.'}, status=400)
+    pw_error = _validate_password(password)
+    if pw_error:
+        return Response({'error': pw_error}, status=400)
 
     if User.objects.filter(email=email).exists():
         return Response({'error': 'An account with this email already exists.'}, status=400)
