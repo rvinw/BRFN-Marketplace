@@ -31,7 +31,7 @@ export default function AddProductForm() {
     setMessage('');
     setLoading(true);
 
-    const token = localStorage.getItem('brfn_token');
+    const token = sessionStorage.getItem('brfn_token');
     if (!token) {
       setMessage('You must be logged in to add products.');
       setLoading(false);

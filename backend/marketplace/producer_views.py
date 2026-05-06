@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from decimal import Decimal
 from django.utils import timezone
-from django.db.models import Sum
+from django.db.models import F, Sum
 
 from marketplace.models import Category, Product, OrderItem, PayoutRequest
 
@@ -123,6 +123,11 @@ def cancel_order_item(request, item_id):
     item.status = "CANCELLED"
     item.save()
 
+    # Restore stock when item is cancelled
+    Product.objects.filter(pk=item.product_id).update(
+        stock_quantity=F('stock_quantity') + item.quantity
+    )
+
     return Response({
         "message": "Order item cancelled successfully.",
         "item_id": item.id,
@@ -173,6 +178,12 @@ def update_order_item_status(request, item_id):
 
     item.status = new_status
     item.save()
+
+    # Restore stock if cancelled
+    if new_status == "CANCELLED":
+        Product.objects.filter(pk=item.product_id).update(
+            stock_quantity=F('stock_quantity') + item.quantity
+        )
 
     order_producer = item.order_producer
     statuses = list(order_producer.items.values_list("status", flat=True))

@@ -39,7 +39,7 @@ export default function CheckoutPage() {
   // Redirect to login if token is missing — user may have registered without
   // going through the API (old broken flow) or their session expired
   useEffect(() => {
-    if (!localStorage.getItem('brfn_token')) {
+    if (!sessionStorage.getItem('brfn_token')) {
       navigate('/login');
     }
   }, []);

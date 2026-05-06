@@ -722,6 +722,26 @@
   }
 },
 {
+  "model": "accounts.address",
+  "pk": 32,
+  "fields": {
+    "line_1": "test",
+    "line_2": "test",
+    "city": "brisstol",
+    "postcode": "bs1"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 33,
+  "fields": {
+    "line_1": "2342342",
+    "line_2": "234",
+    "city": "234",
+    "postcode": "234"
+  }
+},
+{
   "model": "accounts.customerprofile",
   "pk": 1,
   "fields": {

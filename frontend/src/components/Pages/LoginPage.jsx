@@ -29,7 +29,7 @@ export default function LoginPage() {
         return;
       }
 
-      localStorage.setItem('brfn_token', data.token);
+      sessionStorage.setItem('brfn_token', data.token);
       const role = data.user.role_name.toLowerCase();
       login({ name: data.user.full_name, email: data.user.email, role });
 

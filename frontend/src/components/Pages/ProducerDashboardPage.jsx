@@ -22,7 +22,7 @@ export default function ProducerDashboardPage() {
   ];
 
   const getToken = () =>
-    localStorage.getItem("brfn_token") ||
+    sessionStorage.getItem("brfn_token") ||
     localStorage.getItem("access") ||
     localStorage.getItem("token");
 
@@ -77,7 +77,7 @@ export default function ProducerDashboardPage() {
 
   try {
     const token =
-      localStorage.getItem("brfn_token") ||
+      sessionStorage.getItem("brfn_token") ||
       localStorage.getItem("access") ||
       localStorage.getItem("token");
 

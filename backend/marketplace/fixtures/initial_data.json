@@ -613,7 +613,7 @@
     "product_description": "Crisp and peppery — perfect for salads.",
     "current_price": "1.50",
     "product_unit": "BUNCH",
-    "stock_quantity": "30.000",
+    "stock_quantity": "28.000",
     "product_stock_threshold": null,
     "harvest_date": null,
     "best_before_date": null,
@@ -1317,6 +1317,28 @@
   }
 },
 {
+  "model": "marketplace.order",
+  "pk": 27,
+  "fields": {
+    "customer": 4,
+    "delivery_address": 32,
+    "placed_at": "2026-05-06T22:22:45.042Z",
+    "order_status": "PAID",
+    "total_amount": "10.79"
+  }
+},
+{
+  "model": "marketplace.order",
+  "pk": 28,
+  "fields": {
+    "customer": 4,
+    "delivery_address": 33,
+    "placed_at": "2026-05-06T22:49:55.781Z",
+    "order_status": "PENDING",
+    "total_amount": "6.99"
+  }
+},
+{
   "model": "marketplace.orderproducer",
   "pk": 1,
   "fields": {
@@ -1755,6 +1777,24 @@
     "order": 26,
     "producer": 5,
     "status": "DELIVERED"
+  }
+},
+{
+  "model": "marketplace.orderproducer",
+  "pk": 50,
+  "fields": {
+    "order": 27,
+    "producer": 6,
+    "status": "DELIVERED"
+  }
+},
+{
+  "model": "marketplace.orderproducer",
+  "pk": 51,
+  "fields": {
+    "order": 28,
+    "producer": 6,
+    "status": "PENDING"
   }
 },
 {
@@ -2946,6 +2986,42 @@
   }
 },
 {
+  "model": "marketplace.orderitem",
+  "pk": 100,
+  "fields": {
+    "order_producer": 50,
+    "product": 26,
+    "quantity": "2.000",
+    "unit_price_gbp": "1.80",
+    "total_cost": "3.60",
+    "status": "DELIVERED"
+  }
+},
+{
+  "model": "marketplace.orderitem",
+  "pk": 101,
+  "fields": {
+    "order_producer": 50,
+    "product": 27,
+    "quantity": "2.000",
+    "unit_price_gbp": "1.60",
+    "total_cost": "3.20",
+    "status": "DELIVERED"
+  }
+},
+{
+  "model": "marketplace.orderitem",
+  "pk": 102,
+  "fields": {
+    "order_producer": 51,
+    "product": 28,
+    "quantity": "2.000",
+    "unit_price_gbp": "1.50",
+    "total_cost": "3.00",
+    "status": "PENDING"
+  }
+},
+{
   "model": "marketplace.communitypost",
   "pk": 1,
   "fields": {
@@ -3433,6 +3509,20 @@
     "net_amount": "15.20",
     "status": "PENDING",
     "requested_at": "2026-05-05T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 32,
+  "fields": {
+    "producer": 6,
+    "week_start": "2026-05-04",
+    "week_end": "2026-05-10",
+    "gross_amount": "6.80",
+    "commission_amount": "0.34",
+    "net_amount": "6.46",
+    "status": "PAID",
+    "requested_at": "2026-05-06T22:23:31.973Z"
   }
 }
 ]
