@@ -31,7 +31,6 @@ Create a file at `frontend/.env` with the following:
 VITE_API_URL=http://localhost:8000
 VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
 ```
-Ask a teammate for the Google Maps API key.
 
 ### Temp Stuff
 After activating the virtual environment, run the following command to start the application:

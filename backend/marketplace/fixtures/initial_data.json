@@ -3417,7 +3417,7 @@
     "gross_amount": "23.40",
     "commission_amount": "1.17",
     "net_amount": "22.23",
-    "status": "PENDING",
+    "status": "PAID",
     "requested_at": "2026-05-05T09:00:00Z"
   }
 },

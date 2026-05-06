@@ -10,7 +10,10 @@ DUMPS = [
     {
         "app": "marketplace",
         "path": "marketplace/fixtures/initial_data.json",
-        "exclude": ["marketplace.order", "marketplace.orderproducer", "marketplace.orderitem", "marketplace.orderstatushistory"],
+        "exclude": [
+            "marketplace.addproduct",         # legacy unused model
+            "marketplace.orderstatushistory",  # audit trail noise
+        ],
     },
 ]
 
