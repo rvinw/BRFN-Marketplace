@@ -14,10 +14,10 @@ from .models import (
     ProductDeal,
     ProductImage,
 )
-# ProductDeal is kept in imports for the inline — not registered as standalone
+# ProductDeal is kept in imports for the inline, not registered as standalone
 
 
-# ── Inlines ───────────────────────────────────────────────
+# Inlines
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
@@ -42,7 +42,7 @@ class ProductAvailabilityWindowInline(admin.TabularInline):
     fields = ["availability_type", "start_month", "end_month"]
 
 
-# ── Category ──────────────────────────────────────────────
+# Category
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -54,7 +54,7 @@ class CategoryAdmin(admin.ModelAdmin):
     product_count.short_description = "Products"
 
 
-# ── Product ───────────────────────────────────────────────
+# Product 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -92,7 +92,7 @@ class ProductAdmin(admin.ModelAdmin):
     ]
 
 
-# ── Allergen ──────────────────────────────────────────────
+#  Allergen 
 
 @admin.register(Allergen)
 class AllergenAdmin(admin.ModelAdmin):
@@ -101,7 +101,7 @@ class AllergenAdmin(admin.ModelAdmin):
 
 
 
-# ── Orders ────────────────────────────────────────────────
+# Orders 
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
@@ -126,7 +126,7 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderProducerInline]
 
 
-# ── Cart ──────────────────────────────────────────────────
+# Cart
 
 class CartItemInline(admin.TabularInline):
     model = CartItem

@@ -52,11 +52,6 @@ docker-compose up
 ```bash
 npm run dev
 ```
-### New Requirement code for image handling and fixing CORS error
-python -m pip install Pillow
-
-docker-compose exec web pip install django-cors-headers
-
 ### Google APi install for the map
 
 npm install @react-google-maps/api

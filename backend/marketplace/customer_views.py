@@ -26,7 +26,7 @@ def orders(request):
             {"error": "Only customer accounts can access orders."}, status=403
         )
 
-    # ── GET: list orders ──────────────────────────────────────────────────────
+    # GET: list orders 
     if request.method == "GET":
         try:
             customer_profile = request.user.customer_profile
@@ -82,7 +82,7 @@ def orders(request):
             })
         return Response(data, status=200)
 
-    # ── POST: place a new order ───────────────────────────────────────────────
+    # POST: place a new order
     delivery = request.data.get("delivery", {})
     items = request.data.get("items", [])
     total = request.data.get("total", 0)

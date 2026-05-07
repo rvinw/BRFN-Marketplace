@@ -35,9 +35,9 @@ body {
   width: 100%;
 }
 
-/* ══════════════════════════════
+/* 
    TOP BAR
-══════════════════════════════ */
+ */
 .topbar {
   position: sticky;
   top: 0;
@@ -274,9 +274,9 @@ body {
   transform: translateY(-1px);
 }
 
-/* ══════════════════════════════
+/* 
    CATEGORY NAV BAR
-══════════════════════════════ */
+ */
 .navbar {
   width: 100%;
   background: var(--white);

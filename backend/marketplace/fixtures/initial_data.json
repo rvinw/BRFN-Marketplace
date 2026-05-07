@@ -320,7 +320,7 @@
     "organic_status": "ORGANIC",
     "is_available": true,
     "created_at": "2026-04-23T23:47:43.650Z",
-    "updated_at": "2026-05-07T08:04:40.503Z"
+    "updated_at": "2026-05-06T22:38:27.372Z"
   }
 },
 {
@@ -620,7 +620,7 @@
     "organic_status": "ORGANIC",
     "is_available": true,
     "created_at": "2026-05-06T17:22:56.506Z",
-    "updated_at": "2026-05-07T08:36:58.761Z"
+    "updated_at": "2026-05-06T22:16:51.777Z"
   }
 },
 {
@@ -748,7 +748,7 @@
   "pk": 35,
   "fields": {
     "producer": 1,
-    "category": 2,
+    "category": 1,
     "product_name": "cherry",
     "product_description": "cherry",
     "current_price": "1.00",
@@ -760,7 +760,7 @@
     "organic_status": "NON_ORGANIC",
     "is_available": true,
     "created_at": "2026-05-06T23:47:52.276Z",
-    "updated_at": "2026-05-07T07:51:35.116Z"
+    "updated_at": "2026-05-06T23:49:24.150Z"
   }
 },
 {
@@ -1064,8 +1064,8 @@
   "model": "marketplace.productimage",
   "pk": 34,
   "fields": {
-    "product": 34,
-    "image_url": "https://www.shutterstock.com/image-photo/flat-lay-composition-fresh-cherry-600nw-2477400113.jpg",
+    "product": 35,
+    "image_url": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.threebrothersfresh.com.au%2Fwp-content%2Fuploads%2F2020%2F06%2FCHERRIES-500G-PUNNET.jpg&f=1&nofb=1&ipt=2e8d4acad724449fcf1cba18cf53ea989478a68a3df73ff32864ffacd4f4951b",
     "image_sort_order": null
   }
 },
@@ -1073,8 +1073,8 @@
   "model": "marketplace.productimage",
   "pk": 35,
   "fields": {
-    "product": 35,
-    "image_url": "https://media.istockphoto.com/id/612524020/photo/fresh-ripe-black-cherries-background-top-view-close-up.webp?b=1&s=612x612&w=0&k=20&c=aLjv58VU5rqECynAr9-b5YHm2cLsZ1Jo62p-1l22PMQ=",
+    "product": 34,
+    "image_url": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.istockphoto.com%2Fid%2F522738713%2Fphoto%2Fpunnet-of-red-cherry-tomatoes-stock-image.jpg%3Fs%3D612x612%26w%3D0%26k%3D20%26c%3Dh2fO_Ux3O_Wmi5vbsPYVyQGCm9t4cU3pqk-1OXrYXeQ%3D&f=1&nofb=1&ipt=d466fc1e2c081ff83e281706782b07f1ad715f8ae5a8b1f9bf86e17de1316139",
     "image_sort_order": null
   }
 },
@@ -1172,14 +1172,6 @@
   "pk": 6,
   "fields": {
     "product": 19,
-    "allergen": 2
-  }
-},
-{
-  "model": "marketplace.productallergen",
-  "pk": 7,
-  "fields": {
-    "product": 33,
     "allergen": 2
   }
 },
@@ -1305,6 +1297,16 @@
 },
 {
   "model": "marketplace.productavailabilitywindow",
+  "pk": 13,
+  "fields": {
+    "product": 13,
+    "availability_type": "SEASONAL",
+    "start_month": 2,
+    "end_month": 6
+  }
+},
+{
+  "model": "marketplace.productavailabilitywindow",
   "pk": 14,
   "fields": {
     "product": 14,
@@ -1364,26 +1366,6 @@
   }
 },
 {
-  "model": "marketplace.productavailabilitywindow",
-  "pk": 24,
-  "fields": {
-    "product": 35,
-    "availability_type": "YEAR_ROUND",
-    "start_month": null,
-    "end_month": null
-  }
-},
-{
-  "model": "marketplace.productavailabilitywindow",
-  "pk": 25,
-  "fields": {
-    "product": 13,
-    "availability_type": "SEASONAL",
-    "start_month": 1,
-    "end_month": 4
-  }
-},
-{
   "model": "marketplace.productdeal",
   "pk": 1,
   "fields": {
@@ -1392,39 +1374,6 @@
     "expires_at": "2026-04-28T00:00:00Z",
     "note": null,
     "is_active": true
-  }
-},
-{
-  "model": "marketplace.productdeal",
-  "pk": 3,
-  "fields": {
-    "product": 8,
-    "discount_percentage": "20.00",
-    "expires_at": "2026-05-15T07:56:00Z",
-    "note": null,
-    "is_active": false
-  }
-},
-{
-  "model": "marketplace.productdeal",
-  "pk": 6,
-  "fields": {
-    "product": 35,
-    "discount_percentage": "20.00",
-    "expires_at": "2026-05-08T08:00:00Z",
-    "note": "",
-    "is_active": false
-  }
-},
-{
-  "model": "marketplace.review",
-  "pk": 1,
-  "fields": {
-    "product": 35,
-    "customer": 10,
-    "rating": 5,
-    "comment": "sweet and tasty!",
-    "created_at": "2026-05-07T05:02:39.587Z"
   }
 },
 {
@@ -1455,12 +1404,12 @@
   }
 },
 {
-  "model": "marketplace.cartitem",
-  "pk": 7,
+  "model": "marketplace.cart",
+  "pk": 4,
   "fields": {
-    "cart": 2,
-    "product": 35,
-    "product_cart_quantity": 2
+    "customer": 5,
+    "created_at": "2026-05-07T09:33:06.619Z",
+    "updated_at": "2026-05-07T09:33:06.619Z"
   }
 },
 {
@@ -1775,22 +1724,11 @@
   "model": "marketplace.order",
   "pk": 29,
   "fields": {
-    "customer": 4,
+    "customer": 1,
     "delivery_address": 34,
-    "placed_at": "2026-05-07T01:19:05.315Z",
+    "placed_at": "2026-05-07T08:56:18.420Z",
     "order_status": "PENDING",
-    "total_amount": "6.99"
-  }
-},
-{
-  "model": "marketplace.order",
-  "pk": 30,
-  "fields": {
-    "customer": 4,
-    "delivery_address": 35,
-    "placed_at": "2026-05-07T05:10:45.428Z",
-    "order_status": "PENDING",
-    "total_amount": "12.59"
+    "total_amount": "16.99"
   }
 },
 {
@@ -2257,7 +2195,7 @@
   "pk": 52,
   "fields": {
     "order": 29,
-    "producer": 2,
+    "producer": 1,
     "status": "PENDING"
   }
 },
@@ -2265,8 +2203,8 @@
   "model": "marketplace.orderproducer",
   "pk": 53,
   "fields": {
-    "order": 30,
-    "producer": 1,
+    "order": 29,
+    "producer": 5,
     "status": "PENDING"
   }
 },
@@ -2274,8 +2212,8 @@
   "model": "marketplace.orderproducer",
   "pk": 54,
   "fields": {
-    "order": 30,
-    "producer": 5,
+    "order": 29,
+    "producer": 4,
     "status": "PENDING"
   }
 },
@@ -3698,12 +3636,12 @@
   "pk": 102,
   "fields": {
     "order_producer": 52,
-    "product": 35,
-    "quantity": "3.000",
+    "product": 34,
+    "quantity": "1.000",
     "fulfilled_quantity": null,
     "availability_note": null,
-    "unit_price_gbp": "1.00",
-    "total_cost": "3.00",
+    "unit_price_gbp": "2.50",
+    "total_cost": "2.50",
     "status": "PENDING"
   }
 },
@@ -3712,12 +3650,12 @@
   "pk": 103,
   "fields": {
     "order_producer": 53,
-    "product": 35,
-    "quantity": "3.000",
+    "product": 32,
+    "quantity": "1.000",
     "fulfilled_quantity": null,
     "availability_note": null,
-    "unit_price_gbp": "1.00",
-    "total_cost": "3.00",
+    "unit_price_gbp": "3.20",
+    "total_cost": "3.20",
     "status": "PENDING"
   }
 },
@@ -3726,12 +3664,26 @@
   "pk": 104,
   "fields": {
     "order_producer": 54,
-    "product": 33,
-    "quantity": "2.000",
+    "product": 22,
+    "quantity": "1.000",
     "fulfilled_quantity": null,
     "availability_note": null,
     "unit_price_gbp": "2.80",
-    "total_cost": "5.60",
+    "total_cost": "2.80",
+    "status": "PENDING"
+  }
+},
+{
+  "model": "marketplace.orderitem",
+  "pk": 105,
+  "fields": {
+    "order_producer": 54,
+    "product": 23,
+    "quantity": "1.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
+    "unit_price_gbp": "4.50",
+    "total_cost": "4.50",
     "status": "PENDING"
   }
 },
@@ -4344,140 +4296,44 @@
     "producer": 1,
     "product": 35,
     "message": "Low stock alert: 'cherry' has dropped to 14.000 EACH (threshold: 15.000).",
-    "is_read": true,
-    "created_at": "2026-05-06T23:49:24.149Z"
-  }
-},
-{
-  "model": "marketplace.stocknotification",
-  "pk": 2,
-  "fields": {
-    "producer": 6,
-    "product": 35,
-    "message": "Low stock alert: 'cherry' has dropped to 14 units (threshold: 15.000).",
-    "is_read": true,
-    "created_at": "2026-05-07T01:11:40.495Z"
-  }
-},
-{
-  "model": "marketplace.stocknotification",
-  "pk": 3,
-  "fields": {
-    "producer": 2,
-    "product": 35,
-    "message": "Low stock alert: 'cherry' has dropped to 13.999 units (threshold: 15.000).",
     "is_read": false,
-    "created_at": "2026-05-07T01:12:37.152Z"
-  }
-},
-{
-  "model": "marketplace.stocknotification",
-  "pk": 4,
-  "fields": {
-    "producer": 1,
-    "product": 35,
-    "message": "Low stock alert: 'cherry' has dropped to 14.000 units (threshold: 15.000).",
-    "is_read": true,
-    "created_at": "2026-05-07T02:54:46.191Z"
-  }
-},
-{
-  "model": "marketplace.stocknotification",
-  "pk": 5,
-  "fields": {
-    "producer": 1,
-    "product": 35,
-    "message": "Low stock alert: 'cherry' has dropped to 14 units (threshold: 15.000).",
-    "is_read": true,
-    "created_at": "2026-05-07T03:05:46.416Z"
-  }
-},
-{
-  "model": "marketplace.stocknotification",
-  "pk": 6,
-  "fields": {
-    "producer": 1,
-    "product": 35,
-    "message": "Low stock alert: 'cherry' has dropped to 14.000 units (threshold: 15.000).",
-    "is_read": true,
-    "created_at": "2026-05-07T03:07:52.291Z"
-  }
-},
-{
-  "model": "marketplace.stocknotification",
-  "pk": 7,
-  "fields": {
-    "producer": 1,
-    "product": 35,
-    "message": "Low stock alert: 'cherry' has dropped to 14 units (threshold: 15.000).",
-    "is_read": true,
-    "created_at": "2026-05-07T03:08:59.194Z"
-  }
-},
-{
-  "model": "marketplace.stocknotification",
-  "pk": 8,
-  "fields": {
-    "producer": 1,
-    "product": 35,
-    "message": "Low stock alert: 'cherry' has dropped to 14 units (threshold: 15.000).",
-    "is_read": true,
-    "created_at": "2026-05-07T03:16:51.631Z"
-  }
-},
-{
-  "model": "marketplace.stocknotification",
-  "pk": 9,
-  "fields": {
-    "producer": 1,
-    "product": 35,
-    "message": "Low stock alert: 'cherry' has dropped to 14 units (threshold: 15.000).",
-    "is_read": true,
-    "created_at": "2026-05-07T06:31:50.206Z"
-  }
-},
-{
-  "model": "marketplace.stocknotification",
-  "pk": 10,
-  "fields": {
-    "producer": 1,
-    "product": 35,
-    "message": "Low stock alert: 'cherry' has dropped to 14.000 units (threshold: 15.000).",
-    "is_read": true,
-    "created_at": "2026-05-07T07:04:01.878Z"
+    "created_at": "2026-05-06T23:49:24.149Z"
   }
 },
 {
   "model": "marketplace.standingorder",
   "pk": 1,
   "fields": {
-    "customer": 4,
-    "product": 35,
-    "quantity": 3,
-    "is_active": false,
-    "created_at": "2026-05-07T05:04:10.707Z"
+    "customer": 1,
+    "product": 29,
+    "quantity": 1,
+    "is_active": true,
+    "created_at": "2026-05-07T08:56:51.824Z",
+    "delivery_day": 0
   }
 },
 {
   "model": "marketplace.standingorder",
   "pk": 2,
   "fields": {
-    "customer": 4,
-    "product": 33,
-    "quantity": 2,
-    "is_active": false,
-    "created_at": "2026-05-07T05:10:14.515Z"
+    "customer": 1,
+    "product": 34,
+    "quantity": 1,
+    "is_active": true,
+    "created_at": "2026-05-07T08:56:53.333Z",
+    "delivery_day": 0
   }
 },
 {
   "model": "marketplace.standingorder",
   "pk": 3,
   "fields": {
-    "customer": 4,
-    "product": 34,
+    "customer": 1,
+    "product": 32,
     "quantity": 1,
     "is_active": true,
-    "created_at": "2026-05-07T05:16:37.633Z"
+    "created_at": "2026-05-07T08:56:54.679Z",
+    "delivery_day": 0
   }
 },
 {
@@ -4485,10 +4341,23 @@
   "pk": 4,
   "fields": {
     "customer": 1,
-    "product": 35,
-    "quantity": 2,
+    "product": 22,
+    "quantity": 1,
     "is_active": true,
-    "created_at": "2026-05-07T06:48:34.591Z"
+    "created_at": "2026-05-07T08:56:55.764Z",
+    "delivery_day": 0
+  }
+},
+{
+  "model": "marketplace.standingorder",
+  "pk": 5,
+  "fields": {
+    "customer": 1,
+    "product": 23,
+    "quantity": 1,
+    "is_active": true,
+    "created_at": "2026-05-07T08:56:56.500Z",
+    "delivery_day": 0
   }
 }
 ]

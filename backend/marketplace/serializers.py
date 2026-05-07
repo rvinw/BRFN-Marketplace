@@ -146,7 +146,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "customer_name", "created_at"]
 
 
-# Kept for any existing references — no longer used by web-facing endpoints
+# Kept for any existing references  no longer used by web-facing endpoints
 class AddProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = AddProduct
