@@ -154,6 +154,20 @@ export default function CustomerDashboardPage() {
     setStandingOrders(prev => prev.filter(o => o.id !== id));
   };
 
+  const updateDeliveryDay = async (id, delivery_day) => {
+    const res = await apiFetch(`/standing-orders/${id}/delivery-day/`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ delivery_day }),
+    });
+    if (res.ok) {
+      const updated = await res.json();
+      setStandingOrders(prev => prev.map(o =>
+        o.id === id ? { ...o, delivery_day: updated.delivery_day, next_delivery: updated.next_delivery } : o
+      ));
+    }
+  };
+
   const handleReorder = (order) => {
     const allItems = order.producers?.flatMap(p => p.items) ?? [];
     const available = allItems.filter(i => i.is_available);
@@ -236,16 +250,28 @@ export default function CustomerDashboardPage() {
                     <span className="order-card-id">{o.product_name}</span>
                     <span style={{ background: '#f0fdf4', color: '#16a34a', borderRadius: 20, padding: '3px 12px', fontSize: '0.78rem', fontWeight: 700 }}>Weekly</span>
                   </div>
+
                   <div className="order-card-date">
                     Qty: {o.quantity} · £{parseFloat(o.price).toFixed(2)} / {o.product_unit}
                   </div>
-                  <div className="order-card-address">
-                    <span>Next delivery:</span> {(() => {
-                      const next = new Date();
-                      next.setDate(next.getDate() + (7 - next.getDay() + 1) % 7 || 7);
-                      return next.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-                    })()}
+
+                  <div style={{ marginTop: 6, marginBottom: 4 }}>
+                    <label style={{ fontSize: '0.85rem', fontWeight: 600, marginRight: 8 }}>Delivery day:</label>
+                    <select
+                      value={o.delivery_day}
+                      onChange={(e) => updateDeliveryDay(o.id, parseInt(e.target.value))}
+                      style={{ fontSize: '0.85rem', padding: '3px 8px', borderRadius: 6, border: '1px solid #ddd' }}
+                    >
+                      {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day, i) => (
+                        <option key={i} value={i}>{day}</option>
+                      ))}
+                    </select>
                   </div>
+
+                  <div className="order-card-address">
+                    <span>Next delivery:</span> {new Date(o.next_delivery).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </div>
+
                   <div className="order-card-footer" style={{ justifyContent: 'flex-end' }}>
                     <button
                       onClick={() => cancelStandingOrder(o.id)}

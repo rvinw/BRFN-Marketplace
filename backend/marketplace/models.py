@@ -3,7 +3,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-
+from datetime import date, timedelta
 # ----------------------------------|
 # CATALOGUE-------------------------|
 # ----------------------------------|
@@ -450,6 +450,16 @@ class StockNotification(models.Model):
 
 
 class StandingOrder(models.Model):
+    DAYS_OF_WEEK = [
+        (0, 'Monday'),
+        (1, 'Tuesday'),
+        (2, 'Wednesday'),
+        (3, 'Thursday'),
+        (4, 'Friday'),
+        (5, 'Saturday'),
+        (6, 'Sunday'),
+    ]
+
     customer = models.ForeignKey(
         CustomerProfile, on_delete=models.CASCADE, related_name="standing_orders"
     )
@@ -459,6 +469,14 @@ class StandingOrder(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    delivery_day = models.IntegerField(choices=DAYS_OF_WEEK, default=0)
+
+    def next_delivery(self):
+        today = date.today()
+        days_ahead = self.delivery_day - today.weekday()
+        if days_ahead <= 0:
+            days_ahead += 7
+        return today + timedelta(days=days_ahead)
 
     def __str__(self):
         return f"{self.customer.user.email} — {self.product.product_name} x{self.quantity}"
