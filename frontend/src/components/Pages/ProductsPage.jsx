@@ -12,6 +12,7 @@ export default function ProductsPage() {
 
   const searchQuery = searchParams.get('search') || '';
   const categoryQuery = searchParams.get('category') || '';
+  const organicQuery = searchParams.get('organic') || '';
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,13 +25,14 @@ export default function ProductsPage() {
     const params = new URLSearchParams();
     if (searchQuery) params.set('search', searchQuery);
     if (categoryQuery) params.set('category', categoryQuery);
+    if (organicQuery) params.set('organic', organicQuery);
     const qs = params.toString() ? `?${params.toString()}` : '';
     apiFetch(`/products/${qs}`)
       .then(r => r.json())
       .then(data => setProducts(Array.isArray(data) ? data : data.results ?? []))
       .catch(() => setError('Could not load products.'))
       .finally(() => setLoading(false));
-  }, [searchQuery, categoryQuery]);
+  }, [searchQuery, categoryQuery, organicQuery]);
 
   const handleAdd = (product) => {
     addToCart({
@@ -85,7 +87,11 @@ export default function ProductsPage() {
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <select
             value={categoryQuery}
-            onChange={e => e.target.value ? setSearchParams({ category: e.target.value }) : setSearchParams({})}
+            onChange={e => {
+              const next = new URLSearchParams(searchParams);
+              e.target.value ? next.set('category', e.target.value) : next.delete('category');
+              setSearchParams(next);
+            }}
             style={{ padding: '6px 12px', borderRadius: 8, border: '1px solid #d1d5db', fontSize: '0.85rem', color: '#374151', cursor: 'pointer' }}
           >
             <option value="">All Categories</option>
@@ -93,6 +99,20 @@ export default function ProductsPage() {
               <option key={cat} value={cat.toLowerCase()}>{cat}</option>
             ))}
           </select>
+          <button
+            onClick={() => {
+              const next = new URLSearchParams(searchParams);
+              organicQuery ? next.delete('organic') : next.set('organic', 'true');
+              setSearchParams(next);
+            }}
+            style={{
+              padding: '6px 14px', borderRadius: 8, fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer',
+              background: organicQuery ? '#a3e635' : '#fff',
+              border: '1px solid #d1d5db', color: '#374151',
+            }}
+          >
+            Organic
+          </button>
         </div>
       </div>
 

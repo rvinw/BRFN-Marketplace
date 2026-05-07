@@ -98,7 +98,7 @@ def producer_add_product(request):
             product_unit=product_unit,
             stock_quantity=request.data.get('stock_quantity', 0),
             product_stock_threshold=request.data.get('product_stock_threshold') or None,
-            organic_status='NON_ORGANIC',
+            organic_status=request.data.get('organic_status', 'NON_ORGANIC'),
             is_available=availability,
             category=category,
             producer=producer,
@@ -148,6 +148,7 @@ def producer_product_detail(request, product_id):
         'is_available': 'is_available',
         'description': 'product_description',
         'harvest_date': 'harvest_date',
+        'organic_status': 'organic_status',
     }
     for frontend_key, model_field in field_map.items():
         if frontend_key in request.data:

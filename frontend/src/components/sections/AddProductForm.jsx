@@ -28,6 +28,7 @@ export default function AddProductForm() {
     availability: true,
     stockQuantity: 0,
     stockThreshold: '',
+    isOrganic: false,
     allergyInfo: '',
     harvestDate: '',
     imageUrl: '',
@@ -69,6 +70,7 @@ export default function AddProductForm() {
       : formData.unitAmount;
     body.append('unit_amount', unitLabel);
     body.append('availability', formData.availability);
+    body.append('organic_status', formData.isOrganic ? 'ORGANIC' : 'NON_ORGANIC');
     body.append('stock_quantity', formData.stockQuantity);
     if (formData.stockThreshold) body.append('product_stock_threshold', formData.stockThreshold);
     body.append('harvest_date', formData.harvestDate);
@@ -180,6 +182,20 @@ export default function AddProductForm() {
           <div style={{ flex: 1 }}>
             <label>Harvest Date</label>
             <input name="harvestDate" type="datetime-local" value={formData.harvestDate} onChange={handleChange} />
+          </div>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+            <label>Organic</label>
+            <button
+              type="button"
+              onClick={() => setFormData(p => ({ ...p, isOrganic: !p.isOrganic }))}
+              style={{
+                padding: '8px 14px', borderRadius: 6, cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem',
+                background: formData.isOrganic ? '#a3e635' : '#f3f4f6',
+                border: '1px solid #d1d5db', color: '#374151',
+              }}
+            >
+              {formData.isOrganic ? '✓ Organic' : 'Mark as Organic'}
+            </button>
           </div>
         </div>
 

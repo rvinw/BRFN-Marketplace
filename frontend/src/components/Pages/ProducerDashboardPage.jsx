@@ -60,6 +60,19 @@ export default function ProducerDashboardPage() {
     }
   };
 
+  const toggleOrganic = async (product) => {
+    const newStatus = product.organic_status === 'ORGANIC' ? 'NON_ORGANIC' : 'ORGANIC';
+    const res = await fetch(`http://localhost:8000/api/producer/products/${product.id}/`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ organic_status: newStatus }),
+    });
+    if (res.ok) {
+      const updated = await res.json();
+      setProducts(prev => prev.map(p => p.id === updated.id ? { ...p, ...updated } : p));
+    }
+  };
+
   const saveProductEdit = async () => {
     const res = await fetch(`http://localhost:8000/api/producer/products/${editProduct.id}/`, {
       method: "PATCH",
@@ -407,6 +420,12 @@ export default function ProducerDashboardPage() {
                     onClick={() => toggleAvailability(p)}
                   >
                     {p.is_available ? "Mark Unavailable" : "Mark Available"}
+                  </button>
+                  <button
+                    className={p.organic_status === "ORGANIC" ? "cancel-item-btn" : "confirm-item-btn"}
+                    onClick={() => toggleOrganic(p)}
+                  >
+                    {p.organic_status === "ORGANIC" ? "Remove Organic" : "Mark Organic"}
                   </button>
                   <button className="cancel-item-btn" onClick={() => deleteProduct(p.id)}>Delete</button>
                 </div>
