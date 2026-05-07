@@ -73,13 +73,27 @@ export default function ProductsPage() {
 
   return (
     <div style={{ padding: '2rem', maxWidth: 1100, margin: '0 auto' }}>
-      <div style={{ marginBottom: '1.25rem' }}>
-        <h1 style={{ margin: '0 0 4px' }}>{pageTitle}</h1>
-        {!loading && (
-          <p style={{ margin: 0, color: '#6b7280', fontSize: '0.85rem' }}>
-            {products.length} product{products.length !== 1 ? 's' : ''} found
-          </p>
-        )}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1.25rem', flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <h1 style={{ margin: '0 0 4px' }}>{pageTitle}</h1>
+          {!loading && (
+            <p style={{ margin: 0, color: '#6b7280', fontSize: '0.85rem' }}>
+              {products.length} product{products.length !== 1 ? 's' : ''} found
+            </p>
+          )}
+        </div>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <select
+            value={categoryQuery}
+            onChange={e => e.target.value ? setSearchParams({ category: e.target.value }) : setSearchParams({})}
+            style={{ padding: '6px 12px', borderRadius: 8, border: '1px solid #d1d5db', fontSize: '0.85rem', color: '#374151', cursor: 'pointer' }}
+          >
+            <option value="">All Categories</option>
+            {CATEGORY_LABELS.map(cat => (
+              <option key={cat} value={cat.toLowerCase()}>{cat}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Active search tag */}

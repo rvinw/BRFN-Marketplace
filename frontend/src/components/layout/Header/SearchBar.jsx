@@ -79,7 +79,7 @@ export default function SearchBar() {
       <div className="search">
         <input
           className="search__input"
-          placeholder="Search local products…"
+          placeholder="Search local products or producers"
           value={value}
           onChange={e => setValue(e.target.value)}
           onKeyDown={handleKey}
