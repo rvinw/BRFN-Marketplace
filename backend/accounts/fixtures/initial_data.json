@@ -186,22 +186,10 @@
     "role_name": "ADMIN",
     "groups": [],
     "user_permissions": [
-      81,
-      82,
-      83,
-      84,
-      89,
-      90,
-      91,
-      92,
       93,
       94,
       95,
       96,
-      85,
-      86,
-      87,
-      88,
       1,
       2,
       3,
@@ -258,6 +246,10 @@
       66,
       67,
       68,
+      81,
+      82,
+      83,
+      84,
       29,
       30,
       31,
@@ -278,6 +270,14 @@
       42,
       43,
       44,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
       17,
       18,
       19,
@@ -739,6 +739,26 @@
     "line_2": null,
     "city": "bristol",
     "postcode": "bs1 4qx"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 34,
+  "fields": {
+    "line_1": "234",
+    "line_2": "234",
+    "city": "234",
+    "postcode": "234"
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 35,
+  "fields": {
+    "line_1": "asd",
+    "line_2": "asd",
+    "city": "asd",
+    "postcode": "asd"
   }
 },
 {

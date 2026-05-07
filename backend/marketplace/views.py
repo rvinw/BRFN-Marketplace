@@ -23,6 +23,7 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
 
         search = self.request.query_params.get('search', '').strip()
         category = self.request.query_params.get('category', '').strip()
+        organic = self.request.query_params.get('organic', '').strip()
 
         if search:
             qs = qs.filter(
@@ -30,6 +31,9 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
                 Q(product_description__icontains=search) |
                 Q(producer__business_name__icontains=search)
             )
+
+        if organic == 'true':
+            qs = qs.filter(organic_status='ORGANIC')
 
         if category:
             if category.lower() == 'seasonal':
