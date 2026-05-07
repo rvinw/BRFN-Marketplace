@@ -121,7 +121,6 @@ export default function ProducerDashboardPage() {
 
       setOrders(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error("Incoming orders error:", error);
       setOrdersError("Could not connect to backend.");
       setOrders([]);
     } finally {
@@ -159,7 +158,6 @@ export default function ProducerDashboardPage() {
     setPayout(data);
 
   } catch (error) {
-    console.error(error);
     setPayoutError("Could not connect to backend.");
   } finally {
     setPayoutLoading(false);
@@ -196,7 +194,6 @@ export default function ProducerDashboardPage() {
 
       fetchIncomingOrders();
     } catch (error) {
-      console.error("Update item error:", error);
       alert("Error updating item.");
     }
   };
@@ -234,7 +231,6 @@ export default function ProducerDashboardPage() {
 
     fetchIncomingOrders();
   } catch (error) {
-    console.error("Update availability error:", error);
     alert("Error updating availability.");
   }
 };
@@ -530,8 +526,6 @@ export default function ProducerDashboardPage() {
                                 >
                                   Confirm
                                 </button>
-
-                               
                               </>
                             )}
 

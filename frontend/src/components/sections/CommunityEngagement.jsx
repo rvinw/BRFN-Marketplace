@@ -32,12 +32,10 @@ export default function CommunityEngagement() {
         setPostType('Farm Story');
         setIsPublic(false);
       } else {
-        alert('Error - check console');
-        console.error(await response.json());
+        alert('Failed to submit post. Please try again.');
       }
     } catch (error) {
-      alert('Error - check console');
-      console.error(error);
+      alert('Failed to submit post. Please try again.');
     }
   };
 

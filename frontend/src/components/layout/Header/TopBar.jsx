@@ -36,7 +36,7 @@ const MapIcon = () => (
 const DASHBOARD_ROUTES = {
   customer: '/dashboard/customer',
   producer: '/dashboard/producer',
-  admin:    '/dashboard/producer',
+  admin:    '/dashboard/admin',
 };
 
 export default function TopBar() {
