@@ -9,6 +9,7 @@ export default function AddProductForm() {
     unitAmount: '',
     availability: true,
     stockQuantity: 0,
+    stockThreshold: '',
     allergyInfo: '',
     harvestDate: '',
     imageUrl: '',
@@ -45,6 +46,7 @@ export default function AddProductForm() {
     body.append('unit_amount', formData.unitAmount);
     body.append('availability', formData.availability);
     body.append('stock_quantity', formData.stockQuantity);
+    if (formData.stockThreshold) body.append('product_stock_threshold', formData.stockThreshold);
     body.append('harvest_date', formData.harvestDate);
     if (formData.imageUrl) {
       body.append('image_url', formData.imageUrl);
@@ -116,6 +118,10 @@ export default function AddProductForm() {
           <div style={{ flex: 1 }}>
             <label>Stock (0–1000)</label>
             <input name="stockQuantity" type="number" value={formData.stockQuantity} onChange={handleChange} />
+          </div>
+          <div style={{ flex: 1 }}>
+            <label>Low Stock Threshold</label>
+            <input name="stockThreshold" type="number" placeholder="e.g. 10" value={formData.stockThreshold} onChange={handleChange} />
           </div>
           <div style={{ flex: 1 }}>
             <label>Harvest Date</label>

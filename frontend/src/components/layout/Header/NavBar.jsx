@@ -196,6 +196,7 @@ const icons = {
 
 const categories = [
   { label: "Vegetables" },
+  { label: "Fruit" },
   { label: "Dairy" },
   { label: "Bakery" },
   { label: "Preserves" },

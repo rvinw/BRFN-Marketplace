@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { apiFetch } from '../../utils/api';
 
-const CATEGORY_LABELS = ['Vegetables', 'Dairy', 'Bakery', 'Preserves', 'Seasonal', 'Meat'];
+const CATEGORY_LABELS = ['Vegetables','Fruit', 'Dairy', 'Bakery', 'Preserves', 'Seasonal', 'Meat'];
 
 export default function ProductsPage() {
   const { addToCart, items } = useCart();
@@ -36,7 +36,7 @@ export default function ProductsPage() {
     addToCart({
       id: product.id,
       name: product.name,
-      price: parseFloat(product.price),
+      price: product.discounted_price ? parseFloat(product.discounted_price) : parseFloat(product.price),
       unit: product.unit_amount,
       category: product.category,
       image: product.image || null,
@@ -179,6 +179,16 @@ export default function ProductsPage() {
                     Organic
                   </span>
                 )}
+                {p.discounted_price && (
+                  <span style={{
+                    position: 'absolute', top: 10, right: 10,
+                    background: '#dc2626', color: '#fff',
+                    fontSize: '0.7rem', fontWeight: 'bold',
+                    padding: '2px 8px', borderRadius: 10,
+                  }}>
+                    DEAL
+                  </span>
+                )}
               </Link>
 
               <div style={{ padding: '1rem', flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -190,7 +200,14 @@ export default function ProductsPage() {
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
                   <div>
-                    <span style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>£{parseFloat(p.price).toFixed(2)}</span>
+                    {p.discounted_price ? (
+                      <>
+                        <span style={{ textDecoration: 'line-through', color: '#9ca3af', fontSize: '0.9rem', marginRight: 6 }}>£{parseFloat(p.price).toFixed(2)}</span>
+                        <span style={{ fontWeight: 'bold', fontSize: '1.1rem', color: '#dc2626' }}>£{parseFloat(p.discounted_price).toFixed(2)}</span>
+                      </>
+                    ) : (
+                      <span style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>£{parseFloat(p.price).toFixed(2)}</span>
+                    )}
                     <span style={{ color: '#888', fontSize: '0.8rem', marginLeft: 4 }}>/ {p.unit_amount}</span>
                   </div>
                   {cartCount(p.id) > 0 && (

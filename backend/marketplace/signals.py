@@ -1,3 +1,4 @@
+from decimal import Decimal, InvalidOperation
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from .models import Product, StockNotification
@@ -15,8 +16,16 @@ def check_low_stock(sender, instance, **kwargs):
     except Product.DoesNotExist:
         return
 
-    was_above = old.stock_quantity > old.product_stock_threshold
-    now_at_or_below = instance.stock_quantity <= instance.product_stock_threshold
+    try:
+        old_qty = Decimal(str(old.stock_quantity))
+        old_threshold = Decimal(str(old.product_stock_threshold))
+        new_qty = Decimal(str(instance.stock_quantity))
+        new_threshold = Decimal(str(instance.product_stock_threshold))
+    except (InvalidOperation, TypeError):
+        return
+
+    was_above = old_qty > old_threshold
+    now_at_or_below = new_qty <= new_threshold
 
     if was_above and now_at_or_below:
         StockNotification.objects.create(

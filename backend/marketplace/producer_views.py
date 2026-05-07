@@ -6,7 +6,8 @@ from decimal import Decimal
 from django.utils import timezone
 from django.db.models import F, Sum
 
-from marketplace.models import Category, Product, OrderItem, PayoutRequest
+from marketplace.models import Category, Product, OrderItem, PayoutRequest, StockNotification
+from marketplace.serializers import StockNotificationSerializer
 
 
 UNIT_MAP = {
@@ -96,6 +97,7 @@ def producer_add_product(request):
             current_price=price,
             product_unit=product_unit,
             stock_quantity=request.data.get('stock_quantity', 0),
+            product_stock_threshold=request.data.get('product_stock_threshold') or None,
             organic_status='NON_ORGANIC',
             is_available=availability,
             category=category,
@@ -465,3 +467,61 @@ def update_order_item_availability(request, item_id):
         "availability_note": item.availability_note,
         "status": item.status,
     })
+
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def producer_set_deal(request, product_id):
+    if request.user.role_name not in ('PRODUCER', 'ADMIN'):
+        return Response({'error': 'Only producers can set deals.'}, status=403)
+    try:
+        product = Product.objects.get(pk=product_id, producer=request.user.producer_profile)
+    except Product.DoesNotExist:
+        return Response({'error': 'Product not found.'}, status=404)
+
+    from marketplace.models import ProductDeal
+    discount = request.data.get('discount_percentage')
+    expires_at = request.data.get('expires_at')
+
+    product.deals.filter(is_active=True).update(is_active=False)
+
+    if not discount or float(discount) == 0:
+        return Response({'status': 'deal removed'}, status=200)
+    deal = ProductDeal.objects.create(
+        product=product,
+        discount_percentage=discount,
+        expires_at=expires_at,
+        is_active=True,
+    )
+    return Response({'id': deal.id, 'discount_percentage': str(deal.discount_percentage), 'expires_at': deal.expires_at}, status=201)
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def producer_notifications(request):
+    try:
+        producer = request.user.producer_profile
+    except Exception:
+        return Response({'error': 'No producer profile found.'}, status=403)
+    notifications = StockNotification.objects.filter(producer=producer).order_by('-created_at')
+    serializer = StockNotificationSerializer(notifications, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['PATCH'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def mark_notification_read(request, notification_id):
+    try:
+        producer = request.user.producer_profile
+    except Exception:
+        return Response({'error': 'No producer profile found.'}, status=403)
+    try:
+        notification = StockNotification.objects.get(pk=notification_id, producer=producer)
+    except StockNotification.DoesNotExist:
+        return Response({'error': 'Not found.'}, status=404)
+    notification.is_read = True
+    notification.save()
+    return Response({'status': 'marked as read'})

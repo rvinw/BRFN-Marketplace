@@ -7,7 +7,9 @@ from .models import (
     OrderItem,
     OrderProducer,
     Product,
+    ProductDeal,
     Review,
+    StockNotification,
 )
 
 
@@ -17,6 +19,12 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ["id", "category_name", "category_description", "product_count"]
+
+
+class ProductDealSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductDeal
+        fields = ["id", "discount_percentage", "expires_at", "is_active", "note"]
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -39,6 +47,19 @@ class ProductSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     producer_name = serializers.ReadOnlyField(source="producer.business_name")
     stock_status = serializers.SerializerMethodField()
+    deals = ProductDealSerializer(many=True, read_only=True)
+    discounted_price = serializers.SerializerMethodField()
+
+    def get_discounted_price(self, obj):
+        from django.utils import timezone
+        from django.db.models import Q
+        active_deal = obj.deals.filter(is_active=True).filter(
+            Q(expires_at__isnull=True) | Q(expires_at__gt=timezone.now())
+        ).first()
+        if active_deal:
+            discount = active_deal.discount_percentage / 100
+            return round(float(obj.current_price) * (1 - float(discount)), 2)
+        return None
 
     def get_image(self, obj):
         first = obj.images.first()
@@ -69,6 +90,8 @@ class ProductSerializer(serializers.ModelSerializer):
             "created_at",
             "is_available",
             "stock_status",
+            "deals",
+            "discounted_price",
         ]
         read_only_fields = ["created_at"]
 
@@ -126,6 +149,14 @@ class IncomingOrderItemSerializer(serializers.ModelSerializer):
             "total_cost",
             "status",
         ]
+
+
+class StockNotificationSerializer(serializers.ModelSerializer):
+    product_name = serializers.ReadOnlyField(source="product.product_name")
+
+    class Meta:
+        model = StockNotification
+        fields = ["id", "product_name", "message", "is_read", "created_at"]
 
 
 class IncomingOrderProducerSerializer(serializers.ModelSerializer):

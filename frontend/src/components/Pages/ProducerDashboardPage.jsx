@@ -15,6 +15,7 @@ export default function ProducerDashboardPage() {
   const [payout, setPayout] = useState(null);
   const [payoutLoading, setPayoutLoading] = useState(false);
   const [payoutError, setPayoutError] = useState("");
+  const [notifications, setNotifications] = useState([]);
 
   const menuItems = [
     { id: "home", label: "My Products" },
@@ -69,11 +70,21 @@ export default function ProducerDashboardPage() {
         description: editProduct.description,
       }),
     });
-    if (res.ok) {
-      const updated = await res.json();
-      setProducts(prev => prev.map(p => p.id === updated.id ? { ...p, ...updated } : p));
-      setEditProduct(null);
+    if (!res.ok) return;
+    const updated = await res.json();
+    setProducts(prev => prev.map(p => p.id === updated.id ? { ...p, ...updated } : p));
+
+    if (editProduct.discountPercentage && editProduct.dealExpiresAt) {
+      await fetch(`http://localhost:8000/api/producer/products/${editProduct.id}/deals/`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          discount_percentage: editProduct.discountPercentage,
+          expires_at: editProduct.dealExpiresAt,
+        }),
+      });
     }
+    setEditProduct(null);
   };
 
   const deleteProduct = async (id) => {
@@ -268,14 +279,55 @@ export default function ProducerDashboardPage() {
   const activeOrders = orders.filter(o => !["DELIVERED", "CANCELLED"].includes(o.status));
   const completedOrders = orders.filter(o => ["DELIVERED", "CANCELLED"].includes(o.status));
 
+  const fetchNotifications = async () => {
+    const token = getToken();
+    if (!token) return;
+    try {
+      const response = await fetch("http://localhost:8000/api/producer/notifications/", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await response.json();
+      setNotifications(Array.isArray(data) ? data.filter(n => !n.is_read) : []);
+    } catch (err) {
+      console.error("Notifications error:", err);
+    }
+  };
+
   useEffect(() => {
+    fetchNotifications();
     if (view === "home") fetchProducts();
     if (view === "orders" || view === "history") fetchIncomingOrders();
     if (view === "payout") fetchWeeklyPayout();
+
+    const interval = setInterval(fetchNotifications, 30000);
+    return () => clearInterval(interval);
   }, [view]);
 
   return (
     <div className="main-container">
+      {notifications.length > 0 && (
+        <div style={{ background: "#fff3cd", border: "1px solid #ffc107", borderRadius: 6, padding: "12px 16px", margin: "16px", position: "relative" }}>
+          <button
+            onClick={async () => {
+              const token = getToken();
+              await Promise.all(notifications.map(n =>
+                fetch(`http://localhost:8000/api/producer/notifications/${n.id}/read/`, {
+                  method: "PATCH",
+                  headers: { Authorization: `Bearer ${token}` },
+                })
+              ));
+              setNotifications([]);
+            }}
+            style={{ position: "absolute", top: 8, right: 12, background: "none", border: "none", fontSize: 18, cursor: "pointer", color: "#666" }}
+          >✕</button>
+          <strong>Low Stock Alerts</strong>
+          <ul style={{ margin: "8px 0 0", paddingLeft: 20 }}>
+            {notifications.map(n => (
+              <li key={n.id}>{n.message}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       <nav className="dashboard-nav">
         {menuItems.map((item) => (
           <button
@@ -372,8 +424,31 @@ export default function ProducerDashboardPage() {
                       rows={3}
                       style={{ display: "block", width: "100%", padding: "8px 10px", borderRadius: 6, border: "1px solid #ccc", marginTop: 4, resize: "vertical", fontFamily: "inherit" }} />
                   </label>
+                  <hr style={{ margin: "0 0 16px", border: "none", borderTop: "1px solid #eee" }} />
+                  <p style={{ margin: "0 0 12px", fontWeight: 600, fontSize: "0.9rem", color: "#dc2626" }}>Set a Discount Deal (optional)</p>
+                  <label style={{ display: "block", marginBottom: 12, fontWeight: 600, fontSize: "0.9rem" }}>
+                    Discount %
+                    <input type="number" min="1" max="100" placeholder="e.g. 20" value={editProduct.discountPercentage || ""}
+                      onChange={e => setEditProduct(p => ({ ...p, discountPercentage: e.target.value }))}
+                      style={{ display: "block", width: "100%", padding: "8px 10px", borderRadius: 6, border: "1px solid #ccc", marginTop: 4 }} />
+                  </label>
+                  <label style={{ display: "block", marginBottom: 20, fontWeight: 600, fontSize: "0.9rem" }}>
+                    Deal Expires At
+                    <input type="datetime-local" value={editProduct.dealExpiresAt || ""}
+                      onChange={e => setEditProduct(p => ({ ...p, dealExpiresAt: e.target.value }))}
+                      style={{ display: "block", width: "100%", padding: "8px 10px", borderRadius: 6, border: "1px solid #ccc", marginTop: 4 }} />
+                  </label>
                   <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
                     <button className="cancel-item-btn" onClick={() => setEditProduct(null)}>Cancel</button>
+                    <button className="cancel-item-btn" onClick={async () => {
+                      await fetch(`http://localhost:8000/api/producer/products/${editProduct.id}/deals/`, {
+                        method: "POST",
+                        headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "application/json" },
+                        body: JSON.stringify({ discount_percentage: 0 }),
+                      });
+                      setEditProduct(null);
+                      fetchProducts();
+                    }}>Remove Discount</button>
                     <button className="confirm-item-btn" onClick={saveProductEdit}>Save</button>
                   </div>
                 </div>

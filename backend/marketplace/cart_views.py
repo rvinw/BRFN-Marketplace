@@ -31,17 +31,26 @@ def _get_or_create_cart(user):
 
 
 def _serialize_cart(cart):
+    from django.utils import timezone
     items = cart.items.select_related(
         "product__category", "product__producer"
-    ).prefetch_related("product__images")
+    ).prefetch_related("product__images", "product__deals")
+
+    def get_price(product):
+        active_deal = product.deals.filter(is_active=True, expires_at__gt=timezone.now()).first()
+        if active_deal:
+            discount = active_deal.discount_percentage / 100
+            return round(float(product.current_price) * (1 - float(discount)), 2)
+        return float(product.current_price)
+
     return {
         "id": cart.id,
         "items": [
             {
-                "id": item.product.id,  # product ID — matches frontend cart item id
-                "cart_item_id": item.id,  # DB row id for this CartItem
+                "id": item.product.id,
+                "cart_item_id": item.id,
                 "name": item.product.product_name,
-                "price": str(item.product.current_price),
+                "price": str(get_price(item.product)),
                 "unit": item.product.product_unit,
                 "category": item.product.category.category_name,
                 "image": (

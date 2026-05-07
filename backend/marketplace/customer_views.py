@@ -190,6 +190,8 @@ def orders(request):
                 Product.objects.filter(pk=product.pk).update(
                     stock_quantity=F('stock_quantity') - quantity
                 )
+                product.refresh_from_db()
+                product.save()
 
     return Response(
         {

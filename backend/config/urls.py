@@ -32,9 +32,12 @@ from marketplace.producer_views import (
     cancel_order_item,
     producer_add_product,
     producer_product_detail,
+    producer_set_deal,
     update_order_item_availability,
     update_order_item_status,
     weekly_payout,
+    producer_notifications,
+    mark_notification_read,
 )
 from marketplace.review_views import product_reviews
 from marketplace.views import CommunityPostViewSet, ProductViewSet, health
@@ -76,6 +79,7 @@ urlpatterns = [
     path("api/cart/items/", cart_add_item),
     path("api/cart/items/<int:product_id>/", cart_item_detail),
     path("api/producer/products/", producer_add_product),
+    path("api/producer/products/<int:product_id>/deals/", producer_set_deal),
     path("api/producer/products/<int:product_id>/", producer_product_detail),
     path("api/", include(router.urls)),
     path("api/producer/orders/incoming/", producer_incoming_orders, name="producer-incoming-orders"),
@@ -84,4 +88,6 @@ urlpatterns = [
     path("api/producer/order-items/<int:item_id>/availability/", update_order_item_availability, name="update-order-item-availability"),
     path("api/producer/weekly-payout/", weekly_payout, name="weekly-payout"),
     path("api/products/<int:product_id>/reviews/", product_reviews, name="product-reviews"),
+    path("api/producer/notifications/", producer_notifications, name="producer-notifications"),
+    path("api/producer/notifications/<int:notification_id>/read/", mark_notification_read, name="mark-notification-read"),
 ]

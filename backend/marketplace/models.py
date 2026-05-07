@@ -151,7 +151,7 @@ class ProductDeal(models.Model):
         decimal_places=2,
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
-    expires_at = models.DateTimeField()
+    expires_at = models.DateTimeField(blank=True, null=True)
     note = models.TextField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
 

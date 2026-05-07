@@ -194,12 +194,25 @@ export default function ProductDetailPage() {
 
           <div className="product-detail__footer">
             <span className="product-detail__price">
-              £{parseFloat(product.price).toFixed(2)}
-              <span className="product-detail__unit">
-                {" "}
-                / {product.unit_amount}
-              </span>
+              {product.discounted_price ? (
+                <>
+                  <span style={{ textDecoration: 'line-through', color: '#9ca3af', fontSize: '0.95rem', marginRight: 8 }}>
+                    £{parseFloat(product.price).toFixed(2)}
+                  </span>
+                  <span style={{ color: '#dc2626', fontWeight: 'bold' }}>
+                    £{parseFloat(product.discounted_price).toFixed(2)}
+                  </span>
+                </>
+              ) : (
+                <>£{parseFloat(product.price).toFixed(2)}</>
+              )}
+              <span className="product-detail__unit"> / {product.unit_amount}</span>
             </span>
+            {product.deals?.length > 0 && product.deals[0].expires_at && (
+              <p style={{ color: '#dc2626', fontSize: '0.8rem', margin: '4px 0 0' }}>
+                Deal expires: {new Date(product.deals[0].expires_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+              </p>
+            )}
             <button
               className={`product-detail__btn ${cartItem ? "product-detail__btn--added" : ""}`}
               onClick={() => addToCart(product)}
