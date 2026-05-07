@@ -31,19 +31,23 @@ from marketplace.customer_views import orders, producer_incoming_orders
 from marketplace.producer_views import (
     cancel_order_item,
     producer_add_product,
-    producer_product_detail,
-    producer_set_deal,
-    producer_set_availability,
     update_order_item_availability,
     update_order_item_status,
     weekly_payout,
-    producer_notifications,
-    mark_notification_read,
+    producer_my_products,
+    update_producer_product_stock,
+    remove_producer_product,
 )
 from marketplace.review_views import product_reviews
-from marketplace.standing_order_views import standing_orders, cancel_standing_order, update_delivery_day
-from marketplace.views import CommunityPostViewSet, ProductViewSet, health, allergen_list, product_allergens
+from marketplace.views import (
+    CommunityPostViewSet,
+    ProductViewSet,
+    health,
+    recommendations,
+    freshness_check,
+)
 from rest_framework.routers import DefaultRouter
+
 
 router = DefaultRouter()
 router.register(r"products", ProductViewSet, basename="products")
@@ -66,7 +70,7 @@ admin_urlpatterns = [
     path("finance/payouts/<int:pk>/", AdminPayoutDetailView.as_view()),
     path("finance/orders-report/", AdminFinanceOrderReportView.as_view()),
     path("finance/orders-report/csv/", AdminFinanceCSVView.as_view()),
-]
+    ]
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -81,9 +85,6 @@ urlpatterns = [
     path("api/cart/items/", cart_add_item),
     path("api/cart/items/<int:product_id>/", cart_item_detail),
     path("api/producer/products/", producer_add_product),
-    path("api/producer/products/<int:product_id>/deals/", producer_set_deal),
-    path("api/producer/products/<int:product_id>/availability/", producer_set_availability),
-    path("api/producer/products/<int:product_id>/", producer_product_detail),
     path("api/", include(router.urls)),
     path("api/producer/orders/incoming/", producer_incoming_orders, name="producer-incoming-orders"),
     path("api/producer/order-items/<int:item_id>/cancel/", cancel_order_item, name="cancel-order-item"),
@@ -91,11 +92,26 @@ urlpatterns = [
     path("api/producer/order-items/<int:item_id>/availability/", update_order_item_availability, name="update-order-item-availability"),
     path("api/producer/weekly-payout/", weekly_payout, name="weekly-payout"),
     path("api/products/<int:product_id>/reviews/", product_reviews, name="product-reviews"),
-    path("api/allergens/", allergen_list, name="allergen-list"),
-    path("api/products/<int:product_id>/allergens/", product_allergens, name="product-allergens"),
-    path("api/producer/notifications/", producer_notifications, name="producer-notifications"),
-    path("api/producer/notifications/<int:notification_id>/read/", mark_notification_read, name="mark-notification-read"),
-    path("api/standing-orders/", standing_orders, name="standing-orders"),
-    path("api/standing-orders/<int:order_id>/", cancel_standing_order, name="cancel-standing-order"),
-    path('standing-orders/<int:order_id>/delivery-day/', update_delivery_day),
+       path("api/producer/my-products/", producer_my_products, name="producer-my-products"),
+    path(
+        "api/producer/products/<int:product_id>/stock/",
+        update_producer_product_stock,
+        name="update-producer-product-stock",
+    ),
+
+    path(
+        "api/producer/products/<int:product_id>/remove/",
+        remove_producer_product,
+        name="remove-producer-product",
+    ),
+    path(
+        "api/recommendations/<int:user_id>/",
+        recommendations,
+        name="recommendations",
+    ),
+    path(
+        "api/ai/freshness-check/",
+        freshness_check,
+        name="freshness-check",
+    ),
 ]
