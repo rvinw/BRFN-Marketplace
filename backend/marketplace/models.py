@@ -428,3 +428,22 @@ class PayoutRequest(models.Model):
         return (
             f"{self.producer.business_name} payout {self.week_start} - {self.week_end}"
         )
+
+
+class StockNotification(models.Model):
+    producer = models.ForeignKey(
+        ProducerProfile,
+        on_delete=models.CASCADE,
+        related_name="stock_notifications",
+    )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="stock_notifications",
+    )
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.producer.business_name} — {self.product.product_name}"
