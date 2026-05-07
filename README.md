@@ -90,10 +90,11 @@ docker-compose up
 
 # DESD AI Integration Setup Guide
 ## 1. Pull the branch
+```bash
 git fetch origin
 git checkout ai-integration-clean
 git pull origin ai-integration-clean
-
+```
 ## 2. Add the AI model file manually
 The model file is not pushed to GitHub because it is too large.
 Which
@@ -121,7 +122,8 @@ docker compose exec web python -c "import cv2; import tensorflow as tf; print('O
 Use a local image path:
 curl -X POST http://localhost:8000/api/ai/freshness-check/ \
   -F "image=@/image file path"
-Expected response:
+  
+### Expected response:
 {
   "predicted_class": "Banana__Healthy",
   "confidence": 99.99,

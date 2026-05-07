@@ -37,3 +37,4 @@ dist-ssr
 *.sw?
 .venv__pycache__/
 *.pyc
+backend/marketplace/ai_services/freshness_model.h5
