@@ -88,13 +88,13 @@ docker-compose restart web
 docker-compose up
 ```
 
-#DESD AI Integration Setup Guide
-1. Pull the branch
+# DESD AI Integration Setup Guide
+## 1. Pull the branch
 git fetch origin
 git checkout ai-integration-clean
 git pull origin ai-integration-clean
 
-2. Add the AI model file manually
+## 2. Add the AI model file manually
 The model file is not pushed to GitHub because it is too large.
 Which
 freshness_model.h5
@@ -107,7 +107,7 @@ backend/marketplace/ai_services/
 ├── model_service.py
 └── freshness_model.h5
 
-3. Backend setup
+## 3. Backend setup
 From project root:
 docker compose up --build
 If OpenCV gives an error, run:
@@ -117,7 +117,7 @@ docker compose restart web
 Check TensorFlow/OpenCV:
 docker compose exec web python -c "import cv2; import tensorflow as tf; print('OK')"
 
-4. Test backend AI endpoint
+## 4. Test backend AI endpoint
 Use a local image path:
 curl -X POST http://localhost:8000/api/ai/freshness-check/ \
   -F "image=@/image file path"
@@ -132,7 +132,7 @@ Expected response:
 
 
 
-5. Test Task 1
+## 5. Test Task 1
 Login as a customer.
 Go to:
 /dashboard/customer
@@ -140,7 +140,7 @@ You should see:
 Recommended For You
 This shows AI reorder recommendations based on customer purchase history.
 
-6. Test Task 2, 3 and 4
+## 6. Test Task 2, 3 and 4
 Login as a producer.
 Go to:
 /dashboard/producer
@@ -155,7 +155,7 @@ Expected output:
 * explanation
 * Grad-CAM heatmap
 
-AI Task Mapping
+### AI Task Mapping
 Task 1
 Customer purchase-history recommendation system.
 Task 2
@@ -165,7 +165,7 @@ Integrated trained MobileNetV2 model into DESD backend and frontend.
 Task 4
 Explainable AI using Grad-CAM heatmap.
 
-Important Notes
+### Important Notes
 Do not commit:
 freshness_model.h5
 backend/db.sqlite3
