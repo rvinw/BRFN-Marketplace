@@ -724,6 +724,46 @@
   }
 },
 {
+  "model": "marketplace.product",
+  "pk": 34,
+  "fields": {
+    "producer": 1,
+    "category": 1,
+    "product_name": "cherry tomatoes",
+    "product_description": "sweet cherry toms ",
+    "current_price": "2.50",
+    "product_unit": "EACH",
+    "stock_quantity": "6.000",
+    "product_stock_threshold": "5.000",
+    "harvest_date": "2026-05-01",
+    "best_before_date": null,
+    "organic_status": "NON_ORGANIC",
+    "is_available": true,
+    "created_at": "2026-05-06T23:14:12.252Z",
+    "updated_at": "2026-05-06T23:14:12.252Z"
+  }
+},
+{
+  "model": "marketplace.product",
+  "pk": 35,
+  "fields": {
+    "producer": 1,
+    "category": 1,
+    "product_name": "cherry",
+    "product_description": "cherry",
+    "current_price": "1.00",
+    "product_unit": "EACH",
+    "stock_quantity": "14.000",
+    "product_stock_threshold": "15.000",
+    "harvest_date": "2026-05-21",
+    "best_before_date": null,
+    "organic_status": "NON_ORGANIC",
+    "is_available": true,
+    "created_at": "2026-05-06T23:47:52.276Z",
+    "updated_at": "2026-05-06T23:49:24.150Z"
+  }
+},
+{
   "model": "marketplace.productimage",
   "pk": 1,
   "fields": {
@@ -1328,6 +1368,24 @@
   }
 },
 {
+  "model": "marketplace.cart",
+  "pk": 2,
+  "fields": {
+    "customer": 1,
+    "created_at": "2026-05-06T23:21:12.132Z",
+    "updated_at": "2026-05-06T23:21:12.132Z"
+  }
+},
+{
+  "model": "marketplace.cart",
+  "pk": 3,
+  "fields": {
+    "customer": 2,
+    "created_at": "2026-05-06T23:48:34.931Z",
+    "updated_at": "2026-05-06T23:48:34.931Z"
+  }
+},
+{
   "model": "marketplace.order",
   "pk": 1,
   "fields": {
@@ -1611,6 +1669,28 @@
     "placed_at": "2026-05-06T18:40:20.551Z",
     "order_status": "PAID",
     "total_amount": "392.50"
+  }
+},
+{
+  "model": "marketplace.order",
+  "pk": 27,
+  "fields": {
+    "customer": 1,
+    "delivery_address": 32,
+    "placed_at": "2026-05-06T23:22:03.950Z",
+    "order_status": "PENDING",
+    "total_amount": "8.99"
+  }
+},
+{
+  "model": "marketplace.order",
+  "pk": 28,
+  "fields": {
+    "customer": 2,
+    "delivery_address": 33,
+    "placed_at": "2026-05-06T23:49:24.147Z",
+    "order_status": "PENDING",
+    "total_amount": "9.99"
   }
 },
 {
@@ -2055,12 +2135,32 @@
   }
 },
 {
+  "model": "marketplace.orderproducer",
+  "pk": 50,
+  "fields": {
+    "order": 27,
+    "producer": 1,
+    "status": "CONFIRMED"
+  }
+},
+{
+  "model": "marketplace.orderproducer",
+  "pk": 51,
+  "fields": {
+    "order": 28,
+    "producer": 1,
+    "status": "PENDING"
+  }
+},
+{
   "model": "marketplace.orderitem",
   "pk": 1,
   "fields": {
     "order_producer": 1,
     "product": 1,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.50",
     "total_cost": "5.00",
     "status": "DELIVERED"
@@ -2073,6 +2173,8 @@
     "order_producer": 1,
     "product": 2,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.80",
     "total_cost": "3.60",
     "status": "DELIVERED"
@@ -2085,6 +2187,8 @@
     "order_producer": 2,
     "product": 16,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "3.20",
     "total_cost": "6.40",
     "status": "DELIVERED"
@@ -2097,6 +2201,8 @@
     "order_producer": 2,
     "product": 14,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.80",
     "total_cost": "5.40",
     "status": "DELIVERED"
@@ -2109,6 +2215,8 @@
     "order_producer": 3,
     "product": 3,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.20",
     "total_cost": "4.40",
     "status": "DELIVERED"
@@ -2121,6 +2229,8 @@
     "order_producer": 3,
     "product": 4,
     "quantity": "4.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.50",
     "total_cost": "6.00",
     "status": "DELIVERED"
@@ -2133,6 +2243,8 @@
     "order_producer": 3,
     "product": 7,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.20",
     "total_cost": "2.40",
     "status": "DELIVERED"
@@ -2145,6 +2257,8 @@
     "order_producer": 4,
     "product": 9,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.20",
     "total_cost": "4.40",
     "status": "DELIVERED"
@@ -2157,6 +2271,8 @@
     "order_producer": 4,
     "product": 11,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "3.50",
     "total_cost": "7.00",
     "status": "DELIVERED"
@@ -2169,6 +2285,8 @@
     "order_producer": 5,
     "product": 5,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.00",
     "total_cost": "6.00",
     "status": "DELIVERED"
@@ -2181,6 +2299,8 @@
     "order_producer": 5,
     "product": 6,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.80",
     "total_cost": "5.60",
     "status": "DELIVERED"
@@ -2193,6 +2313,8 @@
     "order_producer": 5,
     "product": 8,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.00",
     "total_cost": "2.00",
     "status": "DELIVERED"
@@ -2205,6 +2327,8 @@
     "order_producer": 6,
     "product": 18,
     "quantity": "4.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.50",
     "total_cost": "10.00",
     "status": "DELIVERED"
@@ -2217,6 +2341,8 @@
     "order_producer": 6,
     "product": 17,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.80",
     "total_cost": "5.60",
     "status": "DELIVERED"
@@ -2229,6 +2355,8 @@
     "order_producer": 7,
     "product": 10,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.80",
     "total_cost": "5.60",
     "status": "DELIVERED"
@@ -2241,6 +2369,8 @@
     "order_producer": 7,
     "product": 12,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.50",
     "total_cost": "5.00",
     "status": "DELIVERED"
@@ -2253,6 +2383,8 @@
     "order_producer": 7,
     "product": 13,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.80",
     "total_cost": "3.60",
     "status": "DELIVERED"
@@ -2265,6 +2397,8 @@
     "order_producer": 8,
     "product": 1,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.50",
     "total_cost": "7.50",
     "status": "PENDING"
@@ -2277,6 +2411,8 @@
     "order_producer": 8,
     "product": 2,
     "quantity": "1.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.80",
     "total_cost": "1.80",
     "status": "PENDING"
@@ -2289,6 +2425,8 @@
     "order_producer": 9,
     "product": 6,
     "quantity": "1.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.80",
     "total_cost": "2.80",
     "status": "PENDING"
@@ -2301,6 +2439,8 @@
     "order_producer": 9,
     "product": 5,
     "quantity": "1.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.00",
     "total_cost": "2.00",
     "status": "PENDING"
@@ -2313,6 +2453,8 @@
     "order_producer": 9,
     "product": 4,
     "quantity": "1.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.50",
     "total_cost": "1.50",
     "status": "PENDING"
@@ -2325,6 +2467,8 @@
     "order_producer": 10,
     "product": 20,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "7.85",
     "total_cost": "23.55",
     "status": "DELIVERED"
@@ -2337,6 +2481,8 @@
     "order_producer": 11,
     "product": 1,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.50",
     "total_cost": "5.00",
     "status": "DELIVERED"
@@ -2349,6 +2495,8 @@
     "order_producer": 11,
     "product": 2,
     "quantity": "1.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.80",
     "total_cost": "1.80",
     "status": "DELIVERED"
@@ -2361,6 +2509,8 @@
     "order_producer": 12,
     "product": 16,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "3.20",
     "total_cost": "6.40",
     "status": "DELIVERED"
@@ -2373,6 +2523,8 @@
     "order_producer": 12,
     "product": 14,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.80",
     "total_cost": "5.40",
     "status": "DELIVERED"
@@ -2385,6 +2537,8 @@
     "order_producer": 13,
     "product": 4,
     "quantity": "5.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.50",
     "total_cost": "7.50",
     "status": "DELIVERED"
@@ -2397,6 +2551,8 @@
     "order_producer": 13,
     "product": 5,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.00",
     "total_cost": "6.00",
     "status": "DELIVERED"
@@ -2409,6 +2565,8 @@
     "order_producer": 14,
     "product": 9,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.20",
     "total_cost": "6.60",
     "status": "DELIVERED"
@@ -2421,6 +2579,8 @@
     "order_producer": 14,
     "product": 11,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "3.50",
     "total_cost": "7.00",
     "status": "DELIVERED"
@@ -2433,6 +2593,8 @@
     "order_producer": 15,
     "product": 14,
     "quantity": "4.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.80",
     "total_cost": "7.20",
     "status": "DELIVERED"
@@ -2445,6 +2607,8 @@
     "order_producer": 15,
     "product": 16,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "3.20",
     "total_cost": "9.60",
     "status": "DELIVERED"
@@ -2457,6 +2621,8 @@
     "order_producer": 15,
     "product": 17,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.80",
     "total_cost": "5.60",
     "status": "DELIVERED"
@@ -2469,6 +2635,8 @@
     "order_producer": 15,
     "product": 18,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.50",
     "total_cost": "5.00",
     "status": "DELIVERED"
@@ -2481,6 +2649,8 @@
     "order_producer": 16,
     "product": 1,
     "quantity": "1.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.50",
     "total_cost": "2.50",
     "status": "DELIVERED"
@@ -2493,6 +2663,8 @@
     "order_producer": 16,
     "product": 8,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.00",
     "total_cost": "2.00",
     "status": "DELIVERED"
@@ -2505,6 +2677,8 @@
     "order_producer": 17,
     "product": 25,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.00",
     "total_cost": "6.00",
     "status": "DELIVERED"
@@ -2517,6 +2691,8 @@
     "order_producer": 17,
     "product": 26,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.80",
     "total_cost": "3.60",
     "status": "DELIVERED"
@@ -2529,6 +2705,8 @@
     "order_producer": 18,
     "product": 10,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.80",
     "total_cost": "5.60",
     "status": "DELIVERED"
@@ -2541,6 +2719,8 @@
     "order_producer": 18,
     "product": 12,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.50",
     "total_cost": "7.50",
     "status": "DELIVERED"
@@ -2553,6 +2733,8 @@
     "order_producer": 18,
     "product": 13,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.80",
     "total_cost": "3.60",
     "status": "DELIVERED"
@@ -2565,6 +2747,8 @@
     "order_producer": 19,
     "product": 21,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "3.50",
     "total_cost": "7.00",
     "status": "DELIVERED"
@@ -2577,6 +2761,8 @@
     "order_producer": 19,
     "product": 23,
     "quantity": "1.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "4.50",
     "total_cost": "4.50",
     "status": "DELIVERED"
@@ -2589,6 +2775,8 @@
     "order_producer": 20,
     "product": 6,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.80",
     "total_cost": "8.40",
     "status": "DELIVERED"
@@ -2601,6 +2789,8 @@
     "order_producer": 20,
     "product": 7,
     "quantity": "4.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.20",
     "total_cost": "4.80",
     "status": "DELIVERED"
@@ -2613,6 +2803,8 @@
     "order_producer": 21,
     "product": 29,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "4.50",
     "total_cost": "13.50",
     "status": "DELIVERED"
@@ -2625,6 +2817,8 @@
     "order_producer": 21,
     "product": 31,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "5.50",
     "total_cost": "11.00",
     "status": "DELIVERED"
@@ -2637,6 +2831,8 @@
     "order_producer": 22,
     "product": 15,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.70",
     "total_cost": "5.10",
     "status": "CANCELLED"
@@ -2649,6 +2845,8 @@
     "order_producer": 22,
     "product": 18,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.50",
     "total_cost": "5.00",
     "status": "CANCELLED"
@@ -2661,6 +2859,8 @@
     "order_producer": 22,
     "product": 19,
     "quantity": "1.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "5.80",
     "total_cost": "5.80",
     "status": "CANCELLED"
@@ -2673,6 +2873,8 @@
     "order_producer": 23,
     "product": 3,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.20",
     "total_cost": "4.40",
     "status": "DELIVERED"
@@ -2685,6 +2887,8 @@
     "order_producer": 23,
     "product": 5,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.00",
     "total_cost": "6.00",
     "status": "DELIVERED"
@@ -2697,6 +2901,8 @@
     "order_producer": 24,
     "product": 17,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.80",
     "total_cost": "5.60",
     "status": "DELIVERED"
@@ -2709,6 +2915,8 @@
     "order_producer": 24,
     "product": 19,
     "quantity": "1.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "5.80",
     "total_cost": "5.80",
     "status": "DELIVERED"
@@ -2721,6 +2929,8 @@
     "order_producer": 25,
     "product": 9,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.20",
     "total_cost": "4.40",
     "status": "DELIVERED"
@@ -2733,6 +2943,8 @@
     "order_producer": 25,
     "product": 11,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "3.50",
     "total_cost": "10.50",
     "status": "DELIVERED"
@@ -2745,6 +2957,8 @@
     "order_producer": 26,
     "product": 21,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "3.50",
     "total_cost": "10.50",
     "status": "DELIVERED"
@@ -2757,6 +2971,8 @@
     "order_producer": 26,
     "product": 24,
     "quantity": "1.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "12.00",
     "total_cost": "12.00",
     "status": "DELIVERED"
@@ -2769,6 +2985,8 @@
     "order_producer": 27,
     "product": 27,
     "quantity": "4.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.60",
     "total_cost": "6.40",
     "status": "DELIVERED"
@@ -2781,6 +2999,8 @@
     "order_producer": 28,
     "product": 30,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "3.80",
     "total_cost": "7.60",
     "status": "DELIVERED"
@@ -2793,6 +3013,8 @@
     "order_producer": 29,
     "product": 14,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.80",
     "total_cost": "3.60",
     "status": "DELIVERED"
@@ -2805,6 +3027,8 @@
     "order_producer": 29,
     "product": 16,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "3.20",
     "total_cost": "9.60",
     "status": "DELIVERED"
@@ -2817,6 +3041,8 @@
     "order_producer": 30,
     "product": 22,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.80",
     "total_cost": "5.60",
     "status": "DELIVERED"
@@ -2829,6 +3055,8 @@
     "order_producer": 31,
     "product": 31,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "5.50",
     "total_cost": "11.00",
     "status": "DELIVERED"
@@ -2841,6 +3069,8 @@
     "order_producer": 31,
     "product": 32,
     "quantity": "1.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "3.20",
     "total_cost": "3.20",
     "status": "DELIVERED"
@@ -2853,6 +3083,8 @@
     "order_producer": 32,
     "product": 18,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.50",
     "total_cost": "5.00",
     "status": "DELIVERED"
@@ -2865,6 +3097,8 @@
     "order_producer": 33,
     "product": 1,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.50",
     "total_cost": "7.50",
     "status": "DELIVERED"
@@ -2877,6 +3111,8 @@
     "order_producer": 33,
     "product": 3,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.20",
     "total_cost": "4.40",
     "status": "DELIVERED"
@@ -2889,6 +3125,8 @@
     "order_producer": 33,
     "product": 8,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.00",
     "total_cost": "3.00",
     "status": "DELIVERED"
@@ -2901,6 +3139,8 @@
     "order_producer": 34,
     "product": 25,
     "quantity": "4.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.00",
     "total_cost": "8.00",
     "status": "DELIVERED"
@@ -2913,6 +3153,8 @@
     "order_producer": 34,
     "product": 26,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.80",
     "total_cost": "5.40",
     "status": "DELIVERED"
@@ -2925,6 +3167,8 @@
     "order_producer": 35,
     "product": 10,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.80",
     "total_cost": "5.60",
     "status": "DELIVERED"
@@ -2937,6 +3181,8 @@
     "order_producer": 35,
     "product": 13,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.80",
     "total_cost": "3.60",
     "status": "DELIVERED"
@@ -2949,6 +3195,8 @@
     "order_producer": 36,
     "product": 29,
     "quantity": "4.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "4.50",
     "total_cost": "18.00",
     "status": "DELIVERED"
@@ -2961,6 +3209,8 @@
     "order_producer": 36,
     "product": 30,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "3.80",
     "total_cost": "11.40",
     "status": "DELIVERED"
@@ -2973,6 +3223,8 @@
     "order_producer": 36,
     "product": 31,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "5.50",
     "total_cost": "16.50",
     "status": "DELIVERED"
@@ -2985,6 +3237,8 @@
     "order_producer": 37,
     "product": 16,
     "quantity": "4.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "3.20",
     "total_cost": "12.80",
     "status": "DELIVERED"
@@ -2997,6 +3251,8 @@
     "order_producer": 38,
     "product": 21,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "3.50",
     "total_cost": "7.00",
     "status": "DELIVERED"
@@ -3009,6 +3265,8 @@
     "order_producer": 38,
     "product": 23,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "4.50",
     "total_cost": "9.00",
     "status": "DELIVERED"
@@ -3021,6 +3279,8 @@
     "order_producer": 39,
     "product": 27,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.60",
     "total_cost": "4.80",
     "status": "DELIVERED"
@@ -3033,6 +3293,8 @@
     "order_producer": 39,
     "product": 28,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.50",
     "total_cost": "3.00",
     "status": "DELIVERED"
@@ -3045,6 +3307,8 @@
     "order_producer": 40,
     "product": 4,
     "quantity": "6.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.50",
     "total_cost": "9.00",
     "status": "PENDING"
@@ -3057,6 +3321,8 @@
     "order_producer": 40,
     "product": 5,
     "quantity": "4.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.00",
     "total_cost": "8.00",
     "status": "PENDING"
@@ -3069,6 +3335,8 @@
     "order_producer": 40,
     "product": 6,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.80",
     "total_cost": "8.40",
     "status": "PENDING"
@@ -3081,6 +3349,8 @@
     "order_producer": 41,
     "product": 25,
     "quantity": "5.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.00",
     "total_cost": "10.00",
     "status": "PENDING"
@@ -3093,6 +3363,8 @@
     "order_producer": 42,
     "product": 12,
     "quantity": "4.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.50",
     "total_cost": "10.00",
     "status": "PENDING"
@@ -3105,6 +3377,8 @@
     "order_producer": 42,
     "product": 13,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.80",
     "total_cost": "5.40",
     "status": "PENDING"
@@ -3117,6 +3391,8 @@
     "order_producer": 43,
     "product": 24,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "12.00",
     "total_cost": "24.00",
     "status": "PENDING"
@@ -3129,6 +3405,8 @@
     "order_producer": 43,
     "product": 23,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "4.50",
     "total_cost": "9.00",
     "status": "PENDING"
@@ -3141,6 +3419,8 @@
     "order_producer": 44,
     "product": 1,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.50",
     "total_cost": "7.50",
     "status": "PENDING"
@@ -3153,6 +3433,8 @@
     "order_producer": 44,
     "product": 2,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.80",
     "total_cost": "3.60",
     "status": "PENDING"
@@ -3165,6 +3447,8 @@
     "order_producer": 44,
     "product": 7,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.20",
     "total_cost": "3.60",
     "status": "PENDING"
@@ -3177,6 +3461,8 @@
     "order_producer": 45,
     "product": 29,
     "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "4.50",
     "total_cost": "9.00",
     "status": "PENDING"
@@ -3189,6 +3475,8 @@
     "order_producer": 45,
     "product": 31,
     "quantity": "1.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "5.50",
     "total_cost": "5.50",
     "status": "PENDING"
@@ -3201,6 +3489,8 @@
     "order_producer": 46,
     "product": 14,
     "quantity": "3.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "1.80",
     "total_cost": "5.40",
     "status": "PENDING"
@@ -3213,6 +3503,8 @@
     "order_producer": 47,
     "product": 20,
     "quantity": "20.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "7.85",
     "total_cost": "157.00",
     "status": "DELIVERED"
@@ -3225,6 +3517,8 @@
     "order_producer": 48,
     "product": 33,
     "quantity": "6.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "2.80",
     "total_cost": "16.80",
     "status": "DELIVERED"
@@ -3237,9 +3531,39 @@
     "order_producer": 49,
     "product": 20,
     "quantity": "50.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
     "unit_price_gbp": "7.85",
     "total_cost": "392.50",
     "status": "DELIVERED"
+  }
+},
+{
+  "model": "marketplace.orderitem",
+  "pk": 100,
+  "fields": {
+    "order_producer": 50,
+    "product": 34,
+    "quantity": "2.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
+    "unit_price_gbp": "2.50",
+    "total_cost": "5.00",
+    "status": "CONFIRMED"
+  }
+},
+{
+  "model": "marketplace.orderitem",
+  "pk": 101,
+  "fields": {
+    "order_producer": 51,
+    "product": 35,
+    "quantity": "6.000",
+    "fulfilled_quantity": null,
+    "availability_note": null,
+    "unit_price_gbp": "1.00",
+    "total_cost": "6.00",
+    "status": "PENDING"
   }
 },
 {
@@ -3398,6 +3722,104 @@
 },
 {
   "model": "marketplace.payoutrequest",
+  "pk": 1,
+  "fields": {
+    "producer": 1,
+    "week_start": "2026-04-14",
+    "week_end": "2026-04-20",
+    "gross_amount": "8.60",
+    "commission_amount": "0.43",
+    "net_amount": "8.17",
+    "status": "PAID",
+    "requested_at": "2026-04-22T10:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 2,
+  "fields": {
+    "producer": 2,
+    "week_start": "2026-04-14",
+    "week_end": "2026-04-20",
+    "gross_amount": "11.80",
+    "commission_amount": "0.59",
+    "net_amount": "11.21",
+    "status": "PAID",
+    "requested_at": "2026-04-22T11:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 3,
+  "fields": {
+    "producer": 1,
+    "week_start": "2026-04-21",
+    "week_end": "2026-04-27",
+    "gross_amount": "12.80",
+    "commission_amount": "0.64",
+    "net_amount": "12.16",
+    "status": "PAID",
+    "requested_at": "2026-04-29T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 4,
+  "fields": {
+    "producer": 3,
+    "week_start": "2026-04-21",
+    "week_end": "2026-04-27",
+    "gross_amount": "11.40",
+    "commission_amount": "0.57",
+    "net_amount": "10.83",
+    "status": "PENDING",
+    "requested_at": "2026-04-29T10:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 5,
+  "fields": {
+    "producer": 1,
+    "week_start": "2026-04-28",
+    "week_end": "2026-05-04",
+    "gross_amount": "13.60",
+    "commission_amount": "0.68",
+    "net_amount": "12.92",
+    "status": "PENDING",
+    "requested_at": "2026-05-06T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 6,
+  "fields": {
+    "producer": 2,
+    "week_start": "2026-04-28",
+    "week_end": "2026-05-04",
+    "gross_amount": "15.60",
+    "commission_amount": "0.78",
+    "net_amount": "14.82",
+    "status": "PENDING",
+    "requested_at": "2026-05-06T10:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 7,
+  "fields": {
+    "producer": 3,
+    "week_start": "2026-04-28",
+    "week_end": "2026-05-04",
+    "gross_amount": "14.20",
+    "commission_amount": "0.71",
+    "net_amount": "13.49",
+    "status": "PAID",
+    "requested_at": "2026-05-06T11:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
   "pk": 8,
   "fields": {
     "producer": 5,
@@ -3518,7 +3940,7 @@
     "gross_amount": "21.80",
     "commission_amount": "1.09",
     "net_amount": "20.71",
-    "status": "PAID",
+    "status": "PENDING",
     "requested_at": "2026-04-21T09:00:00Z"
   }
 },
@@ -3730,6 +4152,31 @@
     "net_amount": "15.20",
     "status": "PENDING",
     "requested_at": "2026-05-05T09:00:00Z"
+  }
+},
+{
+  "model": "marketplace.payoutrequest",
+  "pk": 32,
+  "fields": {
+    "producer": 1,
+    "week_start": "2026-05-04",
+    "week_end": "2026-05-10",
+    "gross_amount": "0.00",
+    "commission_amount": "0.00",
+    "net_amount": "0.00",
+    "status": "PENDING",
+    "requested_at": "2026-05-06T23:38:29.985Z"
+  }
+},
+{
+  "model": "marketplace.stocknotification",
+  "pk": 1,
+  "fields": {
+    "producer": 1,
+    "product": 35,
+    "message": "Low stock alert: 'cherry' has dropped to 14.000 EACH (threshold: 15.000).",
+    "is_read": false,
+    "created_at": "2026-05-06T23:49:24.149Z"
   }
 }
 ]
