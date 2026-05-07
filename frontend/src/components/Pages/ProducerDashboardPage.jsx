@@ -5,6 +5,10 @@ import "./ProducerDashboardPage.css";
 
 export default function ProducerDashboardPage() {
   const [view, setView] = useState("home");
+  const [products, setProducts] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(false);
+  const [productsError, setProductsError] = useState("");
+  const [editProduct, setEditProduct] = useState(null);
   const [orders, setOrders] = useState([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [ordersError, setOrdersError] = useState("");
@@ -25,6 +29,61 @@ export default function ProducerDashboardPage() {
     sessionStorage.getItem("brfn_token") ||
     localStorage.getItem("access") ||
     localStorage.getItem("token");
+
+  const fetchProducts = async () => {
+    setProductsLoading(true);
+    setProductsError("");
+    try {
+      const res = await fetch("http://localhost:8000/api/producer/products/", {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
+      const data = await res.json();
+      if (!res.ok) { setProductsError(data.error || "Failed to load products."); return; }
+      setProducts(Array.isArray(data) ? data : []);
+    } catch {
+      setProductsError("Could not connect to backend.");
+    } finally {
+      setProductsLoading(false);
+    }
+  };
+
+  const toggleAvailability = async (product) => {
+    const res = await fetch(`http://localhost:8000/api/producer/products/${product.id}/`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ is_available: !product.is_available }),
+    });
+    if (res.ok) {
+      const updated = await res.json();
+      setProducts(prev => prev.map(p => p.id === updated.id ? { ...p, ...updated } : p));
+    }
+  };
+
+  const saveProductEdit = async () => {
+    const res = await fetch(`http://localhost:8000/api/producer/products/${editProduct.id}/`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        price: editProduct.price,
+        stock_quantity: editProduct.stock_quantity,
+        description: editProduct.description,
+      }),
+    });
+    if (res.ok) {
+      const updated = await res.json();
+      setProducts(prev => prev.map(p => p.id === updated.id ? { ...p, ...updated } : p));
+      setEditProduct(null);
+    }
+  };
+
+  const deleteProduct = async (id) => {
+    if (!confirm("Delete this product? This cannot be undone.")) return;
+    const res = await fetch(`http://localhost:8000/api/producer/products/${id}/`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${getToken()}` },
+    });
+    if (res.ok) setProducts(prev => prev.filter(p => p.id !== id));
+  };
 
   const fetchIncomingOrders = async () => {
     setOrdersLoading(true);
@@ -210,15 +269,13 @@ export default function ProducerDashboardPage() {
     return `${hours}h ${minutes}m remaining`;
   };
 
+  const activeOrders = orders.filter(o => !["DELIVERED", "CANCELLED"].includes(o.status));
+  const completedOrders = orders.filter(o => ["DELIVERED", "CANCELLED"].includes(o.status));
+
   useEffect(() => {
-    if (view === "orders") {
-      fetchIncomingOrders();
-    }
-
-    if (view === "payout") {
-      fetchWeeklyPayout();
-    }
-
+    if (view === "home") fetchProducts();
+    if (view === "orders" || view === "history") fetchIncomingOrders();
+    if (view === "payout") fetchWeeklyPayout();
   }, [view]);
 
   return (
@@ -227,7 +284,12 @@ export default function ProducerDashboardPage() {
         {menuItems.map((item) => (
           <button
             key={item.id}
-            onClick={() => setView(item.id)}
+            onClick={() => {
+              setView(item.id);
+              if (item.id === "home") fetchProducts();
+              if (item.id === "orders" || item.id === "history") fetchIncomingOrders();
+              if (item.id === "payout") fetchWeeklyPayout();
+            }}
             className={view === item.id ? "dashboard-tab active" : "dashboard-tab"}
           >
             {item.label}
@@ -237,11 +299,90 @@ export default function ProducerDashboardPage() {
 
       <main className="producer-content-area">
         {view === "home" && (
-          <div className="producer-card">
-            <h1 className="page-title">My Product Inventory</h1>
-            <p className="read-the-docs">
-              Current listings will appear here shortly.
-            </p>
+          <div className="incoming-orders-page">
+            <h1 className="incoming-orders-title">My Product Inventory</h1>
+
+            {productsLoading && <p className="incoming-orders-message">Loading products...</p>}
+            {productsError && <p className="incoming-orders-error">{productsError}</p>}
+
+            {!productsLoading && !productsError && products.length === 0 && (
+              <p className="incoming-orders-message">
+                No products yet. Use <strong>Add Product</strong> to list your first item.
+              </p>
+            )}
+
+            {!productsLoading && !productsError && products.map(p => (
+              <div key={p.id} className="order-card">
+                <div className="order-card-header">
+                  <div>
+                    <h2>{p.name}</h2>
+                    <p className="order-subtitle">{p.category} · {p.unit_amount}</p>
+                  </div>
+                  <span className="order-status" style={{
+                    background: p.is_available ? "#dcfce7" : "#fee2e2",
+                    color: p.is_available ? "#166534" : "#991b1b",
+                    padding: "4px 12px", borderRadius: 20, fontSize: "0.8rem", fontWeight: 700,
+                  }}>
+                    {p.is_available ? "Available" : "Unavailable"}
+                  </span>
+                </div>
+
+                <div className="order-info-grid">
+                  <div><span className="order-label">Price</span><p>£{parseFloat(p.price).toFixed(2)} / {p.unit_amount}</p></div>
+                  <div><span className="order-label">Stock</span>
+                    <p style={{ color: parseFloat(p.stock_quantity) <= 5 ? "#dc2626" : "inherit", fontWeight: parseFloat(p.stock_quantity) <= 5 ? 700 : 400 }}>
+                      {parseFloat(p.stock_quantity)} {parseFloat(p.stock_quantity) <= 5 && "⚠ Low"}
+                    </p>
+                  </div>
+                  <div><span className="order-label">Organic</span><p>{p.organic_status === "ORGANIC" ? "✓ Organic" : "Non-organic"}</p></div>
+                  {p.harvest_date && <div><span className="order-label">Harvest</span><p>{new Date(p.harvest_date).toLocaleDateString("en-GB")}</p></div>}
+                </div>
+
+                {p.description && <p style={{ margin: "8px 0 0", fontSize: "0.85rem", color: "#555" }}>{p.description}</p>}
+
+                <div className="order-item-actions" style={{ marginTop: 12 }}>
+                  <button className="confirm-item-btn" onClick={() => setEditProduct({ ...p })}>Edit</button>
+                  <button
+                    className={p.is_available ? "cancel-item-btn" : "confirm-item-btn"}
+                    onClick={() => toggleAvailability(p)}
+                  >
+                    {p.is_available ? "Mark Unavailable" : "Mark Available"}
+                  </button>
+                  <button className="cancel-item-btn" onClick={() => deleteProduct(p.id)}>Delete</button>
+                </div>
+              </div>
+            ))}
+
+            {editProduct && (
+              <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
+                <div style={{ background: "#fff", borderRadius: 12, padding: 32, width: "90%", maxWidth: 420 }}>
+                  <h3 style={{ margin: "0 0 20px" }}>Edit — {editProduct.name}</h3>
+                  <label style={{ display: "block", marginBottom: 12, fontWeight: 600, fontSize: "0.9rem" }}>
+                    Price (£)
+                    <input type="number" step="0.01" value={editProduct.price}
+                      onChange={e => setEditProduct(p => ({ ...p, price: e.target.value }))}
+                      style={{ display: "block", width: "100%", padding: "8px 10px", borderRadius: 6, border: "1px solid #ccc", marginTop: 4 }} />
+                  </label>
+                  <label style={{ display: "block", marginBottom: 12, fontWeight: 600, fontSize: "0.9rem" }}>
+                    Stock Quantity
+                    <input type="number" step="0.001" value={editProduct.stock_quantity}
+                      onChange={e => setEditProduct(p => ({ ...p, stock_quantity: e.target.value }))}
+                      style={{ display: "block", width: "100%", padding: "8px 10px", borderRadius: 6, border: "1px solid #ccc", marginTop: 4 }} />
+                  </label>
+                  <label style={{ display: "block", marginBottom: 20, fontWeight: 600, fontSize: "0.9rem" }}>
+                    Description
+                    <textarea value={editProduct.description || ""}
+                      onChange={e => setEditProduct(p => ({ ...p, description: e.target.value }))}
+                      rows={3}
+                      style={{ display: "block", width: "100%", padding: "8px 10px", borderRadius: 6, border: "1px solid #ccc", marginTop: 4, resize: "vertical", fontFamily: "inherit" }} />
+                  </label>
+                  <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
+                    <button className="cancel-item-btn" onClick={() => setEditProduct(null)}>Cancel</button>
+                    <button className="confirm-item-btn" onClick={saveProductEdit}>Save</button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -264,13 +405,13 @@ export default function ProducerDashboardPage() {
               <p className="incoming-orders-error">{ordersError}</p>
             )}
 
-            {!ordersLoading && !ordersError && orders.length === 0 && (
-              <p className="incoming-orders-message">No incoming orders yet.</p>
+            {!ordersLoading && !ordersError && activeOrders.length === 0 && (
+              <p className="incoming-orders-message">No active orders right now. Completed orders appear in Previous Orders.</p>
             )}
 
             {!ordersLoading &&
               !ordersError &&
-              orders.map((order) => (
+              activeOrders.map((order) => (
                 <div key={order.id} className="order-card">
                   <div className="order-card-header">
                     <div>
@@ -433,9 +574,85 @@ export default function ProducerDashboardPage() {
         )}
 
         {view === "history" && (
-          <div className="producer-card">
-            <h1 className="page-title">Order History</h1>
-            <p>View your completed sales and past transactions.</p>
+          <div className="incoming-orders-page">
+            <h1 className="incoming-orders-title">Previous Orders</h1>
+
+            {ordersLoading && <p className="incoming-orders-message">Loading order history...</p>}
+            {ordersError && <p className="incoming-orders-error">{ordersError}</p>}
+
+            {!ordersLoading && !ordersError && completedOrders.length === 0 && (
+              <p className="incoming-orders-message">No completed orders yet.</p>
+            )}
+
+            {!ordersLoading && !ordersError && completedOrders.map((order) => {
+              const allCancelled = order.items?.length > 0 && order.items.every(i => i.status === "CANCELLED");
+              const displayStatus = allCancelled ? "CANCELLED" : order.status;
+              const isDelivered = displayStatus === "DELIVERED";
+              const totalEarned = isDelivered
+                ? order.items?.reduce((sum, i) => sum + parseFloat(i.total_cost || 0), 0) || 0
+                : 0;
+
+              return (
+                <div key={order.id} className="order-card">
+                  <div className="order-card-header">
+                    <div>
+                      <h2>Order #{order.order_id}</h2>
+                      <p className="order-subtitle">Customer: {order.customer_email}</p>
+                      <p className="order-subtitle">
+                        {new Date(order.placed_at).toLocaleDateString("en-GB", {
+                          day: "2-digit", month: "short", year: "numeric",
+                        })}
+                      </p>
+                    </div>
+                    <span className="order-status" style={{
+                      background: isDelivered ? "#dcfce7" : "#fee2e2",
+                      color: isDelivered ? "#166534" : "#991b1b",
+                    }}>
+                      {displayStatus}
+                    </span>
+                  </div>
+
+                  <div className="order-info-grid">
+                    <div><span className="order-label">Postcode</span><p>{order.delivery_postcode}</p></div>
+                    <div><span className="order-label">Items</span><p>{order.items?.length || 0}</p></div>
+                    <div>
+                      <span className="order-label">Total Earned</span>
+                      <p style={{ fontWeight: 700, color: "#166534" }}>£{totalEarned.toFixed(2)}</p>
+                    </div>
+                  </div>
+
+                  <h3 className="order-items-title">Items</h3>
+                  <div className="order-items-list">
+                    {order.items && order.items.length > 0 ? order.items.map((item) => (
+                      <div key={item.id} className="order-item">
+                        <div className="order-item-top">
+                          <span className="product-name">{item.product_name}</span>
+                          <div className="item-meta">
+                            <span>Qty: {item.quantity}</span>
+                            <strong>£{item.total_cost}</strong>
+                          </div>
+                        </div>
+                        <div className="order-item-actions">
+                          <span className={`item-status ${item.status?.toLowerCase()}`}>
+                            {item.status}
+                          </span>
+                          {item.fulfilled_quantity && item.fulfilled_quantity !== item.quantity && (
+                            <span style={{ fontSize: "0.78rem", color: "#92400e", marginLeft: 8 }}>
+                              Fulfilled: {item.fulfilled_quantity}
+                            </span>
+                          )}
+                          {item.availability_note && (
+                            <span style={{ fontSize: "0.78rem", color: "#6b7280", marginLeft: 8 }}>
+                              Note: {item.availability_note}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )) : <p>No items.</p>}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
 

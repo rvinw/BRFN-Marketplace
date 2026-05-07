@@ -31,6 +31,7 @@ from marketplace.customer_views import orders, producer_incoming_orders
 from marketplace.producer_views import (
     cancel_order_item,
     producer_add_product,
+    producer_product_detail,
     update_order_item_availability,
     update_order_item_status,
     weekly_payout,
@@ -75,6 +76,7 @@ urlpatterns = [
     path("api/cart/items/", cart_add_item),
     path("api/cart/items/<int:product_id>/", cart_item_detail),
     path("api/producer/products/", producer_add_product),
+    path("api/producer/products/<int:product_id>/", producer_product_detail),
     path("api/", include(router.urls)),
     path("api/producer/orders/incoming/", producer_incoming_orders, name="producer-incoming-orders"),
     path("api/producer/order-items/<int:item_id>/cancel/", cancel_order_item, name="cancel-order-item"),

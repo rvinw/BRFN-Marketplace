@@ -22,12 +22,35 @@ UNIT_MAP = {
 }
 
 
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def producer_add_product(request):
     if request.user.role_name not in ('PRODUCER', 'ADMIN'):
         return Response({'error': 'Only producer or admin accounts can add products.'}, status=403)
+
+    try:
+        producer = request.user.producer_profile
+    except Exception:
+        producer = None
+
+    if request.method == 'GET':
+        if not producer:
+            return Response([])
+        products = Product.objects.filter(producer=producer).select_related('category').order_by('-created_at')
+        data = [{
+            'id': p.id,
+            'name': p.product_name,
+            'description': p.product_description,
+            'category': p.category.category_name if p.category else '',
+            'price': str(p.current_price),
+            'unit_amount': p.product_unit,
+            'stock_quantity': str(p.stock_quantity),
+            'is_available': p.is_available,
+            'organic_status': p.organic_status,
+            'harvest_date': p.harvest_date.isoformat() if p.harvest_date else None,
+        } for p in products]
+        return Response(data)
 
     try:
         producer = request.user.producer_profile
@@ -92,6 +115,55 @@ def producer_add_product(request):
         'category': product.category.category_name,
         'price': str(product.current_price),
     }, status=201)
+
+
+@api_view(['PATCH', 'DELETE'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def producer_product_detail(request, product_id):
+    if request.user.role_name not in ('PRODUCER', 'ADMIN'):
+        return Response({'error': 'Only producer accounts can manage products.'}, status=403)
+
+    try:
+        product = Product.objects.select_related('category', 'producer').get(pk=product_id)
+    except Product.DoesNotExist:
+        return Response({'error': 'Product not found.'}, status=404)
+
+    try:
+        producer = request.user.producer_profile
+        if product.producer != producer:
+            return Response({'error': 'You do not own this product.'}, status=403)
+    except Exception:
+        pass
+
+    if request.method == 'DELETE':
+        product.delete()
+        return Response(status=204)
+
+    field_map = {
+        'price': 'current_price',
+        'stock_quantity': 'stock_quantity',
+        'is_available': 'is_available',
+        'description': 'product_description',
+        'harvest_date': 'harvest_date',
+    }
+    for frontend_key, model_field in field_map.items():
+        if frontend_key in request.data:
+            setattr(product, model_field, request.data[frontend_key])
+    product.save()
+
+    return Response({
+        'id': product.id,
+        'name': product.product_name,
+        'description': product.product_description,
+        'category': product.category.category_name if product.category else '',
+        'price': str(product.current_price),
+        'unit_amount': product.product_unit,
+        'stock_quantity': str(product.stock_quantity),
+        'is_available': product.is_available,
+        'organic_status': product.organic_status,
+        'harvest_date': product.harvest_date.isoformat() if product.harvest_date else None,
+    })
 
 
 @api_view(["PATCH"])

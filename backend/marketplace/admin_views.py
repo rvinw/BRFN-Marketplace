@@ -2,7 +2,7 @@ import csv
 from datetime import date
 from decimal import Decimal
 
-from django.db.models import Count, Sum
+from django.db.models import Count, F, Sum
 from django.db.models.functions import TruncMonth
 from django.http import HttpResponse
 from django.utils import timezone
@@ -192,12 +192,36 @@ class AdminOrderDetailView(APIView):
 
     def patch(self, request, pk):
         try:
-            order = Order.objects.get(pk=pk)
+            order = Order.objects.prefetch_related(
+                'producer_orders__items'
+            ).get(pk=pk)
         except Order.DoesNotExist:
             return Response({'error': 'Order not found'}, status=status.HTTP_404_NOT_FOUND)
-        if 'order_status' in request.data:
-            order.order_status = request.data['order_status']
+
+        new_status = request.data.get('order_status')
+        if new_status:
+            order.order_status = new_status
             order.save()
+
+            # Cascade to OrderProducer and OrderItem records
+            if new_status == 'CANCELLED':
+                for op in order.producer_orders.all():
+                    for item in op.items.all():
+                        if item.status not in ('CANCELLED',):
+                            # Restore stock for items that weren't already cancelled
+                            Product.objects.filter(pk=item.product_id).update(
+                                stock_quantity=F('stock_quantity') + item.quantity
+                            )
+                        item.status = 'CANCELLED'
+                        item.save()
+                    op.status = 'CANCELLED'
+                    op.save()
+            elif new_status == 'PAID':
+                for op in order.producer_orders.all():
+                    op.status = 'DELIVERED'
+                    op.save()
+                    op.items.all().update(status='DELIVERED')
+
         return Response({'id': order.id, 'order_status': order.order_status})
 
 
