@@ -8,6 +8,7 @@ export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -29,9 +30,14 @@ export default function LoginPage() {
         return;
       }
 
-      sessionStorage.setItem('brfn_token', data.token);
+      if (rememberMe) {
+        localStorage.setItem('brfn_token', data.token);
+      } else {
+        sessionStorage.setItem('brfn_token', data.token);
+      }
+
       const role = data.user.role_name.toLowerCase();
-      login({ name: data.user.full_name, email: data.user.email, role });
+      login({ name: data.user.full_name, email: data.user.email, role }, rememberMe);
 
       if (role === 'admin') navigate('/dashboard/admin');
       else if (role === 'producer') navigate('/dashboard/producer');
@@ -72,6 +78,17 @@ export default function LoginPage() {
               required
             />
           </label>
+
+          <label className="auth-label" style={{ flexDirection: 'row', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={e => setRememberMe(e.target.checked)}
+              style={{ width: 16, height: 16, cursor: 'pointer' }}
+            />
+            Remember me
+          </label>
+
           <button type="submit" className="auth-btn" disabled={loading}>
             {loading ? 'Logging in...' : 'Login'}
           </button>
