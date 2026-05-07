@@ -1,7 +1,16 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
-const ChevronLeft = () => <span style={{ color: "white", fontSize: "20px", lineHeight: 1 }}>&#8249;</span>;
-const ChevronRight = () => <span style={{ color: "white", fontSize: "20px", lineHeight: 1 }}>&#8250;</span>;
+const ChevronLeft = () => (
+  <span style={{ color: "white", fontSize: "20px", lineHeight: 1 }}>
+    &#8249;
+  </span>
+);
+const ChevronRight = () => (
+  <span style={{ color: "white", fontSize: "20px", lineHeight: 1 }}>
+    &#8250;
+  </span>
+);
 
 const slides = [
   {
@@ -9,7 +18,8 @@ const slides = [
     title: "Farm Fresh Vegetables",
     subtitle: "Harvested this morning",
     tag: "Vegetables",
-    image: "https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=1200&q=80",
+    image:
+      "https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=1200&q=80",
     cta: "Shop Vegetables",
   },
   {
@@ -17,7 +27,8 @@ const slides = [
     title: "Artisan Dairy",
     subtitle: "From local herds",
     tag: "Dairy",
-    image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=1200&q=80",
+    image:
+      "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=1200&q=80",
     cta: "Shop Dairy",
   },
   {
@@ -25,7 +36,8 @@ const slides = [
     title: "Fresh-Baked Bread",
     subtitle: "Baked every morning",
     tag: "Bakery",
-    image: "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=1200&q=80",
+    image:
+      "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=1200&q=80",
     cta: "Shop Bakery",
   },
   {
@@ -33,7 +45,8 @@ const slides = [
     title: "Seasonal Preserves",
     subtitle: "Traditional recipes",
     tag: "Preserves",
-    image: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=1200&q=80",
+    image:
+      "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=1200&q=80",
     cta: "Shop Preserves",
   },
   {
@@ -41,7 +54,8 @@ const slides = [
     title: "Seasonal Picks",
     subtitle: "What's best right now",
     tag: "Seasonal",
-    image: "https://images.unsplash.com/photo-1471194402529-8e0f5a675de6?w=1200&q=80",
+    image:
+      "https://images.unsplash.com/photo-1471194402529-8e0f5a675de6?w=1200&q=80",
     cta: "Shop Seasonal",
   },
 ];
@@ -50,6 +64,7 @@ export default function Carousel() {
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef(null);
+  const navigate = useNavigate();
 
   const prev = () => setCurrent((c) => (c - 1 + slides.length) % slides.length);
   const next = () => setCurrent((c) => (c + 1) % slides.length);
@@ -86,7 +101,13 @@ export default function Carousel() {
               <span className="carousel__tag">{slide.tag}</span>
               <h2 className="carousel__title">{slide.title}</h2>
               <p className="carousel__subtitle">{slide.subtitle}</p>
-              <button className="carousel__cta" type="button">
+              <button
+                className="carousel__cta"
+                type="button"
+                onClick={() =>
+                  navigate(`/products?category=${slide.tag.toLowerCase()}`)
+                }
+              >
                 {slide.cta}
               </button>
             </div>
@@ -95,10 +116,20 @@ export default function Carousel() {
       </div>
 
       {/* Prev / Next */}
-      <button className="carousel__arrow carousel__arrow--prev" onClick={prev} type="button" aria-label="Previous">
+      <button
+        className="carousel__arrow carousel__arrow--prev"
+        onClick={prev}
+        type="button"
+        aria-label="Previous"
+      >
         <ChevronLeft />
       </button>
-      <button className="carousel__arrow carousel__arrow--next" onClick={next} type="button" aria-label="Next">
+      <button
+        className="carousel__arrow carousel__arrow--next"
+        onClick={next}
+        type="button"
+        aria-label="Next"
+      >
         <ChevronRight />
       </button>
 
