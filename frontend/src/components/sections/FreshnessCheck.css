@@ -1,0 +1,146 @@
+.freshness-section {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 28px;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.freshness-header h2 {
+  margin: 0;
+  font-size: 2rem;
+  color: #111827;
+}
+
+.freshness-header p {
+  margin-top: 8px;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.freshness-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.freshness-upload-card,
+.freshness-result-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.freshness-upload-box {
+  height: 260px;
+  border: 2px dashed #d1d5db;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  cursor: pointer;
+  overflow: hidden;
+  background: white;
+}
+
+.freshness-upload-box input {
+  display: none;
+}
+
+.freshness-upload-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.freshness-check-button {
+  width: 100%;
+  margin-top: 16px;
+  background: #111827;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.freshness-check-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.freshness-error {
+  color: #dc2626;
+  margin-top: 12px;
+}
+
+.freshness-status {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+}
+
+.freshness-status--fresh {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.freshness-status--rotten {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.freshness-result-card h3 {
+  margin: 0 0 10px;
+  color: #111827;
+}
+
+.freshness-confidence {
+  font-weight: 700;
+  color: #16a34a;
+}
+
+.freshness-explanation {
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.freshness-gradcam {
+  margin-top: 20px;
+}
+
+.freshness-gradcam h4 {
+  margin-bottom: 10px;
+  color: #111827;
+}
+
+.freshness-gradcam img {
+  width: 260px;
+  max-width: 100%;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+}
+.freshness-model-note {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: #16a34a;
+  font-weight: 600;
+}
+.freshness-xai-note {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+@media (max-width: 768px) {
+  .freshness-layout {
+    grid-template-columns: 1fr;
+  }
+}
