@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import "./CartPage.css";
@@ -5,6 +6,20 @@ import "./CartPage.css";
 export default function CartPage() {
   const navigate = useNavigate();
   const { items, updateQty, removeFromCart } = useCart();
+  const [standingMsgs, setStandingMsgs] = useState({});
+
+  const setStandingOrder = async (item) => {
+    const token = sessionStorage.getItem('brfn_token');
+    if (!token) { navigate('/login'); return; }
+    const res = await fetch('http://localhost:8000/api/standing-orders/', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ product_id: item.id, quantity: item.quantity }),
+    });
+    const msg = res.ok ? '✓ Weekly order set!' : 'Failed';
+    setStandingMsgs(prev => ({ ...prev, [item.id]: msg }));
+    setTimeout(() => setStandingMsgs(prev => ({ ...prev, [item.id]: '' })), 3000);
+  };
 
   const formatStock = (value) => parseInt(value || 0, 10);
 
@@ -20,7 +35,6 @@ export default function CartPage() {
     if (item.stock_quantity === undefined || item.stock_quantity === null) {
       return false;
     }
-
     return Number(item.quantity) > Number(item.stock_quantity);
   };
 
@@ -35,8 +49,7 @@ export default function CartPage() {
       <div className="cart-header">
         <h1>Your Cart</h1>
         <p>
-          {items.length} {items.length === 1 ? "item" : "items"} from local
-          producers
+          {items.length} {items.length === 1 ? "item" : "items"} from local producers
         </p>
       </div>
 
@@ -46,10 +59,7 @@ export default function CartPage() {
             <div className="cart-empty">
               <h2>Your basket is empty</h2>
               <p>Discover fresh produce from local farmers and makers.</p>
-              <button
-                className="btn-primary"
-                onClick={() => navigate("/products")}
-              >
+              <button className="btn-primary" onClick={() => navigate("/products")}>
                 Browse Products
               </button>
             </div>
@@ -60,17 +70,11 @@ export default function CartPage() {
 
               return (
                 <div
-                  className={`cart-item ${
-                    soldOut || overStock ? "cart-item--warning" : ""
-                  }`}
+                  className={`cart-item ${soldOut || overStock ? "cart-item--warning" : ""}`}
                   key={item.id}
                 >
                   {item.image && (
-                    <img
-                      className="cart-item__img"
-                      src={item.image}
-                      alt={item.name}
-                    />
+                    <img className="cart-item__img" src={item.image} alt={item.name} />
                   )}
 
                   <div className="cart-item__info">
@@ -84,15 +88,11 @@ export default function CartPage() {
 
                     <div className="cart-item__badges">
                       {item.category && (
-                        <span className="badge badge--category">
-                          {item.category}
-                        </span>
+                        <span className="badge badge--category">{item.category}</span>
                       )}
-
                       {item.organic && (
                         <span className="badge badge--organic">Organic</span>
                       )}
-
                       {soldOut ? (
                         <span className="badge badge--sold-out">Sold Out</span>
                       ) : (
@@ -104,15 +104,13 @@ export default function CartPage() {
 
                     {overStock && (
                       <p className="stock-warning">
-                        Only {formatStock(item.stock_quantity)} available.
-                        Please reduce the quantity.
+                        Only {formatStock(item.stock_quantity)} available. Please reduce the quantity.
                       </p>
                     )}
 
                     {soldOut && (
                       <p className="stock-warning">
-                        This item is currently sold out. Please remove it from
-                        your basket.
+                        This item is currently sold out. Please remove it from your basket.
                       </p>
                     )}
                   </div>
@@ -123,34 +121,27 @@ export default function CartPage() {
                     </span>
 
                     <div className="qty-control">
-                      <button
-                        className="qty-btn"
-                        onClick={() => updateQty(item.id, -1)}
-                      >
-                        −
-                      </button>
-
+                      <button className="qty-btn" onClick={() => updateQty(item.id, -1)}>−</button>
                       <span className="qty-value">{item.quantity}</span>
-
                       <button
                         className="qty-btn"
-                        disabled={
-                          soldOut ||
-                          Number(item.quantity) >= Number(item.stock_quantity)
-                        }
+                        disabled={soldOut || Number(item.quantity) >= Number(item.stock_quantity)}
                         onClick={() => updateQty(item.id, +1)}
-                      >
-                        +
-                      </button>
+                      >+</button>
                     </div>
 
-                    <button
-                      className="remove-btn"
-                      onClick={() => removeFromCart(item.id)}
-                    >
+                    <button className="remove-btn" onClick={() => removeFromCart(item.id)}>
                       Remove
                     </button>
+
+                    <button
+                      onClick={() => setStandingOrder(item)}
+                      style={{ background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0', borderRadius: 20, padding: '5px 12px', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600, whiteSpace: 'nowrap' }}
+                    >
+                      {standingMsgs[item.id] || '↻ Repeat weekly'}
+                    </button>
                   </div>
+
                 </div>
               );
             })
@@ -183,8 +174,7 @@ export default function CartPage() {
 
           {hasInvalidItems && (
             <p className="checkout-warning">
-              Some items are sold out or exceed available stock. Please update
-              your basket before checkout.
+              Some items are sold out or exceed available stock. Please update your basket before checkout.
             </p>
           )}
 
@@ -196,16 +186,12 @@ export default function CartPage() {
             Proceed to Checkout
           </button>
 
-          <button
-            className="continue-link"
-            onClick={() => navigate("/products")}
-          >
+          <button className="continue-link" onClick={() => navigate("/products")}>
             ← Continue shopping
           </button>
 
           <p className="producer-note">
-            Items may be fulfilled by multiple local producers. Delivery dates
-            will be confirmed at checkout.
+            Items may be fulfilled by multiple local producers. Delivery dates will be confirmed at checkout.
           </p>
         </div>
       </div>

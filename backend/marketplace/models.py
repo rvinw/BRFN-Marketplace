@@ -447,3 +447,18 @@ class StockNotification(models.Model):
 
     def __str__(self):
         return f"{self.producer.business_name} — {self.product.product_name}"
+
+
+class StandingOrder(models.Model):
+    customer = models.ForeignKey(
+        CustomerProfile, on_delete=models.CASCADE, related_name="standing_orders"
+    )
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="standing_orders"
+    )
+    quantity = models.PositiveIntegerField(default=1)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.customer.user.email} — {self.product.product_name} x{self.quantity}"

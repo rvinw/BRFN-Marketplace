@@ -11,6 +11,15 @@
   color: #111827;
 }
 
+.customer-dashboard-section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 2.5rem 0 1rem;
+  color: #111827;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
 /* ── Loading / Error / Empty ── */
 .customer-dashboard-loading {
   color: #6b7280;

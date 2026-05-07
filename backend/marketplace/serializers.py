@@ -47,8 +47,16 @@ class ProductSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     producer_name = serializers.ReadOnlyField(source="producer.business_name")
     stock_status = serializers.SerializerMethodField()
-    deals = ProductDealSerializer(many=True, read_only=True)
+    deals = serializers.SerializerMethodField()
     discounted_price = serializers.SerializerMethodField()
+
+    def get_deals(self, obj):
+        from django.utils import timezone
+        from django.db.models import Q
+        active_deals = obj.deals.filter(is_active=True).filter(
+            Q(expires_at__isnull=True) | Q(expires_at__gt=timezone.now())
+        )
+        return ProductDealSerializer(active_deals, many=True).data
 
     def get_discounted_price(self, obj):
         from django.utils import timezone

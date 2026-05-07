@@ -60,7 +60,6 @@ export default function ProductDetailPage() {
   const [avgRating, setAvgRating] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   // Review form state
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -220,6 +219,7 @@ export default function ProductDetailPage() {
               {cartItem ? `In cart (${cartItem.quantity})` : "Add to cart"}
             </button>
           </div>
+
         </div>
       </div>
 

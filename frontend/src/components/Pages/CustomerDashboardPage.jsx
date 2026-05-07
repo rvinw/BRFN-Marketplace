@@ -126,10 +126,12 @@ function OrderCard({ order, onReorder }) {
 }
 
 export default function CustomerDashboardPage() {
+  const [view, setView] = useState('orders');
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [reorderMsg, setReorderMsg] = useState('');
+  const [standingOrders, setStandingOrders] = useState([]);
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -141,7 +143,16 @@ export default function CustomerDashboardPage() {
       .then(data => setOrders(data))
       .catch(err => setError(err.message))
       .finally(() => setLoading(false));
+
+    apiFetch('/standing-orders/')
+      .then(res => res.ok ? res.json() : [])
+      .then(data => setStandingOrders(Array.isArray(data) ? data : []));
   }, []);
+
+  const cancelStandingOrder = async (id) => {
+    await apiFetch(`/standing-orders/${id}/`, { method: 'DELETE' });
+    setStandingOrders(prev => prev.filter(o => o.id !== id));
+  };
 
   const handleReorder = (order) => {
     const allItems = order.producers?.flatMap(p => p.items) ?? [];
@@ -171,29 +182,84 @@ export default function CustomerDashboardPage() {
 
   return (
     <div className="customer-dashboard">
-      <h1>My Orders</h1>
+      <h1>My Account</h1>
 
-      {reorderMsg && (
-        <div className="reorder-banner">
-          {reorderMsg}
-        </div>
-      )}
-
-      {loading && <p className="customer-dashboard-loading">Loading orders…</p>}
-      {error && <p className="customer-dashboard-error">{error}</p>}
-
-      {!loading && !error && orders.length === 0 && (
-        <div className="customer-dashboard-empty">
-          <p>No orders yet.</p>
-          <p>Your orders will appear here once you place one.</p>
-        </div>
-      )}
-
-      <div className="order-list">
-        {orders.map(order => (
-          <OrderCard key={order.id} order={order} onReorder={handleReorder} />
+      <nav style={{ display: 'flex', gap: 8, marginBottom: '1.5rem', borderBottom: '2px solid #e5e7eb', paddingBottom: 0 }}>
+        {[{ id: 'orders', label: 'My Orders' }, { id: 'standing', label: 'Standing Orders' }].map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setView(tab.id)}
+            style={{
+              background: 'none', border: 'none', cursor: 'pointer',
+              padding: '8px 16px', fontWeight: 600, fontSize: '0.9rem',
+              color: view === tab.id ? '#111827' : '#6b7280',
+              borderBottom: view === tab.id ? '2px solid #111827' : '2px solid transparent',
+              marginBottom: -2, outline: 'none', boxShadow: 'none', borderRadius: 0,
+            }}
+          >
+            {tab.label}
+          </button>
         ))}
-      </div>
+      </nav>
+
+      {view === 'orders' && (
+        <>
+          {reorderMsg && <div className="reorder-banner">{reorderMsg}</div>}
+          {loading && <p className="customer-dashboard-loading">Loading orders…</p>}
+          {error && <p className="customer-dashboard-error">{error}</p>}
+          {!loading && !error && orders.length === 0 && (
+            <div className="customer-dashboard-empty">
+              <p>No orders yet.</p>
+              <p>Your orders will appear here once you place one.</p>
+            </div>
+          )}
+          <div className="order-list">
+            {orders.map(order => (
+              <OrderCard key={order.id} order={order} onReorder={handleReorder} />
+            ))}
+          </div>
+        </>
+      )}
+
+      {view === 'standing' && (
+        <>
+          {standingOrders.length === 0 ? (
+            <div className="customer-dashboard-empty">
+              <p>No standing orders yet.</p>
+              <p>Add items to your cart and click <strong>↻ Repeat weekly</strong> to set one up.</p>
+            </div>
+          ) : (
+            <div className="order-list">
+              {standingOrders.map(o => (
+                <div key={o.id} className="order-card">
+                  <div className="order-card-header">
+                    <span className="order-card-id">{o.product_name}</span>
+                    <span style={{ background: '#f0fdf4', color: '#16a34a', borderRadius: 20, padding: '3px 12px', fontSize: '0.78rem', fontWeight: 700 }}>Weekly</span>
+                  </div>
+                  <div className="order-card-date">
+                    Qty: {o.quantity} · £{parseFloat(o.price).toFixed(2)} / {o.product_unit}
+                  </div>
+                  <div className="order-card-address">
+                    <span>Next delivery:</span> {(() => {
+                      const next = new Date();
+                      next.setDate(next.getDate() + (7 - next.getDay() + 1) % 7 || 7);
+                      return next.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+                    })()}
+                  </div>
+                  <div className="order-card-footer" style={{ justifyContent: 'flex-end' }}>
+                    <button
+                      onClick={() => cancelStandingOrder(o.id)}
+                      style={{ background: '#fee2e2', color: '#991b1b', border: 'none', borderRadius: 6, padding: '6px 14px', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem' }}
+                    >
+                      Cancel standing order
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }

@@ -40,6 +40,7 @@ from marketplace.producer_views import (
     mark_notification_read,
 )
 from marketplace.review_views import product_reviews
+from marketplace.standing_order_views import standing_orders, cancel_standing_order
 from marketplace.views import CommunityPostViewSet, ProductViewSet, health
 from rest_framework.routers import DefaultRouter
 
@@ -90,4 +91,6 @@ urlpatterns = [
     path("api/products/<int:product_id>/reviews/", product_reviews, name="product-reviews"),
     path("api/producer/notifications/", producer_notifications, name="producer-notifications"),
     path("api/producer/notifications/<int:notification_id>/read/", mark_notification_read, name="mark-notification-read"),
+    path("api/standing-orders/", standing_orders, name="standing-orders"),
+    path("api/standing-orders/<int:order_id>/", cancel_standing_order, name="cancel-standing-order"),
 ]
