@@ -44,6 +44,9 @@ class ProductSerializer(serializers.ModelSerializer):
         source="producer.business_name", read_only=True
     )
     producer_id = serializers.PrimaryKeyRelatedField(source="producer", read_only=True)
+    producer_postcode = serializers.CharField(
+        source="producer.address.postcode", read_only=True
+    )
     image = serializers.SerializerMethodField()
     producer_name = serializers.ReadOnlyField(source="producer.business_name")
     stock_status = serializers.SerializerMethodField()
@@ -52,22 +55,30 @@ class ProductSerializer(serializers.ModelSerializer):
     allergens = serializers.SerializerMethodField()
 
     def get_allergens(self, obj):
-        return list(obj.productallergen_set.select_related('allergen').values_list('allergen__allergen_name', flat=True))
+        return list(
+            obj.productallergen_set.select_related("allergen").values_list(
+                "allergen__allergen_name", flat=True
+            )
+        )
 
     def get_deals(self, obj):
-        from django.utils import timezone
         from django.db.models import Q
+        from django.utils import timezone
+
         active_deals = obj.deals.filter(is_active=True).filter(
             Q(expires_at__isnull=True) | Q(expires_at__gt=timezone.now())
         )
         return ProductDealSerializer(active_deals, many=True).data
 
     def get_discounted_price(self, obj):
-        from django.utils import timezone
         from django.db.models import Q
-        active_deal = obj.deals.filter(is_active=True).filter(
-            Q(expires_at__isnull=True) | Q(expires_at__gt=timezone.now())
-        ).first()
+        from django.utils import timezone
+
+        active_deal = (
+            obj.deals.filter(is_active=True)
+            .filter(Q(expires_at__isnull=True) | Q(expires_at__gt=timezone.now()))
+            .first()
+        )
         if active_deal:
             discount = active_deal.discount_percentage / 100
             return round(float(obj.current_price) * (1 - float(discount)), 2)
@@ -76,7 +87,7 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_image(self, obj):
         first = obj.images.first()
         return first.image_url if first else None
-    
+
     def get_stock_status(self, obj):
         if obj.stock_quantity <= 0 or not obj.is_available:
             return "SOLD_OUT"
@@ -98,6 +109,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "image",
             "producer_name",
             "producer_id",
+            "producer_postcode",
             "harvest_date",
             "created_at",
             "is_available",

@@ -3,7 +3,9 @@ import { useParams, Link } from "react-router-dom";
 import "./ProductDetailPage.css";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
+import { usePostcode } from "../../context/PostcodeContext";
 import { apiFetch } from "../../utils/api";
+import { getFoodMiles } from "../../utils/foodMiles";
 
 function StarRating({ value, onChange }) {
   const [hovered, setHovered] = useState(0);
@@ -54,12 +56,15 @@ export default function ProductDetailPage() {
   const { id } = useParams();
   const { addToCart, items } = useCart();
   const { user } = useAuth();
+  const { postcode: customerPostcode } = usePostcode();
 
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [miles, setMiles] = useState(null);
+
   // Review form state
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -91,6 +96,9 @@ export default function ProductDetailPage() {
         if (!res.ok) throw new Error("Not found");
         const data = await res.json();
         setProduct(data);
+        if (customerPostcode && data.producer_postcode) {
+          getFoodMiles(customerPostcode, data.producer_postcode).then(setMiles);
+        }
       } catch {
         setError("Product not found.");
       } finally {
@@ -172,6 +180,12 @@ export default function ProductDetailPage() {
           <h1 className="product-detail__name">{product.name}</h1>
           <p className="product-detail__producer">by {product.producer_name}</p>
 
+          {miles !== null && (
+            <p className="product-detail__food-miles">
+              📍 {miles} miles from producer to you
+            </p>
+          )}
+
           {avgRating && (
             <div className="product-detail__avg-rating">
               <span className="avg-rating__stars">
@@ -192,11 +206,38 @@ export default function ProductDetailPage() {
           <p className="product-detail__description">{product.description}</p>
 
           {product.allergens?.length > 0 && (
-            <div style={{ margin: '12px 0', padding: '10px 14px', background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8 }}>
-              <p style={{ margin: '0 0 6px', fontWeight: 700, fontSize: '0.85rem', color: '#991b1b' }}>⚠ Allergen Warning</p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {product.allergens.map(a => (
-                  <span key={a} style={{ background: '#fee2e2', color: '#991b1b', borderRadius: 20, padding: '2px 10px', fontSize: '0.8rem', fontWeight: 600 }}>
+            <div
+              style={{
+                margin: "12px 0",
+                padding: "10px 14px",
+                background: "#fef2f2",
+                border: "1px solid #fca5a5",
+                borderRadius: 8,
+              }}
+            >
+              <p
+                style={{
+                  margin: "0 0 6px",
+                  fontWeight: 700,
+                  fontSize: "0.85rem",
+                  color: "#991b1b",
+                }}
+              >
+                ⚠ Allergen Warning
+              </p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                {product.allergens.map((a) => (
+                  <span
+                    key={a}
+                    style={{
+                      background: "#fee2e2",
+                      color: "#991b1b",
+                      borderRadius: 20,
+                      padding: "2px 10px",
+                      fontSize: "0.8rem",
+                      fontWeight: 600,
+                    }}
+                  >
                     {a}
                   </span>
                 ))}
@@ -208,21 +249,41 @@ export default function ProductDetailPage() {
             <span className="product-detail__price">
               {product.discounted_price ? (
                 <>
-                  <span style={{ textDecoration: 'line-through', color: '#9ca3af', fontSize: '0.95rem', marginRight: 8 }}>
+                  <span
+                    style={{
+                      textDecoration: "line-through",
+                      color: "#9ca3af",
+                      fontSize: "0.95rem",
+                      marginRight: 8,
+                    }}
+                  >
                     £{parseFloat(product.price).toFixed(2)}
                   </span>
-                  <span style={{ color: '#dc2626', fontWeight: 'bold' }}>
+                  <span style={{ color: "#dc2626", fontWeight: "bold" }}>
                     £{parseFloat(product.discounted_price).toFixed(2)}
                   </span>
                 </>
               ) : (
                 <>£{parseFloat(product.price).toFixed(2)}</>
               )}
-              <span className="product-detail__unit"> / {product.unit_amount}</span>
+              <span className="product-detail__unit">
+                {" "}
+                / {product.unit_amount}
+              </span>
             </span>
             {product.deals?.length > 0 && product.deals[0].expires_at && (
-              <p style={{ color: '#dc2626', fontSize: '0.8rem', margin: '4px 0 0' }}>
-                Deal expires: {new Date(product.deals[0].expires_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+              <p
+                style={{
+                  color: "#dc2626",
+                  fontSize: "0.8rem",
+                  margin: "4px 0 0",
+                }}
+              >
+                Deal expires:{" "}
+                {new Date(product.deals[0].expires_at).toLocaleDateString(
+                  "en-GB",
+                  { day: "numeric", month: "short", year: "numeric" },
+                )}
               </p>
             )}
             <button
@@ -232,7 +293,6 @@ export default function ProductDetailPage() {
               {cartItem ? `In cart (${cartItem.quantity})` : "Add to cart"}
             </button>
           </div>
-
         </div>
       </div>
 
