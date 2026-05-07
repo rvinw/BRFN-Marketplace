@@ -49,6 +49,10 @@ class ProductSerializer(serializers.ModelSerializer):
     stock_status = serializers.SerializerMethodField()
     deals = serializers.SerializerMethodField()
     discounted_price = serializers.SerializerMethodField()
+    allergens = serializers.SerializerMethodField()
+
+    def get_allergens(self, obj):
+        return list(obj.productallergen_set.select_related('allergen').values_list('allergen__allergen_name', flat=True))
 
     def get_deals(self, obj):
         from django.utils import timezone
@@ -100,6 +104,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "stock_status",
             "deals",
             "discounted_price",
+            "allergens",
         ]
         read_only_fields = ["created_at"]
 

@@ -191,6 +191,19 @@ export default function ProductDetailPage() {
 
           <p className="product-detail__description">{product.description}</p>
 
+          {product.allergens?.length > 0 && (
+            <div style={{ margin: '12px 0', padding: '10px 14px', background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8 }}>
+              <p style={{ margin: '0 0 6px', fontWeight: 700, fontSize: '0.85rem', color: '#991b1b' }}>⚠ Allergen Warning</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {product.allergens.map(a => (
+                  <span key={a} style={{ background: '#fee2e2', color: '#991b1b', borderRadius: 20, padding: '2px 10px', fontSize: '0.8rem', fontWeight: 600 }}>
+                    {a}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="product-detail__footer">
             <span className="product-detail__price">
               {product.discounted_price ? (

@@ -41,7 +41,7 @@ from marketplace.producer_views import (
 )
 from marketplace.review_views import product_reviews
 from marketplace.standing_order_views import standing_orders, cancel_standing_order
-from marketplace.views import CommunityPostViewSet, ProductViewSet, health
+from marketplace.views import CommunityPostViewSet, ProductViewSet, health, allergen_list, product_allergens
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -89,6 +89,8 @@ urlpatterns = [
     path("api/producer/order-items/<int:item_id>/availability/", update_order_item_availability, name="update-order-item-availability"),
     path("api/producer/weekly-payout/", weekly_payout, name="weekly-payout"),
     path("api/products/<int:product_id>/reviews/", product_reviews, name="product-reviews"),
+    path("api/allergens/", allergen_list, name="allergen-list"),
+    path("api/products/<int:product_id>/allergens/", product_allergens, name="product-allergens"),
     path("api/producer/notifications/", producer_notifications, name="producer-notifications"),
     path("api/producer/notifications/<int:notification_id>/read/", mark_notification_read, name="mark-notification-read"),
     path("api/standing-orders/", standing_orders, name="standing-orders"),

@@ -1,6 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
 
 export default function AddProductForm() {
+  const [allergenOptions, setAllergenOptions] = useState([]);
+  const [selectedAllergens, setSelectedAllergens] = useState([]);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/allergens/`)
+      .then(r => r.json())
+      .then(data => setAllergenOptions(Array.isArray(data) ? data : []))
+      .catch(() => {});
+  }, []);
+
+  const toggleAllergen = (id) => {
+    setSelectedAllergens(prev =>
+      prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id]
+    );
+  };
+
   const [formData, setFormData] = useState({
     name: '',
     category: 'Dairy',
@@ -62,8 +80,16 @@ export default function AddProductForm() {
       const data = await res.json();
 
       if (res.ok) {
+        if (selectedAllergens.length > 0) {
+          await fetch(`${API_URL}/api/products/${data.id}/allergens/`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ allergen_ids: selectedAllergens }),
+          });
+        }
         setMessage(`Product "${data.name}" added successfully!`);
-        setFormData({ name: '', category: 'Dairy', description: '', price: '', unitAmount: '', availability: true, stockQuantity: 0, allergyInfo: '', harvestDate: '' });
+        setFormData({ name: '', category: 'Dairy', description: '', price: '', unitAmount: '', availability: true, stockQuantity: 0, stockThreshold: '', allergyInfo: '', harvestDate: '', imageUrl: '' });
+        setSelectedAllergens([]);
       } else {
         setMessage(data.error || 'Failed to add product.');
       }
@@ -131,6 +157,31 @@ export default function AddProductForm() {
 
         <label>Product Image URL</label>
         <input name="imageUrl" type="url" placeholder="https://example.com/image.jpg" value={formData.imageUrl} onChange={handleChange} />
+
+        {allergenOptions.length > 0 && (
+          <div>
+            <label>Allergens</label>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: 6 }}>
+              {allergenOptions.map(a => (
+                <label key={a.id} style={{
+                  display: 'flex', alignItems: 'center', gap: 5,
+                  padding: '4px 10px', borderRadius: 20, cursor: 'pointer', fontSize: '0.85rem',
+                  background: selectedAllergens.includes(a.id) ? '#fef2f2' : '#f3f4f6',
+                  border: `1px solid ${selectedAllergens.includes(a.id) ? '#fca5a5' : '#e5e7eb'}`,
+                  color: selectedAllergens.includes(a.id) ? '#991b1b' : '#374151',
+                }}>
+                  <input
+                    type="checkbox"
+                    checked={selectedAllergens.includes(a.id)}
+                    onChange={() => toggleAllergen(a.id)}
+                    style={{ margin: 0 }}
+                  />
+                  {a.name}
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
 
         <button type="submit" className="navitem" style={{ width: '100%', marginTop: '20px' }} disabled={loading}>
           {loading ? 'Adding Product...' : 'Submit Product'}

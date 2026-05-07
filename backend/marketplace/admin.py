@@ -14,6 +14,7 @@ from .models import (
     ProductDeal,
     ProductImage,
 )
+# ProductDeal is kept in imports for the inline — not registered as standalone
 
 
 # ── Inlines ───────────────────────────────────────────────
@@ -98,15 +99,6 @@ class AllergenAdmin(admin.ModelAdmin):
     list_display = ["allergen_name"]
     search_fields = ["allergen_name"]
 
-
-# ── Product Deal ──────────────────────────────────────────
-
-@admin.register(ProductDeal)
-class ProductDealAdmin(admin.ModelAdmin):
-    list_display = ["product", "discount_percentage", "expires_at", "is_active"]
-    list_filter = ["is_active"]
-    search_fields = ["product__product_name"]
-    list_editable = ["is_active"]
 
 
 # ── Orders ────────────────────────────────────────────────
