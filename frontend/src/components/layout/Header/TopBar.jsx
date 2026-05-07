@@ -74,39 +74,6 @@ export default function TopBar() {
           Producer Map
         </Link>
 
-        {!postcodeOpen ? (
-          <button
-            className="postcode-chip"
-            type="button"
-            onClick={() => { setDraft(postcode); setPostcodeOpen(true); }}
-          >
-            <span className="postcode-chip__icon"><PinIcon /></span>
-            {postcode || 'Enter postcode'}
-          </button>
-        ) : (
-          <div className="postcode-edit">
-            <span className="postcode-chip__icon"><PinIcon /></span>
-            <input
-              className="postcode-input"
-              placeholder="e.g. BS1 5XX"
-              type="text"
-              autoFocus
-              value={draft}
-              onChange={e => setDraft(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === 'Enter') { savePostcode(draft); setPostcodeOpen(false); }
-                if (e.key === 'Escape') setPostcodeOpen(false);
-              }}
-            />
-            <button
-              className="postcode-save"
-              type="button"
-              onClick={() => { savePostcode(draft); setPostcodeOpen(false); }}
-            >
-              Save
-            </button>
-          </div>
-        )}
 
         {user ? (
           <div style={{ position: 'relative' }}>
@@ -124,13 +91,6 @@ export default function TopBar() {
                 borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                 minWidth: '160px', zIndex: 100,
               }}>
-                <Link
-                  to={DASHBOARD_ROUTES[user.role]}
-                  style={{ display: 'block', padding: '10px 16px', textDecoration: 'none', color: '#333' }}
-                  onClick={() => setMenuOpen(false)}
-                >
-                  My Dashboard
-                </Link>
                 <button
                   onClick={handleLogout}
                   style={{

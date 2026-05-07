@@ -68,6 +68,31 @@ const icons = {
       />
     </svg>
   ),
+  Fruit: (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M12 22C7.5 22 4 18 4 13.5c0-3.5 2-6.5 5-8"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12 22c4.5 0 8-4 8-8.5C20 10 18 7 15 5"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12 5V2M12 2c0 0 2-2 4-1"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
   Dairy: (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
       <path
@@ -273,6 +298,20 @@ export default function NavBar() {
             margin: "0 15px",
           }}
         ></div>
+
+        {/* Customer Dashboard Link — only visible to customers */}
+        {user && user.role === "customer" && (
+          <Link
+            to="/dashboard/customer"
+            className={`navitem${active === "Customer" ? " navitem--active" : ""}`}
+            onClick={() => setActive("Customer")}
+            style={{ marginLeft: "auto" }}
+          >
+            <span className="navitem__text" style={{ color: "#1d4ed8", fontWeight: "bold" }}>
+              My Account
+            </span>
+          </Link>
+        )}
 
         {/* Producer Dashboard Link — only visible to producers and admins */}
         {user && ["producer", "admin"].includes(user.role) && (

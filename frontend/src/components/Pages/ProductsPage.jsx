@@ -82,35 +82,6 @@ export default function ProductsPage() {
         )}
       </div>
 
-      {/* Category filter pills */}
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: '1rem' }}>
-        <button
-          onClick={() => setSearchParams({})}
-          style={{
-            padding: '5px 14px', borderRadius: 20,
-            border: '1px solid #d1d5db',
-            background: !categoryQuery ? '#a3e635' : '#fff',
-            color: '#111', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 600,
-          }}
-        >
-          All
-        </button>
-        {CATEGORY_LABELS.map(cat => (
-          <button
-            key={cat}
-            onClick={() => setCategory(cat)}
-            style={{
-              padding: '5px 14px', borderRadius: 20,
-              border: '1px solid #d1d5db',
-              background: categoryQuery.toLowerCase() === cat.toLowerCase() ? '#a3e635' : '#fff',
-              color: '#111', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 600,
-            }}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
       {/* Active search tag */}
       {hasFilter && (
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: '1rem', alignItems: 'center' }}>

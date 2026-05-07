@@ -9,8 +9,20 @@ const BRISTOL_CENTER = { lat: 51.4545, lng: -2.5879 };
 // Must be defined outside the component so the reference is stable.
 const LIBRARIES = [];
 
+function haversineDistance(lat1, lng1, lat2, lng2) {
+  const R = 3958.8;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLng / 2) ** 2;
+  return (R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))).toFixed(1);
+}
+
 export default function ProducerMapPage() {
-  const { postcode } = usePostcode();
+  const { postcode, savePostcode } = usePostcode();
+  const [draft, setDraft] = useState(postcode || '');
+  const [userLocation, setUserLocation] = useState(null);
   const [producers, setProducers] = useState([]);
   const [markers, setMarkers] = useState([]);
   const [center, setCenter] = useState(BRISTOL_CENTER);
@@ -68,11 +80,18 @@ export default function ProducerMapPage() {
     if (!isLoaded || !postcode || !geocoderRef.current) return;
     geocode(`${postcode}, UK`).then((loc) => {
       if (loc) {
-        setCenter({ lat: loc.lat(), lng: loc.lng() });
+        const lat = loc.lat();
+        const lng = loc.lng();
+        setCenter({ lat, lng });
+        setUserLocation({ lat, lng });
         setZoom(12);
       }
     });
   }, [isLoaded, postcode, geocode]);
+
+  const handlePostcodeSave = () => {
+    if (draft.trim()) savePostcode(draft.trim());
+  };
 
   if (loadError) {
     return (
@@ -94,18 +113,25 @@ export default function ProducerMapPage() {
     <div className="producer-map-page">
       <div className="producer-map-header">
         <div>
-          <h1>Producer Map</h1>
+          <h1>Local Producers Near You</h1>
           <p className="producer-map-subtitle">
             {loadingMarkers
-              ? 'Placing producers…'
-              : `${markers.length} verified producer${markers.length !== 1 ? 's' : ''} on the map`}
+              ? 'Finding producers…'
+              : `Showing ${markers.length} verified local producer${markers.length !== 1 ? 's' : ''} — click a pin to see details`}
           </p>
         </div>
-        {postcode && (
-          <div className="producer-map-postcode-tag">
-            <PinIcon /> Showing near <strong>{postcode}</strong>
-          </div>
-        )}
+        <div className="postcode-edit">
+          <input
+            className="postcode-input"
+            value={draft}
+            onChange={e => setDraft(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handlePostcodeSave()}
+            placeholder="Enter your postcode"
+          />
+          <button className="postcode-save" onClick={handlePostcodeSave}>
+            Search
+          </button>
+        </div>
       </div>
 
       <div className="producer-map-body">
@@ -136,6 +162,11 @@ export default function ProducerMapPage() {
               <div className="map-info-window">
                 <strong>{selected.business_name}</strong>
                 <span>{selected.address}</span>
+                {userLocation && (
+                  <span style={{ color: '#16a34a', fontWeight: 600 }}>
+                    {haversineDistance(userLocation.lat, userLocation.lng, selected.lat, selected.lng)} miles away
+                  </span>
+                )}
               </div>
             </InfoWindow>
           )}
