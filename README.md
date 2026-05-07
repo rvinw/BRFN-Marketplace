@@ -87,3 +87,88 @@ docker-compose restart web
 ```bash
 docker-compose up
 ```
+
+# DESD AI Integration Setup Guide
+## 1. Pull the branch
+git fetch origin
+git checkout ai-integration-clean
+git pull origin ai-integration-clean
+
+## 2. Add the AI model file manually
+The model file is not pushed to GitHub because it is too large.
+Which
+freshness_model.h5
+Place it here:
+backend/marketplace/ai_services/freshness_model.h5
+The folder should contain:
+backend/marketplace/ai_services/
+├── __init__.py
+├── class_names.json
+├── model_service.py
+└── freshness_model.h5
+
+## 3. Backend setup
+From project root:
+docker compose up --build
+If OpenCV gives an error, run:
+docker compose exec web pip uninstall -y opencv-python
+docker compose exec web pip install opencv-python-headless
+docker compose restart web
+Check TensorFlow/OpenCV:
+docker compose exec web python -c "import cv2; import tensorflow as tf; print('OK')"
+
+## 4. Test backend AI endpoint
+Use a local image path:
+curl -X POST http://localhost:8000/api/ai/freshness-check/ \
+  -F "image=@/image file path"
+Expected response:
+{
+  "predicted_class": "Banana__Healthy",
+  "confidence": 99.99,
+  "is_fresh": true,
+  "gradcam_base64": "...",
+  "explanation": "..."
+}
+
+
+
+## 5. Test Task 1
+Login as a customer.
+Go to:
+/dashboard/customer
+You should see:
+Recommended For You
+This shows AI reorder recommendations based on customer purchase history.
+
+## 6. Test Task 2, 3 and 4
+Login as a producer.
+Go to:
+/dashboard/producer
+You should see:
+AI Freshness Check
+Upload a produce image and click:
+Run AI Freshness Check
+Expected output:
+* predicted produce class
+* fresh/rotten result
+* confidence score
+* explanation
+* Grad-CAM heatmap
+
+### AI Task Mapping
+Task 1
+Customer purchase-history recommendation system.
+Task 2
+Fresh/rotten produce image classification.
+Task 3
+Integrated trained MobileNetV2 model into DESD backend and frontend.
+Task 4
+Explainable AI using Grad-CAM heatmap.
+
+### Important Notes
+Do not commit:
+freshness_model.h5
+backend/db.sqlite3
+__pycache__/
+The model file must stay local only.
+
