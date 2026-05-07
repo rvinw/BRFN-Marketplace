@@ -7,8 +7,6 @@ import os
 
 from .models import Allergen, CommunityPost, Product, ProductAllergen
 from .serializers import CommunityPostSerializer, ProductSerializer
-from marketplace.ai_services.recommender_db import get_db_recommendations
-from marketplace.ai_services.model_service import classify_produce
 
 
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
@@ -67,7 +65,11 @@ def allergen_list(request):
 @api_view(["GET"])
 def recommendations(request, user_id):
     """Task 1 — database-based quick reorder recommendations."""
-    recs = get_db_recommendations(user_id=user_id, top_n=3)
+    try:
+        from marketplace.ai_services.recommender_db import get_db_recommendations
+        recs = get_db_recommendations(user_id=user_id, top_n=3)
+    except ImportError:
+        return Response({"error": "AI recommendation service not available."}, status=503)
     return Response({
         "user_id": user_id,
         "recommendations": recs,
@@ -90,6 +92,7 @@ def freshness_check(request):
     tmp_path = None
 
     try:
+        from marketplace.ai_services.model_service import classify_produce
         suffix = os.path.splitext(image.name)[1] or ".jpg"
 
         with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:

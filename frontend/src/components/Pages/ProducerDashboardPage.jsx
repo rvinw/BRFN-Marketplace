@@ -24,6 +24,7 @@ export default function ProducerDashboardPage() {
     { id: "orders", label: "Incoming Orders" },
     { id: "history", label: "Previous Orders" },
     { id: "payout", label: "Weekly Payout" },
+    { id: "freshness", label: "Freshness Check" },
     { id: "community", label: "Community Engagement" },
   ];
 
@@ -313,22 +314,13 @@ const removeProductFromSale = async (productId) => {
 };
 
   useEffect(() => {
-  if (view === "home") {
-    fetchMyProducts();
-  }
-
-  if (view === "orders") {
-    fetchIncomingOrders();
-  }
-
-  if (view === "payout") {
-    fetchWeeklyPayout();
-  }
-}, [view]);
+    if (view === "home") fetchMyProducts();
+    if (view === "orders" || view === "history") fetchIncomingOrders();
+    if (view === "payout") fetchWeeklyPayout();
+  }, [view]);
 
   return (
     <div className="main-container">
-      <FreshnessCheck />
       <nav className="dashboard-nav">
         {menuItems.map((item) => (
           <button
@@ -345,8 +337,8 @@ const removeProductFromSale = async (productId) => {
 
       <main className="producer-content-area">
         {view === "home" && (
-          <div className="my-products-page">
-            <h1 className="my-products-title">My Product Inventory</h1>
+          <div className="incoming-orders-page">
+            <h1 className="incoming-orders-title">My Product Inventory</h1>
 
             {productsLoading && (
               <p className="incoming-orders-message">Loading your products...</p>
@@ -362,81 +354,78 @@ const removeProductFromSale = async (productId) => {
               </p>
             )}
 
-            {!productsLoading && !productsError && myProducts.length > 0 && (
-              <div className="my-products-grid">
-                {myProducts.map((product) => {
-                  const soldOut =
-                    product.stock_status === "SOLD_OUT" ||
-                    product.is_available === false ||
-                    Number(product.stock_quantity) <= 0;
+            {!productsLoading &&
+              !productsError &&
+              myProducts.map((product) => {
+                const soldOut =
+                  product.stock_status === "SOLD_OUT" ||
+                  product.is_available === false ||
+                  Number(product.stock_quantity) <= 0;
 
-                  return (
-                    <div key={product.id} className="my-product-card">
-                      <div className="my-product-header">
-                        <div>
-                          <h2>{product.product_name}</h2>
-                          <p>{product.category}</p>
-                        </div>
-
-                        <span
-                          className={
-                            soldOut
-                              ? "product-stock-badge sold-out"
-                              : "product-stock-badge in-stock"
-                          }
-                        >
-                          {soldOut ? "Sold Out" : "Available"}
-                        </span>
+                return (
+                  <div key={product.id} className="order-card">
+                    <div className="order-card-header">
+                      <div>
+                        <h2>{product.product_name}</h2>
+                        <p className="order-subtitle">{product.category}</p>
                       </div>
+                      <span
+                        className="order-status"
+                        style={{ background: soldOut ? "#fca5a5" : "#a3e635" }}
+                      >
+                        {soldOut ? "Sold Out" : "Available"}
+                      </span>
+                    </div>
 
-                      <div className="my-product-info">
-                        <div>
-                          <span>Price</span>
-                          <strong>£{product.current_price}</strong>
-                        </div>
-
-                        <div>
-                          <span>Unit</span>
-                          <strong>{product.product_unit}</strong>
-                        </div>
-
-                        <div>
-                          <span>Current Stock</span>
-                          <strong>{parseInt(product.stock_quantity)}</strong>
-                        </div>
+                    <div className="order-info-grid" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
+                      <div>
+                        <span className="order-label">Price</span>
+                        <p>£{product.current_price}</p>
                       </div>
-
-                      <div className="stock-edit-row">
-                        <label>
-                          New Stock Quantity
-                          <input
-                            id={`stock-${product.id}`}
-                            type="number"
-                            min="0"
-                            step="1"
-                            defaultValue={parseInt(product.stock_quantity)}
-                          />
-                        </label>
-
-                        <button
-                          className="update-stock-btn"
-                          onClick={() => updateProductStock(product.id)}
-                        >
-                          Update Stock
-                        </button>
-
-                        <button
-                          className="remove-product-btn"
-                          onClick={() => removeProductFromSale(product.id)}
-                        >
-                          Remove from Sale
-                        </button>
+                      <div>
+                        <span className="order-label">Unit</span>
+                        <p>{product.product_unit}</p>
+                      </div>
+                      <div>
+                        <span className="order-label">Current Stock</span>
+                        <p>{parseInt(product.stock_quantity)}</p>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            )}
+
+                    <div className="order-items-title" style={{ marginTop: "1rem" }}>
+                      Update Stock
+                    </div>
+                    <div className="order-item-actions" style={{ marginTop: "0.5rem", flexWrap: "wrap" }}>
+                      <input
+                        id={`stock-${product.id}`}
+                        type="number"
+                        min="0"
+                        step="1"
+                        defaultValue={parseInt(product.stock_quantity)}
+                        style={{
+                          padding: "0.45rem 0.8rem",
+                          borderRadius: "8px",
+                          border: "1px solid #dddddd",
+                          fontSize: "1rem",
+                          width: "120px",
+                        }}
+                      />
+                      <button
+                        className="confirm-item-btn"
+                        onClick={() => updateProductStock(product.id)}
+                      >
+                        Update Stock
+                      </button>
+                      <button
+                        className="cancel-item-btn"
+                        onClick={() => removeProductFromSale(product.id)}
+                      >
+                        Remove from Sale
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
           </div>
         )}
 
@@ -461,13 +450,14 @@ const removeProductFromSale = async (productId) => {
               <p className="incoming-orders-error">{ordersError}</p>
             )}
 
-            {!ordersLoading && !ordersError && orders.length === 0 && (
+            {!ordersLoading && !ordersError &&
+              orders.filter(o => !["DELIVERED", "CANCELLED", "PAID"].includes(o.status)).length === 0 && (
               <p className="incoming-orders-message">No incoming orders yet.</p>
             )}
 
             {!ordersLoading &&
               !ordersError &&
-              orders.map((order) => (
+              orders.filter(o => !["DELIVERED", "CANCELLED", "PAID"].includes(o.status)).map((order) => (
                 <div key={order.id} className="order-card">
                   <div className="order-card-header">
                     <div>
@@ -645,9 +635,84 @@ const removeProductFromSale = async (productId) => {
         )}
 
         {view === "history" && (
-          <div className="producer-card">
-            <h1 className="page-title">Order History</h1>
-            <p>View your completed sales and past transactions.</p>
+          <div className="incoming-orders-page">
+            <h1 className="incoming-orders-title">Order History</h1>
+
+            {ordersLoading && (
+              <p className="incoming-orders-message">Loading order history...</p>
+            )}
+
+            {ordersError && (
+              <p className="incoming-orders-error">{ordersError}</p>
+            )}
+
+            {!ordersLoading && !ordersError &&
+              orders.filter(o => ["DELIVERED", "CANCELLED", "PAID"].includes(o.status)).length === 0 && (
+              <p className="incoming-orders-message">No completed orders yet.</p>
+            )}
+
+            {!ordersLoading &&
+              !ordersError &&
+              orders
+                .filter(o => ["DELIVERED", "CANCELLED", "PAID"].includes(o.status))
+                .map((order) => (
+                <div key={order.id} className="order-card">
+                  <div className="order-card-header">
+                    <div>
+                      <h2>Order #{order.order_id}</h2>
+                      <p className="order-subtitle">Customer: {order.customer_email}</p>
+                      <p className="order-subtitle">
+                        Placed:{" "}
+                        {new Date(order.placed_at).toLocaleString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+                    </div>
+                    <span className={`order-status ${order.status?.toLowerCase()}`}>
+                      {order.status}
+                    </span>
+                  </div>
+
+                  <div className="order-info-grid">
+                    <div>
+                      <span className="order-label">Postcode</span>
+                      <p>{order.delivery_postcode}</p>
+                    </div>
+                    <div>
+                      <span className="order-label">Items</span>
+                      <p>{order.items?.length || 0}</p>
+                    </div>
+                  </div>
+
+                  <h3 className="order-items-title">Order Items</h3>
+                  <div className="order-items-list">
+                    {order.items && order.items.length > 0 ? (
+                      order.items.map((item) => (
+                        <div key={item.id} className="order-item">
+                          <div className="order-item-top">
+                            <span className="product-name">{item.product_name}</span>
+                            <div className="item-meta">
+                              <span>Qty: {formatQty(item.quantity)}</span>
+                              <strong>£{item.total_cost}</strong>
+                            </div>
+                          </div>
+                          <div className="order-item-actions">
+                            <span className={`item-status ${item.status?.toLowerCase()}`}>
+                              {item.status}
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p>No items found for this order.</p>
+                    )}
+                  </div>
+                </div>
+              ))}
           </div>
         )}
 
@@ -747,6 +812,12 @@ const removeProductFromSale = async (productId) => {
                 )}
               </div>
             )}
+          </div>
+        )}
+
+        {view === "freshness" && (
+          <div className="form-container">
+            <FreshnessCheck />
           </div>
         )}
 

@@ -555,3 +555,78 @@ def mark_notification_read(request, notification_id):
     notification.is_read = True
     notification.save()
     return Response({'status': 'marked as read'})
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def producer_my_products(request):
+    if request.user.role_name not in ('PRODUCER', 'ADMIN'):
+        return Response({'error': 'Only producer accounts can access this.'}, status=403)
+    try:
+        producer = request.user.producer_profile
+    except Exception:
+        return Response([], status=200)
+    products = (
+        Product.objects
+        .filter(producer=producer)
+        .select_related('category')
+        .order_by('-created_at')
+    )
+    data = []
+    for p in products:
+        stock_status = 'SOLD_OUT' if not p.is_available or p.stock_quantity <= 0 else 'IN_STOCK'
+        data.append({
+            'id': p.id,
+            'product_name': p.product_name,
+            'category': p.category.category_name if p.category else '',
+            'current_price': str(p.current_price),
+            'product_unit': p.product_unit,
+            'stock_quantity': str(p.stock_quantity),
+            'is_available': p.is_available,
+            'stock_status': stock_status,
+        })
+    return Response(data)
+
+
+@api_view(['PATCH'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def update_producer_product_stock(request, product_id):
+    if request.user.role_name not in ('PRODUCER', 'ADMIN'):
+        return Response({'error': 'Only producer accounts can update stock.'}, status=403)
+    try:
+        producer = request.user.producer_profile
+        product = Product.objects.get(pk=product_id, producer=producer)
+    except Product.DoesNotExist:
+        return Response({'error': 'Product not found.'}, status=404)
+    except Exception:
+        return Response({'error': 'No producer profile found.'}, status=403)
+    qty = request.data.get('stock_quantity')
+    if qty is None:
+        return Response({'error': 'stock_quantity is required.'}, status=400)
+    try:
+        product.stock_quantity = int(qty)
+        product.is_available = product.stock_quantity > 0
+        product.save()
+    except (ValueError, TypeError):
+        return Response({'error': 'Invalid stock quantity.'}, status=400)
+    return Response({'status': 'stock updated', 'stock_quantity': product.stock_quantity})
+
+
+@api_view(['PATCH'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def remove_producer_product(request, product_id):
+    if request.user.role_name not in ('PRODUCER', 'ADMIN'):
+        return Response({'error': 'Only producer accounts can remove products.'}, status=403)
+    try:
+        producer = request.user.producer_profile
+        product = Product.objects.get(pk=product_id, producer=producer)
+    except Product.DoesNotExist:
+        return Response({'error': 'Product not found.'}, status=404)
+    except Exception:
+        return Response({'error': 'No producer profile found.'}, status=403)
+    product.is_available = False
+    product.save()
+    return Response({'status': 'product removed from sale'})
