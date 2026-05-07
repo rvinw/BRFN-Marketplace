@@ -68,11 +68,11 @@ export default function App() {
               }
             />
 
-            {/* Protected: producers and admins only */}
+            {/* Protected: producers only */}
             <Route
               path="/dashboard/producer"
               element={
-                <ProtectedRoute allowedRoles={["producer", "admin"]}>
+                <ProtectedRoute allowedRoles={["producer"]}>
                   <ProducerDashboardPage />
                 </ProtectedRoute>
               }

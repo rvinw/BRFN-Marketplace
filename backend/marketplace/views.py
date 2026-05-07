@@ -63,7 +63,6 @@ def allergen_list(request):
 @api_view(['POST'])
 def product_allergens(request, product_id):
     from rest_framework_simplejwt.authentication import JWTAuthentication
-    from rest_framework.permissions import IsAuthenticated
     auth = JWTAuthentication()
     try:
         user, _ = auth.authenticate(request)
@@ -71,7 +70,10 @@ def product_allergens(request, product_id):
         return Response({'error': 'Unauthorised.'}, status=401)
 
     try:
-        product = Product.objects.get(pk=product_id, producer__user=user)
+        if user.role_name == 'ADMIN':
+            product = Product.objects.get(pk=product_id)
+        else:
+            product = Product.objects.get(pk=product_id, producer__user=user)
     except Product.DoesNotExist:
         return Response({'error': 'Product not found.'}, status=404)
 

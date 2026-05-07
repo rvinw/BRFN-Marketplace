@@ -53,7 +53,13 @@ class AdminProductListView(APIView):
                 is_available=request.data.get('availability', True),
                 category_id=request.data.get('category_id'),
                 producer_id=request.data.get('producer_id'),
+                harvest_date=(request.data.get('harvest_date') or '')[:10] or None,
+                product_stock_threshold=request.data.get('stock_threshold') or None,
             )
+            image_url = (request.data.get('image_url') or '').strip()
+            if image_url:
+                from marketplace.models import ProductImage
+                ProductImage.objects.create(product=product, image_url=image_url)
             return Response(_product_data(product), status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -83,6 +89,8 @@ class AdminProductDetailView(APIView):
             'stock_quantity': 'stock_quantity',
             'organic_status': 'organic_status',
             'category_id': 'category_id',
+            'harvest_date': 'harvest_date',
+            'stock_threshold': 'product_stock_threshold',
         }
         for frontend_field, model_field in field_map.items():
             if frontend_field in request.data:

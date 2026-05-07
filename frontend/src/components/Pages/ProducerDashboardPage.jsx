@@ -27,9 +27,8 @@ export default function ProducerDashboardPage() {
   ];
 
   const getToken = () =>
-    sessionStorage.getItem("brfn_token") ||
-    localStorage.getItem("access") ||
-    localStorage.getItem("token");
+    localStorage.getItem("brfn_token") ||
+    sessionStorage.getItem("brfn_token");
 
   const fetchProducts = async () => {
     setProductsLoading(true);
@@ -170,10 +169,7 @@ export default function ProducerDashboardPage() {
   setPayoutError("");
 
   try {
-    const token =
-      sessionStorage.getItem("brfn_token") ||
-      localStorage.getItem("access") ||
-      localStorage.getItem("token");
+    const token = getToken();
 
     const response = await fetch(
       "http://localhost:8000/api/producer/weekly-payout/",

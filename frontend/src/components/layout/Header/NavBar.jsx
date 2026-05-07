@@ -313,8 +313,8 @@ export default function NavBar() {
           </Link>
         )}
 
-        {/* Producer Dashboard Link — only visible to producers and admins */}
-        {user && ["producer", "admin"].includes(user.role) && (
+        {/* Producer Dashboard Link — only visible to producers */}
+        {user && user.role === "producer" && (
           <Link
             to="/dashboard/producer"
             className={`navitem${active === "Producer" ? " navitem--active" : ""}`}
@@ -339,6 +339,7 @@ export default function NavBar() {
             to="/dashboard/admin"
             className={`navitem${active === "Admin" ? " navitem--active" : ""}`}
             onClick={() => setActive("Admin")}
+            style={{ marginLeft: "auto" }}
           >
             <span className="navitem__icon" style={{ color: "#854d0e" }}>
               {icons.Admin}
