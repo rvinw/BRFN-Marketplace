@@ -79,6 +79,10 @@ def producer_add_product(request):
             producer=producer,
             harvest_date=(request.data.get('harvest_date') or '')[:10] or None,
         )
+        image_url = request.data.get('image_url', '').strip()
+        if image_url:
+            from marketplace.models import ProductImage
+            ProductImage.objects.create(product=product, image_url=image_url)
     except Exception as e:
         return Response({'error': str(e)}, status=400)
 

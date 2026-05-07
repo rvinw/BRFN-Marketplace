@@ -13,6 +13,7 @@ export default function AddProductForm() {
     stockQuantity: 0,
     allergyInfo: '',
     harvestDate: '',
+    imageUrl: '',
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -47,10 +48,8 @@ export default function AddProductForm() {
     body.append('availability', formData.availability);
     body.append('stock_quantity', formData.stockQuantity);
     body.append('harvest_date', formData.harvestDate);
-
-    const imageInput = document.querySelector('input[type="file"]');
-    if (imageInput?.files[0]) {
-      body.append('product_image', imageInput.files[0]);
+    if (formData.imageUrl) {
+      body.append('image_url', formData.imageUrl);
     }
 
     try {
@@ -126,8 +125,8 @@ export default function AddProductForm() {
           </div>
         </div>
 
-        <label>Product Image</label>
-        <input type="file" accept="image/*" />
+        <label>Product Image URL</label>
+        <input name="imageUrl" type="url" placeholder="https://example.com/image.jpg" value={formData.imageUrl} onChange={handleChange} />
 
         <button type="submit" className="navitem" style={{ width: '100%', marginTop: '20px' }} disabled={loading}>
           {loading ? 'Adding Product...' : 'Submit Product'}
