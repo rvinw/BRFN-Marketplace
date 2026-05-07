@@ -84,6 +84,18 @@ export default function ProducerDashboardPage() {
         }),
       });
     }
+
+    if (editProduct.availabilityType) {
+      await fetch(`http://localhost:8000/api/producer/products/${editProduct.id}/availability/`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          availability_type: editProduct.availabilityType,
+          start_month: editProduct.startMonth || null,
+          end_month: editProduct.endMonth || null,
+        }),
+      });
+    }
     setEditProduct(null);
   };
 
@@ -425,7 +437,35 @@ export default function ProducerDashboardPage() {
                       style={{ display: "block", width: "100%", padding: "8px 10px", borderRadius: 6, border: "1px solid #ccc", marginTop: 4, resize: "vertical", fontFamily: "inherit" }} />
                   </label>
                   <hr style={{ margin: "0 0 16px", border: "none", borderTop: "1px solid #eee" }} />
-                  <p style={{ margin: "0 0 12px", fontWeight: 600, fontSize: "0.9rem", color: "#dc2626" }}>Set a Discount Deal (optional)</p>
+                  <p style={{ margin: "0 0 12px", fontWeight: 600, fontSize: "0.9rem" }}>Seasonal Availability</p>
+                  <label style={{ display: "block", marginBottom: 12, fontWeight: 600, fontSize: "0.9rem" }}>
+                    Availability Type
+                    <select value={editProduct.availabilityType || ""}
+                      onChange={e => setEditProduct(p => ({ ...p, availabilityType: e.target.value }))}
+                      style={{ display: "block", width: "100%", padding: "8px 10px", borderRadius: 6, border: "1px solid #ccc", marginTop: 4 }}>
+                      <option value="">-- Select --</option>
+                      <option value="YEAR_ROUND">Year Round</option>
+                      <option value="SEASONAL">Seasonal</option>
+                    </select>
+                  </label>
+                  {editProduct.availabilityType === "SEASONAL" && (
+                    <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
+                      <label style={{ flex: 1, fontWeight: 600, fontSize: "0.9rem" }}>
+                        Start Month
+                        <input type="number" min="1" max="12" placeholder="1-12" value={editProduct.startMonth || ""}
+                          onChange={e => setEditProduct(p => ({ ...p, startMonth: e.target.value }))}
+                          style={{ display: "block", width: "100%", padding: "8px 10px", borderRadius: 6, border: "1px solid #ccc", marginTop: 4 }} />
+                      </label>
+                      <label style={{ flex: 1, fontWeight: 600, fontSize: "0.9rem" }}>
+                        End Month
+                        <input type="number" min="1" max="12" placeholder="1-12" value={editProduct.endMonth || ""}
+                          onChange={e => setEditProduct(p => ({ ...p, endMonth: e.target.value }))}
+                          style={{ display: "block", width: "100%", padding: "8px 10px", borderRadius: 6, border: "1px solid #ccc", marginTop: 4 }} />
+                      </label>
+                    </div>
+                  )}
+                  <hr style={{ margin: "0 0 16px", border: "none", borderTop: "1px solid #eee" }} />
+                  <p style={{ margin: "0 0 12px", fontWeight: 600, fontSize: "0.9rem" }}>Discount Deal</p>
                   <label style={{ display: "block", marginBottom: 12, fontWeight: 600, fontSize: "0.9rem" }}>
                     Discount %
                     <input type="number" min="1" max="100" placeholder="e.g. 20" value={editProduct.discountPercentage || ""}

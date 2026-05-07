@@ -50,9 +50,14 @@ class ProductSerializer(serializers.ModelSerializer):
     deals = serializers.SerializerMethodField()
     discounted_price = serializers.SerializerMethodField()
     allergens = serializers.SerializerMethodField()
+    availability_windows = serializers.SerializerMethodField()
 
     def get_allergens(self, obj):
         return list(obj.productallergen_set.select_related('allergen').values_list('allergen__allergen_name', flat=True))
+
+    def get_availability_windows(self, obj):
+        return [{'availability_type': w.availability_type, 'start_month': w.start_month, 'end_month': w.end_month}
+                for w in obj.availability_windows.all()]
 
     def get_deals(self, obj):
         from django.utils import timezone
@@ -105,6 +110,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "deals",
             "discounted_price",
             "allergens",
+            "availability_windows",
         ]
         read_only_fields = ["created_at"]
 

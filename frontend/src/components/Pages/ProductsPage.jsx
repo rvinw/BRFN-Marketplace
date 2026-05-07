@@ -183,6 +183,14 @@ export default function ProductsPage() {
                 {p.producer_name && (
                   <p style={{ margin: 0, fontSize: '0.78rem', color: '#9ca3af' }}>by {p.producer_name}</p>
                 )}
+                {p.availability_windows?.map((w, i) => {
+                  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                  return w.availability_type === 'SEASONAL' ? (
+                    <span key={i} style={{ fontSize: '0.72rem', background: '#fefce8', color: '#854d0e', borderRadius: 20, padding: '2px 8px', fontWeight: 700, display: 'inline-block' }}>
+                      Seasonal: {MONTHS[(w.start_month||1)-1]}–{MONTHS[(w.end_month||12)-1]}
+                    </span>
+                  ) : null;
+                })}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
                   <div>
                     {p.discounted_price ? (

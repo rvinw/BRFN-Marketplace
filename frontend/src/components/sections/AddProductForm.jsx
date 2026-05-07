@@ -34,6 +34,9 @@ export default function AddProductForm() {
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [availabilityType, setAvailabilityType] = useState('');
+  const [startMonth, setStartMonth] = useState('');
+  const [endMonth, setEndMonth] = useState('');
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -61,7 +64,10 @@ export default function AddProductForm() {
     body.append('category', formData.category);
     body.append('description', formData.description);
     body.append('price', formData.price);
-    body.append('unit_amount', formData.unitAmount);
+    const unitLabel = ['kg', 'g', 'l', 'ml'].includes(formData.unitAmount) && formData.unitQuantity
+      ? `${formData.unitQuantity}${formData.unitAmount}`
+      : formData.unitAmount;
+    body.append('unit_amount', unitLabel);
     body.append('availability', formData.availability);
     body.append('stock_quantity', formData.stockQuantity);
     if (formData.stockThreshold) body.append('product_stock_threshold', formData.stockThreshold);
@@ -87,9 +93,17 @@ export default function AddProductForm() {
             body: JSON.stringify({ allergen_ids: selectedAllergens }),
           });
         }
+        if (availabilityType) {
+          await fetch(`${API_URL}/api/producer/products/${data.id}/availability/`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ availability_type: availabilityType, start_month: startMonth || null, end_month: endMonth || null }),
+          });
+        }
         setMessage(`Product "${data.name}" added successfully!`);
         setFormData({ name: '', category: 'Dairy', description: '', price: '', unitAmount: '', availability: true, stockQuantity: 0, stockThreshold: '', allergyInfo: '', harvestDate: '', imageUrl: '' });
         setSelectedAllergens([]);
+        setAvailabilityType(''); setStartMonth(''); setEndMonth('');
       } else {
         setMessage(data.error || 'Failed to add product.');
       }
@@ -136,7 +150,21 @@ export default function AddProductForm() {
           </div>
           <div style={{ flex: 1 }}>
             <label>Unit Amount</label>
-            <input name="unitAmount" type="text" placeholder="e.g. kg, each, 500g" value={formData.unitAmount} onChange={handleChange} />
+            <select name="unitAmount" value={formData.unitAmount} onChange={handleChange}>
+              <option value="">-- Select --</option>
+              <option value="each">Each</option>
+              <option value="kg">Kilogram (kg)</option>
+              <option value="g">Gram (g)</option>
+              <option value="l">Litre (l)</option>
+              <option value="ml">Millilitre (ml)</option>
+              <option value="pack">Pack</option>
+              <option value="bunch">Bunch</option>
+              <option value="box">Box</option>
+              <option value="dozen">Dozen</option>
+            </select>
+            {['kg', 'g', 'l', 'ml'].includes(formData.unitAmount) && (
+              <input name="unitQuantity" type="number" min="1" placeholder={`How many ${formData.unitAmount}? e.g. 500`} value={formData.unitQuantity || ''} onChange={handleChange} style={{ marginTop: 6 }} />
+            )}
           </div>
         </div>
 
@@ -157,6 +185,25 @@ export default function AddProductForm() {
 
         <label>Product Image URL</label>
         <input name="imageUrl" type="url" placeholder="https://example.com/image.jpg" value={formData.imageUrl} onChange={handleChange} />
+
+        <label>Seasonal Availability</label>
+        <select value={availabilityType} onChange={e => setAvailabilityType(e.target.value)}>
+          <option value="">-- Select (optional) --</option>
+          <option value="YEAR_ROUND">Year Round</option>
+          <option value="SEASONAL">Seasonal</option>
+        </select>
+        {availabilityType === 'SEASONAL' && (
+          <div style={{ display: 'flex', gap: '20px', marginTop: 8 }}>
+            <div style={{ flex: 1 }}>
+              <label>Start Month (1-12)</label>
+              <input type="number" min="1" max="12" placeholder="e.g. 3" value={startMonth} onChange={e => setStartMonth(e.target.value)} />
+            </div>
+            <div style={{ flex: 1 }}>
+              <label>End Month (1-12)</label>
+              <input type="number" min="1" max="12" placeholder="e.g. 9" value={endMonth} onChange={e => setEndMonth(e.target.value)} />
+            </div>
+          </div>
+        )}
 
         {allergenOptions.length > 0 && (
           <div>

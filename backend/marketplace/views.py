@@ -32,7 +32,10 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
             )
 
         if category:
-            qs = qs.filter(category__category_name__icontains=category)
+            if category.lower() == 'seasonal':
+                qs = qs.filter(availability_windows__availability_type='SEASONAL').distinct()
+            else:
+                qs = qs.filter(category__category_name__icontains=category)
 
         return qs
 

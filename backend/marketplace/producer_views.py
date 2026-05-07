@@ -472,6 +472,35 @@ def update_order_item_availability(request, item_id):
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
+def producer_set_availability(request, product_id):
+    if request.user.role_name not in ('PRODUCER', 'ADMIN'):
+        return Response({'error': 'Only producers can set availability.'}, status=403)
+    try:
+        product = Product.objects.get(pk=product_id, producer=request.user.producer_profile)
+    except Product.DoesNotExist:
+        return Response({'error': 'Product not found.'}, status=404)
+
+    from marketplace.models import ProductAvailabilityWindow
+    availability_type = request.data.get('availability_type')
+    start_month = request.data.get('start_month') or None
+    end_month = request.data.get('end_month') or None
+
+    if availability_type not in ('SEASONAL', 'YEAR_ROUND'):
+        return Response({'error': 'Invalid availability type.'}, status=400)
+
+    ProductAvailabilityWindow.objects.filter(product=product).delete()
+    ProductAvailabilityWindow.objects.create(
+        product=product,
+        availability_type=availability_type,
+        start_month=start_month if availability_type == 'SEASONAL' else None,
+        end_month=end_month if availability_type == 'SEASONAL' else None,
+    )
+    return Response({'status': 'availability updated'}, status=200)
+
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def producer_set_deal(request, product_id):
     if request.user.role_name not in ('PRODUCER', 'ADMIN'):
         return Response({'error': 'Only producers can set deals.'}, status=403)

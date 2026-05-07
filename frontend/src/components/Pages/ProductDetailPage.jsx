@@ -189,6 +189,19 @@ export default function ProductDetailPage() {
             <span className="product-detail__badge">Organic</span>
           )}
 
+          {product.availability_windows?.map((w, i) => {
+            const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            return w.availability_type === 'YEAR_ROUND' ? (
+              <span key={i} style={{ display: 'inline-block', background: '#f0fdf4', color: '#16a34a', borderRadius: 20, padding: '3px 12px', fontSize: '0.78rem', fontWeight: 700, marginBottom: 8 }}>
+                Available Year Round
+              </span>
+            ) : (
+              <span key={i} style={{ display: 'inline-block', background: '#fefce8', color: '#854d0e', borderRadius: 20, padding: '3px 12px', fontSize: '0.78rem', fontWeight: 700, marginBottom: 8 }}>
+                Seasonal: {MONTHS[(w.start_month || 1) - 1]} – {MONTHS[(w.end_month || 12) - 1]}
+              </span>
+            );
+          })}
+
           <p className="product-detail__description">{product.description}</p>
 
           {product.allergens?.length > 0 && (
